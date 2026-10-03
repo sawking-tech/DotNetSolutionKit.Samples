@@ -20,7 +20,7 @@ services:
       - ./deploy/compose/keys/jwt-public.pem:/app/keys/jwt-public.pem:ro
     # The entry point; a TLS terminating proxy in front publishes it further.
     ports:
-      - "127.0.0.1:5336:8080"
+      - "127.0.0.1:5473:8080"
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/ready"]
       interval: 10s
