@@ -8,7 +8,7 @@ services:
       args:
         SERVICE: ST.DotNetSolutionKit.Samples.Gateway
         GIT_SHA: ${GIT_SHA:-local}
-    image: ${REGISTRY:-local}/gateway:${TAG:-latest}
+    image: ${REGISTRY:-local}/dotnetsolutionkit_samples-gateway:${TAG:-latest}
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       Jwt__Issuer: ${JWT_ISSUER:?Set JWT_ISSUER in deploy/compose/.env}
@@ -20,7 +20,7 @@ services:
       - ./deploy/compose/keys/jwt-public.pem:/app/keys/jwt-public.pem:ro
     # The entry point; a TLS terminating proxy in front publishes it further.
     ports:
-      - "127.0.0.1:5835:8080"
+      - "127.0.0.1:5721:8080"
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/ready"]
       interval: 10s

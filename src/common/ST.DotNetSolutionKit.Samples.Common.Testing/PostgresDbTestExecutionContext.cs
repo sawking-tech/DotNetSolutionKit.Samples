@@ -339,7 +339,7 @@ public abstract class PostgresIntegrationTestBase<TService, TDbContext>
         {
             // DROP failure does not fail the test, but it is written to the test output: a silent catch
             // here once hid that no test database was ever dropped.
-            TestContext.Progress.WriteLine($"Could not drop test database {dbName}: {ex.Message}");
+            Console.Error.WriteLine($"Could not drop test database {dbName}: {ex.Message}");
         }
     }
 

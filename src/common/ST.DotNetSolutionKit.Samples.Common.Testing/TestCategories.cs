@@ -8,4 +8,11 @@ public static class TestCategories
 {
     /// <summary>Needs a real PostgreSQL; see <see cref="Integration.Postgres"/>.</summary>
     public const string Integration = "Integration";
+
+    /// <summary>
+    /// The trait an xUnit test carries the category under: <c>[Trait(TestCategories.TraitName,
+    /// TestCategories.Integration)]</c>. Named so that the filter CI uses for NUnit's categories,
+    /// <c>TestCategory=Integration</c>, selects xUnit tests too.
+    /// </summary>
+    public const string TraitName = "TestCategory";
 }
