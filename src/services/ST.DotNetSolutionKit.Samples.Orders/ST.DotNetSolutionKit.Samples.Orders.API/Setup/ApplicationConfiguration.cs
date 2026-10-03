@@ -1,0 +1,56 @@
+using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
+using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration.Secrets;
+using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+namespace ST.DotNetSolutionKit.Samples.Orders.API.Setup;
+
+internal static class ApplicationConfiguration
+{
+    public static IConfigurationBuilder SetupAppConfiguration(
+        this IConfigurationBuilder builder, IHostEnvironment env, string[] args)
+    {
+        // Platform feature flags, shipped from Common so every service reads the same file and a
+        // feature means one thing across the platform. First, so everything below can override it.
+        builder.AddPlatformFeatures();
+
+        // Always base config
+        builder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+        // Environment-specific configuration
+        if (!string.IsNullOrWhiteSpace(env.EnvironmentName))
+        {
+            var envConfigFile = $"appsettings.{env.EnvironmentName}.json";
+            builder.AddJsonFile(envConfigFile, optional: true, reloadOnChange: true);
+        }
+
+        // Secret files only for Local
+        if (env.IsEnvironment("Local"))
+        {
+            builder.AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true);
+        }
+
+        // Always connect environment variables (secrets, dynamic parameters)
+        builder.AddEnvironmentVariables();
+
+        // The secret store goes last, so a value it holds wins over anything shipped in the image. Its
+        // connection (project, environment, folders, whether it is required) is read from the Infisical
+        // section of configuration; the machine identity comes from environment variables, added above.
+        // The arguments are fallbacks for when configuration says nothing: the service's own folder, and
+        // a store that may be missing only on a developer machine.
+        // Skipped for --schema-only: a build agent producing the API document holds no store identity.
+        if (!SchemaOnlyMode.IsEnabled(args))
+        {
+            builder.AddPlatformSecrets("/orders", optional: env.IsEnvironment("Local"));
+        }
+
+        // With the database switched off, what is stored in it goes off too: the job server, and the bus
+        // when it delivers through the outbox.
+        builder.AddDependencyOverrides(busNeedsDatabase: true);
+
+        // A schema-only run turns every infrastructure switch off, last so it wins over the files and
+        // the environment.
+        builder.AddSchemaOnlyOverrides(args);
+
+        return builder;
+    }
+}
