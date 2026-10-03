@@ -16,7 +16,7 @@ services:
       HangfireSettings__DashboardPassword: ${HANGFIRE_DASHBOARD_PASSWORD:?Set HANGFIRE_DASHBOARD_PASSWORD in deploy/compose/.env}
     # Only on the host's loopback: a reverse proxy or a gateway in front publishes it.
     ports:
-      - "127.0.0.1:5256:8080"
+      - "127.0.0.1:5811:8080"
     # Ready, not merely alive: whatever depends on this service starts once its database is reachable.
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/ready"]

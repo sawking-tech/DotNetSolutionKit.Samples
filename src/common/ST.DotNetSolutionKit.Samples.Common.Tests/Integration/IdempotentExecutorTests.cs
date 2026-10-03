@@ -21,7 +21,7 @@ namespace ST.DotNetSolutionKit.Samples.Common.Tests.Integration;
 internal class IdempotentExecutorTests
 {
     private const string Operation = "widgets.create";
-    private const string Key = "key-0123456789abcdef";
+    private const string Key = "same-request-retried";
 
     private string _database = null!;
     private string _connection = null!;
