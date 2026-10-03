@@ -8,4 +8,4 @@ Generated from [DotNetSolutionKit v2.6.0](https://github.com/sawking-tech/DotNet
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true
 ```
 
-Nothing here is edited by hand: the branch is replaced when the template has a new release.
+Nothing here is edited by hand: the branch is replaced when the template moves on.
