@@ -10,4 +10,4 @@ dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Gateway --ApiGateway true
 ```
 
-Nothing here is edited by hand: the branch is replaced when the template has a new release.
+Nothing here is edited by hand: the branch is replaced when the template moves on.
