@@ -23,4 +23,6 @@ Nothing here is edited by hand: the branch is replaced when the template moves o
 Once a day [regenerate](.github/workflows/regenerate.yml) checks for a new release of the template.
 When there is one, every release branch is generated again from it and pushed, and its CI runs.
 nightly follows master instead: it is generated again when master has moved, and may be red.
+After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's
+reports/ folder: tests, coverage, time and the branch's files, one file per release.
 The automation is in [.samples](.samples).
