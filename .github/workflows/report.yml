@@ -1,0 +1,46 @@
+name: Report
+
+# After the CI of a sample branch, writes the run's report into that branch: reports/<version>.json and .md
+# (.samples/report.sh). The commit says [skip ci], so it starts no CI of its own and no report of a report.
+# It is pushed with SAMPLES_DEPLOY_KEY, as the regeneration is.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: report-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  report:
+    # A pull request's CI reports nothing: only what lands on a sample branch does.
+    if: github.event.workflow_run.event != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: automation
+
+      - name: Write and push the report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEPLOY_KEY: ${{ secrets.SAMPLES_DEPLOY_KEY }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN: ${{ github.event.workflow_run.id }}
+        run: |
+          key="$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "$DEPLOY_KEY" > "$key" && chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git clone -q --branch "$BRANCH" "git@github.com:${GITHUB_REPOSITORY}.git" branch
+          cd branch
+          bash ../automation/.samples/report.sh "$RUN"
+          git add reports
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "Report of CI run $RUN [skip ci]" || exit 0
+          git push -q origin "$BRANCH"

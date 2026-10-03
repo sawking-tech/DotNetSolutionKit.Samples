@@ -101,6 +101,8 @@ jobs:
             git checkout -q --orphan "${{ matrix.branch }}"
           fi
           git rm -rqf . 2>/dev/null || true
+          # The reports of earlier runs stay: they are the branch's history, which the site shows.
+          git checkout -q HEAD -- reports 2>/dev/null || true
           cp -a "$RUNNER_TEMP/sample/." .
           git add -A
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
