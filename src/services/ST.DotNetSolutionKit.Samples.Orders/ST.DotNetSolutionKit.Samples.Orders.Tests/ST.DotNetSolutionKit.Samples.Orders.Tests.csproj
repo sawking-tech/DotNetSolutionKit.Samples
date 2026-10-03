@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="NUnit" />
+        <PackageReference Include="NUnit3TestAdapter" />
+        <PackageReference Include="coverlet.collector" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="Moq" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Tests\ST.DotNetSolutionKit.Samples.Common.Tests.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Web\ST.DotNetSolutionKit.Samples.Common.Web.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Orders\ST.DotNetSolutionKit.Samples.Orders.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Orders.Application\ST.DotNetSolutionKit.Samples.Orders.Application.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Orders.Infrastructure\ST.DotNetSolutionKit.Samples.Orders.Infrastructure.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Orders.API\ST.DotNetSolutionKit.Samples.Orders.API.csproj" />
+    </ItemGroup>
+
+</Project>
