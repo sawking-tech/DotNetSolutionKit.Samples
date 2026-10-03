@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 #
-# Generates one sample from a release of the template into an empty folder:
+# Generates one sample from a release of the template, or from a branch of it, into an empty folder:
 #
-#   ./generate.sh <tag> <branch> <folder>
+#   ./generate.sh <tag or branch> <branch> <folder>
 #
-# The template comes from the release's package when it has one, from the tagged sources otherwise.
+# The template comes from the release's package when it has one, from the sources at that tag or branch
+# otherwise.
 # What to generate for each branch is in variants.json. The branch marked "default" is the repository's
 # default branch: it also carries this automation (.samples/ and the regenerate workflow), so a
 # regeneration of it does not delete what regenerates it.
@@ -14,6 +15,7 @@ tag="$1" branch="$2" out="$3"
 here="$(cd "$(dirname "$0")" && pwd)"
 template_repo="${TEMPLATE_REPO:-sawking-tech/DotNetSolutionKit}"
 work="$(mktemp -d)"
+commit=""
 # TEMPLATE_HIVE keeps the install apart from the templates of the machine, for a run outside CI.
 hive=()
 [ -n "${TEMPLATE_HIVE:-}" ] && hive=(--debug:custom-hive "$TEMPLATE_HIVE")
@@ -22,6 +24,7 @@ if gh release download "$tag" -R "$template_repo" -p '*.nupkg' -D "$work/package
     dotnet new install "$work"/package/*.nupkg --force "${hive[@]}"
 else
     git clone -q --depth 1 --branch "$tag" "https://github.com/$template_repo.git" "$work/template"
+    commit=$(git -C "$work/template" rev-parse HEAD)
     dotnet new install "$work/template/template" --force "${hive[@]}"
 fi
 
@@ -42,15 +45,20 @@ about=$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .about' "$here/va
     echo
     echo "$about"
     echo
-    echo "Generated from [DotNetSolutionKit $tag](https://github.com/$template_repo/releases/tag/$tag) with:"
+    if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .ref // empty' "$here/variants.json")" ]; then
+        echo "Generated from DotNetSolutionKit $tag at [${commit:0:7}](https://github.com/$template_repo/commit/$commit), not a release, with:"
+    else
+        echo "Generated from [DotNetSolutionKit $tag](https://github.com/$template_repo/releases/tag/$tag) with:"
+    fi
     echo
     echo '```bash'
     sed 's/^/dotnet new DotNetSolutionKit /' "$work/commands"
     echo '```'
     echo
-    echo "Nothing here is edited by hand: the branch is replaced when the template has a new release."
+    echo "Nothing here is edited by hand: the branch is replaced when the template moves on."
 } > README.md
-echo "$tag" > template-version
+# What the branch was generated from: the release tag, or the commit for a branch of the template.
+echo "${commit:-$tag}" > template-version
 
 # The generated CI runs on a push to main or master and on pull requests: right for a team, where the
 # other branches go through pull requests. A sample branch is pushed straight, so its name joins them.
@@ -72,7 +80,8 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
         jq -r --arg r "$repo" '.[] | "| [`\(.branch)`](\($r)/tree/\(.branch)) | \(.about) | [![CI](\($r)/actions/workflows/ci.yml/badge.svg?branch=\(.branch))](\($r)/actions/workflows/ci.yml?query=branch%3A\(.branch)) |"' "$here/variants.json"
         echo
         echo "Once a day [regenerate](.github/workflows/regenerate.yml) checks for a new release of the template."
-        echo "When there is one, every branch is generated again from it and pushed, and its CI runs. Only releases"
-        echo "are sampled, never the commits between them. The automation is in [.samples](.samples)."
+        echo "When there is one, every release branch is generated again from it and pushed, and its CI runs."
+        echo "nightly follows master instead: it is generated again when master has moved, and may be red."
+        echo "The automation is in [.samples](.samples)."
     } >> README.md
 fi
