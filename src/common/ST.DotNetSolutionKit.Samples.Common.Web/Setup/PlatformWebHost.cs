@@ -1,10 +1,13 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ST.DotNetSolutionKit.Samples.Common.Application.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Application.Serialization;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
+using ST.DotNetSolutionKit.Samples.Common.Web.Authentication;
 using ST.DotNetSolutionKit.Samples.Common.Web.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Web.Errors;
 using ST.DotNetSolutionKit.Samples.Common.Web.Health;
@@ -52,6 +55,13 @@ public static class PlatformWebHost
         builder.SetupSwaggerPage(serviceAssembly);
         builder.AddPlatformCors();
 
+        // How the token cookies are sent is the deployment's to state; a combination the browser or the
+        // CSRF check cannot honour stops the start here, with what to change.
+        var authCookies = builder.Configuration.GetSection(AuthCookieSettings.SectionName).Get<AuthCookieSettings>()
+                          ?? new AuthCookieSettings();
+        authCookies.Validate(builder.Configuration.GetSection(CorsSettings.SectionName).Get<CorsSettings>());
+        builder.Services.AddSingleton(authCookies);
+
         // /health and /ready are mapped by UsePlatformPipeline; a host with no dependency to check
         // (a gateway) still needs the health check services behind them.
         builder.Services.AddHealthChecks();
@@ -91,6 +101,11 @@ public static class PlatformWebHost
         app.UseRouting();
         app.UsePlatformCors();
         app.UsePlatformErrorHandling();
+
+        // A state-changing request a token cookie would authenticate needs the CSRF header. After error
+        // handling, so the refusal is a problem the frontend can read; before authentication, which would
+        // otherwise accept the cookie.
+        app.UseMiddleware<CsrfProtectionMiddleware>();
 
         if (authenticate)
         {

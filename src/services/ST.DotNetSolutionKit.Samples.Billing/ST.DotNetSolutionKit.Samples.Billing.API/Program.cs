@@ -1,5 +1,6 @@
 using System.Reflection;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration.Secrets;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Common.Web.Diagnostics;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
@@ -26,6 +27,13 @@ try
     var switches = DependencySwitches.Read(app.Configuration);
     if (switches.SwitchedOff.Count > 0)
         app.Logger.LogWarning("Running without: {SwitchedOff}", string.Join(", ", switches.SwitchedOff.Select(key => $"{key}=false")));
+
+    // The secret store could not be read and its snapshot answered instead, or the snapshot could not be
+    // written: either is fine for now and wrong to leave unnoticed.
+    if (app.Configuration[SecretsConfigurationProvider.LoadedFromKey] is { } loadedFrom && loadedFrom.StartsWith("snapshot", StringComparison.Ordinal))
+        app.Logger.LogWarning("The secret store could not be read; running on its {Snapshot}", loadedFrom);
+    if (app.Configuration[SecretsConfigurationProvider.SnapshotErrorKey] is { } snapshotError)
+        app.Logger.LogWarning("The snapshot of the secret store could not be written: {SnapshotError}", snapshotError);
 
     // --- Database Initialization ---
     if (switches.Database)

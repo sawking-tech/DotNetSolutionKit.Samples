@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# Generates one sample from a release of the template into an empty folder:
+#
+#   ./generate.sh <tag> <branch> <folder>
+#
+# The template comes from the release's package when it has one, from the tagged sources otherwise.
+# What to generate for each branch is in variants.json. The branch marked "default" is the repository's
+# default branch: it also carries this automation (.samples/ and the regenerate workflow), so a
+# regeneration of it does not delete what regenerates it.
+set -euo pipefail
+
+tag="$1" branch="$2" out="$3"
+here="$(cd "$(dirname "$0")" && pwd)"
+template_repo="${TEMPLATE_REPO:-sawking-tech/DotNetSolutionKit}"
+work="$(mktemp -d)"
+# TEMPLATE_HIVE keeps the install apart from the templates of the machine, for a run outside CI.
+hive=()
+[ -n "${TEMPLATE_HIVE:-}" ] && hive=(--debug:custom-hive "$TEMPLATE_HIVE")
+
+if gh release download "$tag" -R "$template_repo" -p '*.nupkg' -D "$work/package" 2>/dev/null; then
+    dotnet new install "$work"/package/*.nupkg --force "${hive[@]}"
+else
+    git clone -q --depth 1 --branch "$tag" "https://github.com/$template_repo.git" "$work/template"
+    dotnet new install "$work/template/template" --force "${hive[@]}"
+fi
+
+mkdir -p "$out"
+cd "$out"
+jq -r --arg b "$branch" '.[] | select(.branch == $b) | .generate[]' "$here/variants.json" | tr -d '\r' > "$work/commands"
+[ -s "$work/commands" ] || { echo "variants.json has no branch $branch" >&2; exit 1; }
+while read -r args; do
+    # Word splitting of the arguments is intended.
+    # shellcheck disable=SC2086
+    dotnet new DotNetSolutionKit $args "${hive[@]}"
+done < "$work/commands"
+bash src/services/manual-add-projects.sh < /dev/null
+
+about=$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .about' "$here/variants.json")
+{
+    echo "# Sample: $branch"
+    echo
+    echo "$about"
+    echo
+    echo "Generated from [DotNetSolutionKit $tag](https://github.com/$template_repo/releases/tag/$tag) with:"
+    echo
+    echo '```bash'
+    sed 's/^/dotnet new DotNetSolutionKit /' "$work/commands"
+    echo '```'
+    echo
+    echo "Nothing here is edited by hand: the branch is replaced when the template has a new release."
+} > README.md
+echo "$tag" > template-version
+
+# The generated CI runs on a push to main or master and on pull requests: right for a team, where the
+# other branches go through pull requests. A sample branch is pushed straight, so its name joins them.
+for wf in .github/workflows/*.yml; do
+    [ -f "$wf" ] && sed -i "s/branches: \[main, master\]/branches: [main, master, $branch]/" "$wf"
+done
+
+if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false' "$here/variants.json")" = "true" ]; then
+    mkdir -p .samples .github/workflows
+    cp "$here/generate.sh" "$here/variants.json" .samples/
+    cp "$here/../.github/workflows/regenerate.yml" .github/workflows/regenerate.yml
+    {
+        echo
+        echo "## The samples"
+        echo
+        echo "| Branch | What it shows | CI |"
+        echo "|---|---|---|"
+        repo="https://github.com/${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
+        jq -r --arg r "$repo" '.[] | "| [`\(.branch)`](\($r)/tree/\(.branch)) | \(.about) | [![CI](\($r)/actions/workflows/ci.yml/badge.svg?branch=\(.branch))](\($r)/actions/workflows/ci.yml?query=branch%3A\(.branch)) |"' "$here/variants.json"
+        echo
+        echo "Once a day [regenerate](.github/workflows/regenerate.yml) checks for a new release of the template."
+        echo "When there is one, every branch is generated again from it and pushed, and its CI runs. Only releases"
+        echo "are sampled, never the commits between them. The automation is in [.samples](.samples)."
+    } >> README.md
+fi

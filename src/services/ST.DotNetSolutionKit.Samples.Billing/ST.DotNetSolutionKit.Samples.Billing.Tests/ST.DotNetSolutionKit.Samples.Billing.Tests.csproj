@@ -21,7 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Tests\ST.DotNetSolutionKit.Samples.Common.Tests.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
@@ -30,6 +29,7 @@
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.Application\ST.DotNetSolutionKit.Samples.Billing.Application.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.Infrastructure\ST.DotNetSolutionKit.Samples.Billing.Infrastructure.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.API\ST.DotNetSolutionKit.Samples.Billing.API.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Testing\ST.DotNetSolutionKit.Samples.Common.Testing.csproj" />
     </ItemGroup>
 
 </Project>

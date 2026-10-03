@@ -24,6 +24,7 @@
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Web\ST.DotNetSolutionKit.Samples.Common.Web.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Testing\ST.DotNetSolutionKit.Samples.Common.Testing.csproj" />
     </ItemGroup>
 
 </Project>

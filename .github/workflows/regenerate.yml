@@ -1,0 +1,116 @@
+name: Regenerate
+
+# Once a day, checks for a new release of the template. When there is one, every sample branch is replaced by a fresh
+# generation from that release. Only releases are sampled, never the commits between them.
+#
+# The branches carry workflow files, which GITHUB_TOKEN may not push, and a push by GITHUB_TOKEN starts no
+# workflows. The push uses SAMPLES_DEPLOY_KEY, a deploy key of this repository with write access: it does
+# not expire, and its push starts the branch's CI like any other push.
+#
+# This file lives on the default branch, which is a sample too: generate.sh puts it back on each
+# regeneration, with the rest of the automation in .samples/.
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Regenerate even when the latest release is already here
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  TEMPLATE_REPO: sawking-tech/DotNetSolutionKit
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+      regenerate: ${{ steps.release.outputs.regenerate }}
+      branches: ${{ steps.release.outputs.branches }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh release view -R "$TEMPLATE_REPO" --json tagName -q .tagName)
+          here=$(cat template-version 2>/dev/null || echo none)
+          echo "latest release $tag, samples from $here"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "branches=$(jq -c '[.[].branch]' .samples/variants.json)" >> "$GITHUB_OUTPUT"
+          if [ "$tag" != "$here" ] || [ "${{ inputs.force }}" = "true" ]; then
+            echo "regenerate=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "regenerate=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  regenerate:
+    needs: check
+    if: needs.check.outputs.regenerate == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: ${{ fromJSON(needs.check.outputs.branches) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: automation
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Generate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash automation/.samples/generate.sh "${{ needs.check.outputs.tag }}" "${{ matrix.branch }}" "$RUNNER_TEMP/sample"
+
+      - name: Replace the branch
+        env:
+          DEPLOY_KEY: ${{ secrets.SAMPLES_DEPLOY_KEY }}
+        run: |
+          key="$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "$DEPLOY_KEY" > "$key" && chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git clone -q "git@github.com:${GITHUB_REPOSITORY}.git" branch
+          cd branch
+          if git ls-remote --exit-code --heads origin "${{ matrix.branch }}" >/dev/null; then
+            git checkout -q "${{ matrix.branch }}"
+          else
+            git checkout -q --orphan "${{ matrix.branch }}"
+          fi
+          git rm -rqf . 2>/dev/null || true
+          cp -a "$RUNNER_TEMP/sample/." .
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "Generated from DotNetSolutionKit ${{ needs.check.outputs.tag }}"
+          git push -q origin "${{ matrix.branch }}"
+
+  # GitHub turns a schedule off in a public repository after 60 days without a commit. Releases of the
+  # template can be further apart, so an empty commit on the default branch keeps the schedule alive.
+  keep-alive:
+    needs: check
+    if: needs.check.outputs.regenerate != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          DEPLOY_KEY: ${{ secrets.SAMPLES_DEPLOY_KEY }}
+        run: |
+          age=$(( ($(date +%s) - $(git log -1 --format=%ct)) / 86400 ))
+          echo "the last commit is $age days old"
+          [ "$age" -ge 50 ] || exit 0
+          key="$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "$DEPLOY_KEY" > "$key" && chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git remote set-url origin "git@github.com:${GITHUB_REPOSITORY}.git"
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q --allow-empty -m "Keep the regeneration schedule alive"
+          git push -q origin HEAD

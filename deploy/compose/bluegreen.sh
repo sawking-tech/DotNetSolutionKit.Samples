@@ -113,6 +113,53 @@ NGINX
     docker exec "$EDGE" nginx -s reload
 }
 
+# One run at a time: two runs at once would switch the edge and record the active color against each
+# other, and the color left recorded could be the one the other run stops. mkdir is atomic everywhere,
+# flock is not on every host; a lock left by a run that is gone is taken over.
+take_lock() {
+    local lock="$STATE/lock" holder
+    if mkdir "$lock" 2>/dev/null; then
+        echo $$ > "$lock/pid"
+        trap 'rm -rf "$STATE/lock"' EXIT
+        return
+    fi
+    holder=$(cat "$lock/pid" 2>/dev/null || true)
+    if [ -n "$holder" ] && kill -0 "$holder" 2>/dev/null; then
+        echo "Another bluegreen.sh is running (pid $holder)" >&2
+        exit 1
+    fi
+    echo "Taking over the lock of a run that is gone (pid ${holder:-unknown})" >&2
+    rm -rf "$lock"
+    take_lock
+}
+
+# Starts a color and waits for its services to be ready. A color that does not get there is stopped,
+# with its last log lines, and the active color is not touched.
+start_color() {
+    local c=$1; shift
+    if BLUEGREEN_NETWORK="$PREFIX-$c" color "$c" up -d --wait "$@"; then
+        return 0
+    fi
+    echo "$c did not become ready; the active color stays as it was" >&2
+    BLUEGREEN_NETWORK="$PREFIX-$c" color "$c" logs --tail 30 >&2 || true
+    BLUEGREEN_NETWORK="$PREFIX-$c" color "$c" stop >/dev/null 2>&1 || true
+    return 1
+}
+
+# Points the edge at a color and checks the edge answers. When it does not, the edge goes back to the
+# color it served before, if there was one, instead of being left on a color that does not answer.
+switch_to() {
+    local next=$1 previous=$2
+    switch_edge "$next"
+    wait_ready && return 0
+    if [ -n "$previous" ]; then
+        echo "Switching the edge back to $previous" >&2
+        switch_edge "$previous"
+    fi
+    BLUEGREEN_NETWORK="$PREFIX-$next" color "$next" stop >/dev/null 2>&1 || true
+    return 1
+}
+
 wait_ready() {
     for _ in $(seq 1 30); do
         curl -fsS -o /dev/null "http://127.0.0.1:$EDGE_PORT/ready" && return 0
@@ -124,16 +171,19 @@ wait_ready() {
 
 case "${1:-}" in
     up)
+        take_lock
         write_override
         current=$(active); next=$(other "${current:-green}")
         echo "==> infrastructure"
         infra up -d --wait
+        # A changed setting or image recreates an infrastructure container, and the new one is on
+        # neither color's network: the running color would lose its database. Both are reconnected.
+        prepare_network blue
+        prepare_network green
         echo "==> $next"
-        prepare_network "$next"
-        BLUEGREEN_NETWORK="$PREFIX-$next" color "$next" up -d --wait
+        start_color "$next" || exit 1
         echo "==> edge to $next"
-        switch_edge "$next"
-        wait_ready
+        switch_to "$next" "$current" || exit 1
         echo "$next" > "$ACTIVE_FILE"
         if [ -n "$current" ] && [ "${KEEP_OLD:-0}" != 1 ]; then
             echo "==> stopping $current"
@@ -142,13 +192,15 @@ case "${1:-}" in
         echo "Active: $next"
         ;;
     rollback)
+        take_lock
         write_override
         current=$(active); [ -n "$current" ] || { echo "Nothing deployed yet" >&2; exit 1; }
         previous=$(other "$current")
+        prepare_network blue
+        prepare_network green
         echo "==> $previous"
-        BLUEGREEN_NETWORK="$PREFIX-$previous" color "$previous" up -d --wait --no-recreate
-        switch_edge "$previous"
-        wait_ready
+        start_color "$previous" --no-recreate || exit 1
+        switch_to "$previous" "$current" || exit 1
         echo "$previous" > "$ACTIVE_FILE"
         BLUEGREEN_NETWORK="$PREFIX-$current" color "$current" stop
         echo "Active: $previous"

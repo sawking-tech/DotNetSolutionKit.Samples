@@ -90,6 +90,18 @@ public sealed class ConfigurationFeatureCatalog : IFeatureCatalog
             Ticket = section.GetValue<string?>("ticket"),
         };
 
+        // A pinned flag takes its value from the shared file alone, whatever the layers above it say.
+        var file = FeatureFile();
+        if (file is not null && IsPinned(file, section.Path))
+        {
+            descriptor = descriptor with
+            {
+                Pinned = true,
+                Enabled = file.TryGet($"{section.Path}:enabled", out var value) && bool.TryParse(value, out var on) && on,
+                Environments = FileEnvironments(file, section.Path),
+            };
+        }
+
         var enabled = descriptor.ValueIn(_environment.EnvironmentName);
         var today = DateOnly.FromDateTime(_timeProvider.GetUtcNow().UtcDateTime);
 
@@ -97,7 +109,7 @@ public sealed class ConfigurationFeatureCatalog : IFeatureCatalog
         {
             Descriptor = descriptor,
             Enabled = enabled,
-            Source = SourceOf(section, descriptor),
+            Source = descriptor.Pinned ? FeatureValueSource.Pinned : SourceOf(section, descriptor),
             Expired = descriptor.IsExpired(today),
         };
     }
@@ -114,6 +126,30 @@ public sealed class ConfigurationFeatureCatalog : IFeatureCatalog
             return ProviderFor(environmentPath) ?? FeatureValueSource.Environment;
 
         return ProviderFor($"{section.Path}:enabled") ?? FeatureValueSource.Default;
+    }
+
+    /// <summary>The provider of the shared feature file, found by its file name among the layers.</summary>
+    private IConfigurationProvider? FeatureFile() =>
+        (_configuration as IConfigurationRoot)?.Providers
+            .OfType<FileConfigurationProvider>()
+            .LastOrDefault(provider => string.Equals(
+                Path.GetFileName(provider.Source.Path),
+                FeatureConfigurationExtensions.FileName,
+                StringComparison.OrdinalIgnoreCase));
+
+    private static bool IsPinned(IConfigurationProvider file, string sectionPath) =>
+        file.TryGet($"{sectionPath}:pinned", out var value) && bool.TryParse(value, out var pinned) && pinned;
+
+    private static IReadOnlyDictionary<string, bool> FileEnvironments(IConfigurationProvider file, string sectionPath)
+    {
+        var path = $"{sectionPath}:environments";
+        return file.GetChildKeys([], path)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Where(environment => file.TryGet($"{path}:{environment}", out _))
+            .ToDictionary(
+                environment => environment,
+                environment => file.TryGet($"{path}:{environment}", out var value) && bool.TryParse(value, out var on) && on,
+                StringComparer.OrdinalIgnoreCase);
     }
 
     private FeatureValueSource? ProviderFor(string path)

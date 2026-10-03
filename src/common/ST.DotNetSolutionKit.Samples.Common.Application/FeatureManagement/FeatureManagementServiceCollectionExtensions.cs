@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
@@ -39,6 +40,7 @@ public static class FeatureManagementServiceCollectionExtensions
 
         services.TryAddSingleton(storeOptions);
         services.TryAddSingleton<IFeatureStore, FileFeatureStore>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, PinnedFeaturesAnnouncer>());
 
         return services;
     }

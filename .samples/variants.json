@@ -1,0 +1,27 @@
+[
+  {
+    "branch": "single",
+    "about": "One service with the defaults: PostgreSQL, Hangfire, docker compose files, and CI.",
+    "generate": [
+      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true"
+    ]
+  },
+  {
+    "branch": "gateway",
+    "about": "Two services behind a YARP gateway that validates the token and forwards the user.",
+    "generate": [
+      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true",
+      "-N ST -P DotNetSolutionKit.Samples -S Billing",
+      "-N ST -P DotNetSolutionKit.Samples -S Gateway --ApiGateway true"
+    ]
+  },
+  {
+    "branch": "full",
+    "about": "Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse; two services.",
+    "generate": [
+      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true",
+      "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true"
+    ],
+    "default": true
+  }
+]

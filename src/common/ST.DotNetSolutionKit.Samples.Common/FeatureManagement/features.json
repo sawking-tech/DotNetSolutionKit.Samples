@@ -4,6 +4,7 @@
   "Features": {
     "sample.feature": {
       "enabled": false,
+      "pinned": false,
       "effect": "enables",
       "environments": {
         "Development": true

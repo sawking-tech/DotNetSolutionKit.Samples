@@ -135,11 +135,79 @@ public class SecretsConfigurationTests
         store.ReadPaths.ShouldHaveSingleItem().ShouldBe(Shared);
     }
 
+    // --- the snapshot: the values last read, answering when the store cannot be reached ------------------
+
+    [Test]
+    public void A_snapshot_is_kept_of_what_the_store_answered()
+    {
+        var snapshot = SnapshotPath();
+
+        var configuration = Build(Store("Host=prod-db"), snapshotPath: snapshot);
+
+        configuration[SecretsConfigurationProvider.LoadedFromKey].ShouldBe("store");
+        File.Exists(snapshot).ShouldBeTrue();
+        File.ReadAllText(snapshot).ShouldContain("Host=prod-db");
+    }
+
+    [Test]
+    public void An_unreachable_store_is_answered_from_its_snapshot()
+    {
+        var snapshot = SnapshotPath();
+        Build(Store("Host=prod-db"), snapshotPath: snapshot);
+
+        var configuration = Build(new UnreachableStore(), snapshotPath: snapshot);
+
+        configuration["ConnectionStrings:DefaultConnection"].ShouldBe("Host=prod-db",
+            "the service starts on the values it last read instead of not starting");
+        configuration[SecretsConfigurationProvider.LoadedFromKey]!.ShouldStartWith("snapshot");
+    }
+
+    [Test]
+    public void An_unreachable_store_without_a_snapshot_still_stops_the_service()
+    {
+        var start = () => Build(new UnreachableStore(), snapshotPath: SnapshotPath());
+
+        Should.Throw<ConfigurationException>(start);
+    }
+
+    [Test]
+    public void The_snapshot_is_readable_by_its_owner_alone()
+    {
+        if (OperatingSystem.IsWindows())
+            Assert.Ignore("Unix file modes; checked on the Linux CI.");
+
+        var snapshot = SnapshotPath();
+        Build(Store("Host=prod-db"), snapshotPath: snapshot);
+
+        File.GetUnixFileMode(snapshot).ShouldBe(UnixFileMode.UserRead | UnixFileMode.UserWrite,
+            "it holds the secrets themselves");
+    }
+
+    [Test]
+    public void A_snapshot_that_cannot_be_written_does_not_stop_the_service_and_is_reported()
+    {
+        // A directory where the file should be: the write fails the way a read-only volume would.
+        var snapshot = SnapshotPath();
+        Directory.CreateDirectory(snapshot);
+
+        var configuration = Build(Store("Host=prod-db"), snapshotPath: snapshot);
+
+        configuration["ConnectionStrings:DefaultConnection"].ShouldBe("Host=prod-db");
+        configuration[SecretsConfigurationProvider.SnapshotErrorKey].ShouldNotBeNullOrEmpty();
+    }
+
+    private static FakeStore Store(string connection) =>
+        new((Shared, new Dictionary<string, string> { ["ConnectionStrings__DefaultConnection"] = connection }));
+
+    private static string SnapshotPath() =>
+        Path.Combine(Directory.CreateTempSubdirectory("snapshot-").FullName, "secrets.snapshot.json");
+
     private static IConfiguration Build(
         ISecretStore store,
         bool configured = true,
         bool optional = false,
-        string servicePath = Service)
+        string servicePath = Service,
+        string? snapshotPath = null)
     {
         var builder = new ConfigurationBuilder();
 
@@ -151,6 +219,7 @@ public class SecretsConfigurationTests
                 ["Infisical:EnvironmentSlug"] = "prod",
                 ["Infisical:ClientId"] = "id",
                 ["Infisical:ClientSecret"] = "secret",
+                ["Infisical:SnapshotPath"] = snapshotPath,
             });
         }
 

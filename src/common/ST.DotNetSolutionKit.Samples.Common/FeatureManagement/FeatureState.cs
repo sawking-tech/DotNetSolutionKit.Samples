@@ -55,4 +55,7 @@ public enum FeatureValueSource
 
     /// <summary>An environment variable, which outranks the file and is easy to forget having set.</summary>
     EnvironmentVariable = 4,
+
+    /// <summary>The shared file, pinned there over every other layer.</summary>
+    Pinned = 5,
 }

@@ -16,7 +16,7 @@ public static class Postgres
     {
         var value = Environment.GetEnvironmentVariable(Variable);
         if (string.IsNullOrWhiteSpace(value))
-            Assert.Ignore($"{Variable} is not set: no PostgreSQL to run integration tests against.");
+            TestSkip.Because($"{Variable} is not set: no PostgreSQL to run integration tests against.");
         return value!;
     }
 }

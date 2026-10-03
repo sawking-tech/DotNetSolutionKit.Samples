@@ -68,6 +68,19 @@ public sealed class InfisicalOptions
     public bool Enabled { get; set; } = true;
 
     /// <summary>
+    /// A file the values read from the store are copied to, and read from when the store cannot be
+    /// reached. Empty, the default: no copy is kept.
+    /// </summary>
+    /// <remarks>
+    /// The copy holds the secrets themselves, so it is off unless whoever runs the service turns it on,
+    /// and then belongs on a volume only the service can read; it is written readable by its owner alone.
+    /// Its use is an outage of the store: the service starts on the values it last read, instead of not
+    /// starting at all. On a filesystem that does not outlive the container the copy is gone with it, and
+    /// so is the point.
+    /// </remarks>
+    public string SnapshotPath { get; set; } = string.Empty;
+
+    /// <summary>
     /// Whether enough is configured to read anything at all.
     /// </summary>
     public bool IsConfigured =>
