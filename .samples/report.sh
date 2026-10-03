@@ -6,7 +6,8 @@
 #
 # reports/<version>.json keeps every run of the branch generated from that version (a release tag, or the
 # template's commit for nightly) and the branch's files; reports/<version>.md is the same for a reader.
-# The site reads the JSON. Needs gh with access to the run, its log and its coverage artifact.
+# reports/index.json lists the reports with their last run: the site reads it from raw.githubusercontent.com,
+# which cannot list a folder. Needs gh with access to the run, its log and its coverage artifact.
 set -euo pipefail
 
 run="$1"
@@ -52,4 +53,6 @@ mv "$work/report.json" "$file"
     echo
     echo "$(jq '.files | length' "$file") files in the branch; the list is in [$version.json]($version.json)."
 } > "reports/$version.md"
+jq -s 'map(select(.runs | length > 0) | {version, file: "\(.version).json", runs: (.runs | length), last: (.runs[-1] | {conclusion, started, tests, coverage, seconds})})
+    | sort_by(.last.started) | reverse' $(ls reports/*.json | grep -v '/index.json$') > reports/index.json
 echo "$file: $(jq -c '.runs[-1] | {conclusion, tests, coverage, seconds}' "$file")"
