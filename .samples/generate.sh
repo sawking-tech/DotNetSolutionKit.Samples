@@ -83,7 +83,7 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
         echo "When there is one, every release branch is generated again from it and pushed, and its CI runs."
         echo "nightly follows master instead: it is generated again when master has moved, and may be red."
         echo "After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's"
-        echo "reports/ folder: tests, coverage, time and the branch's files, one file per release."
+        echo "reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release."
         echo "The automation is in [.samples](.samples)."
     } >> README.md
 fi

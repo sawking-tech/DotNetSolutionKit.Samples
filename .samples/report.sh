@@ -4,10 +4,12 @@
 #
 #   ./report.sh <run id>
 #
-# reports/<version>.json keeps every run of the branch generated from that version (a release tag, or the
-# template's commit for nightly) and the branch's files; reports/<version>.md is the same for a reader.
-# reports/index.json lists the reports with their last run: the site reads it from raw.githubusercontent.com,
-# which cannot list a folder. Needs gh with access to the run, its log and its coverage artifact.
+# The reports live in reports/<branch>/, so two branches merged together keep each other's reports.
+# reports/<branch>/<version>.json keeps every run of the branch generated from that version (a release tag,
+# or the template's commit for nightly) and the branch's files; <version>.md is the same for a reader.
+# reports/<branch>/index.json lists the reports with their last run: the site reads it from
+# raw.githubusercontent.com, which cannot list a folder. Reports an earlier run left directly in reports/
+# are moved into the branch's folder. Needs gh with access to the run, its log and its coverage artifact.
 set -euo pipefail
 
 run="$1"
@@ -34,8 +36,13 @@ entry=$(jq -c --argjson tests "$tests" --argjson coverage "$coverage" '{
     seconds: ((.updated_at | fromdateiso8601) - (.run_started_at | fromdateiso8601)),
     tests: $tests, coverage: $coverage }' "$work/run.json")
 
-mkdir -p reports
-file="reports/$version.json"
+dir="reports/$branch"
+mkdir -p "$dir"
+for old in reports/*.json reports/*.md; do
+    [ -f "$old" ] || continue
+    if [ "$(basename "$old")" = index.json ]; then git rm -q "$old"; else git mv "$old" "$dir/"; fi
+done
+file="$dir/$version.json"
 [ -f "$file" ] || echo '{"runs": []}' > "$file"
 git ls-files | grep -v '^reports/' > "$work/files"
 jq --arg branch "$branch" --arg version "$version" --argjson entry "$entry" --rawfile files "$work/files" '
@@ -52,7 +59,7 @@ mv "$work/report.json" "$file"
     jq -r '.runs[] | "| [\(.run)](\(.url)) | \(.started) | \(.conclusion) | \(.tests.passed) / \(.tests.total) | \(.coverage.line // "-")% | \(.coverage.branch // "-")% |"' "$file"
     echo
     echo "$(jq '.files | length' "$file") files in the branch; the list is in [$version.json]($version.json)."
-} > "reports/$version.md"
+} > "$dir/$version.md"
 jq -s 'map(select(.runs | length > 0) | {version, file: "\(.version).json", runs: (.runs | length), last: (.runs[-1] | {conclusion, started, tests, coverage, seconds})})
-    | sort_by(.last.started) | reverse' $(ls reports/*.json | grep -v '/index.json$') > reports/index.json
+    | sort_by(.last.started) | reverse' $(ls "$dir"/*.json | grep -v '/index.json$') > "$dir/index.json"
 echo "$file: $(jq -c '.runs[-1] | {conclusion, tests, coverage, seconds}' "$file")"
