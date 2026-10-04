@@ -1,16 +1,21 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using ST.DotNetSolutionKit.Samples.Common.Domain.Specifications;
 using LinqSpecs;
+using ST.DotNetSolutionKit.Samples.Common.Domain.Specifications;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Specifications;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
 
 /// <summary>
-/// In-memory stub for ICaseInsensitiveSearch.
-/// Replicates PostgresCaseInsensitiveSearch behavior: PreparePattern + ILIKE-to-Regex conversion.
+/// The in-memory stand-in for <see cref="PostgresCaseInsensitiveSearch"/>: the same escaped pattern, matched
+/// the way PostgreSQL's <c>ILIKE</c> matches it.
 /// </summary>
+/// <remarks>
+/// The pattern comes from <see cref="PostgresCaseInsensitiveSearch.EscapeAndWrapPattern"/> itself, so the
+/// tests on the in-memory database see what the database would: a term with spaces around it keeps them,
+/// and a change in the escaping reaches the tests too.
+/// </remarks>
 public sealed class InMemoryCaseInsensitiveSearch : ICaseInsensitiveSearch
 {
     private static readonly MethodInfo IsMatchMethod =
@@ -21,88 +26,28 @@ public sealed class InMemoryCaseInsensitiveSearch : ICaseInsensitiveSearch
             [typeof(string), typeof(string), typeof(RegexOptions)],
             null)!;
 
+    private static readonly MethodInfo AnyMethod = typeof(Enumerable).GetMethods()
+        .First(m => m.Name == nameof(Enumerable.Any) && m.GetParameters().Length == 2)
+        .MakeGenericMethod(typeof(string));
+
     public Specification<T> GetSpecification<T>(Expression<Func<T, string>> propertyExpression, string? pattern)
     {
-        if (string.IsNullOrEmpty(pattern))
-            return new AdHocSpecification<T>(_ => true);
-
-        var regexPattern = ILikeToRegex(PreparePattern(pattern));
-        var parameter = propertyExpression.Parameters[0];
-
-        var call = Expression.Call(IsMatchMethod,
-            propertyExpression.Body,
-            Expression.Constant(regexPattern),
-            Expression.Constant(RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
-
-        return new AdHocSpecification<T>(Expression.Lambda<Func<T, bool>>(call, parameter));
+        var match = Match(propertyExpression.Body, pattern);
+        return new AdHocSpecification<T>(Expression.Lambda<Func<T, bool>>(match, propertyExpression.Parameters[0]));
     }
 
     public Specification<T> GetArraySpecification<T>(Expression<Func<T, string[]>> arrayPropertyExpression, string? pattern)
     {
-        if (string.IsNullOrEmpty(pattern))
-            return new AdHocSpecification<T>(_ => true);
-
-        var regexPattern = ILikeToRegex(PreparePattern(pattern));
-        var parameter = arrayPropertyExpression.Parameters[0];
-
-        var itemParam = Expression.Parameter(typeof(string), "s");
-        var itemCall = Expression.Call(IsMatchMethod,
-            itemParam,
-            Expression.Constant(regexPattern),
-            Expression.Constant(RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
-        var itemLambda = Expression.Lambda<Func<string, bool>>(itemCall, itemParam);
-
-        var anyMethod = typeof(Enumerable).GetMethods()
-            .First(m => m.Name == nameof(Enumerable.Any) && m.GetParameters().Length == 2)
-            .MakeGenericMethod(typeof(string));
-
-        var anyCall = Expression.Call(null, anyMethod, arrayPropertyExpression.Body, itemLambda);
-        return new AdHocSpecification<T>(Expression.Lambda<Func<T, bool>>(anyCall, parameter));
+        var item = Expression.Parameter(typeof(string), "s");
+        var itemMatch = Expression.Lambda<Func<string, bool>>(Match(item, pattern), item);
+        var any = Expression.Call(null, AnyMethod, arrayPropertyExpression.Body, itemMatch);
+        return new AdHocSpecification<T>(Expression.Lambda<Func<T, bool>>(any, arrayPropertyExpression.Parameters[0]));
     }
 
-    /// <summary>
-    /// Mirrors PostgresCaseInsensitiveSearch.EscapeAndWrapPattern:
-    /// escapes '/', '%', '_' using '/' as escape char, wraps with %.
-    /// </summary>
-    private static string PreparePattern(string term)
-        => $"%{term.Trim().Replace("/", "//").Replace("%", "/%").Replace("_", "/_")}%";
-
-    /// <summary>
-    /// Converts a PostgreSQL ILIKE pattern (with '/' as escape char) to a .NET Regex pattern.
-    /// '/' followed by next char → literal char (Regex.Escaped)
-    /// '%' → .*
-    /// '_' → .
-    /// other → Regex.Escape(char)
-    /// </summary>
-    private static string ILikeToRegex(string iLikePattern)
-    {
-        var sb = new StringBuilder("^");
-        var i = 0;
-        while (i < iLikePattern.Length)
-        {
-            var c = iLikePattern[i];
-            if (c == '/' && i + 1 < iLikePattern.Length)
-            {
-                sb.Append(Regex.Escape(iLikePattern[i + 1].ToString()));
-                i += 2;
-            }
-            else if (c == '%')
-            {
-                sb.Append(".*");
-                i++;
-            }
-            else if (c == '_')
-            {
-                sb.Append('.');
-                i++;
-            }
-            else
-            {
-                sb.Append(Regex.Escape(c.ToString()));
-                i++;
-            }
-        }
-        sb.Append('$');
-        return sb.ToString();
-    }
+    // Singleline: % in ILIKE runs across line breaks, and so must .* here.
+    private static MethodCallExpression Match(Expression value, string? pattern) =>
+        Expression.Call(IsMatchMethod,
+            value,
+            Expression.Constant(LikePattern.ToRegex(PostgresCaseInsensitiveSearch.EscapeAndWrapPattern(pattern), '/')),
+            Expression.Constant(RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Singleline));
 }

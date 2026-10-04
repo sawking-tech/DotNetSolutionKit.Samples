@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <!-- The template version this service was generated from; Directory.Build.props checks its major -->
+        <DotNetSolutionKitServiceVersion>source</DotNetSolutionKitServiceVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>

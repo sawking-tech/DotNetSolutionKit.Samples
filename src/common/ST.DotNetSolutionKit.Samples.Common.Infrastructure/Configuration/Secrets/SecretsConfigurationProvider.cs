@@ -13,21 +13,30 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration.Secre
 /// <c>ConnectionStrings__DefaultConnection</c> becomes <c>ConnectionStrings:DefaultConnection</c> -
 /// which is the same spelling environment variables already use.
 /// </remarks>
-public sealed class SecretsConfigurationProvider : ConfigurationProvider
+public sealed class SecretsConfigurationProvider : ConfigurationProvider, IDisposable
 {
     /// <summary>
     /// Where this run's values came from: <c>store</c>, or <c>snapshot</c> with the time the snapshot was
     /// written. Read at startup to warn that a service runs on a copy.
     /// </summary>
-    public const string LoadedFromKey = "Infisical:LoadedFrom";
+    public const string LoadedFromKey = "Secrets:LoadedFrom";
 
     /// <summary>Why the snapshot could not be written, when it could not; read at startup to warn.</summary>
-    public const string SnapshotErrorKey = "Infisical:SnapshotError";
+    public const string SnapshotErrorKey = "Secrets:SnapshotError";
 
-    private readonly InfisicalOptions _options;
+    /// <summary>
+    /// When and why the last reload could not read the store; the service keeps the values it had.
+    /// </summary>
+    public const string ReloadErrorKey = "Secrets:ReloadError";
+
+    private static readonly string[] StatusKeys = [LoadedFromKey, SnapshotErrorKey, ReloadErrorKey];
+
+    private readonly SecretStoreOptions _options;
     private readonly ISecretStore _store;
+    private Timer? _reloadTimer;
+    private int _reloading;
 
-    public SecretsConfigurationProvider(InfisicalOptions options, ISecretStore store)
+    public SecretsConfigurationProvider(SecretStoreOptions options, ISecretStore store)
     {
         _options = options;
         _store = store;
@@ -38,6 +47,83 @@ public sealed class SecretsConfigurationProvider : ConfigurationProvider
         // Configuration is built synchronously, before the host exists. Blocking here is deliberate: a
         // service must not reach its first request before it knows whether it has its secrets.
         LoadAsync().GetAwaiter().GetResult();
+        StartReloading();
+    }
+
+    /// <summary>
+    /// Reads the store every <see cref="SecretStoreOptions.ReloadSeconds"/>, so a value changed there reaches
+    /// the running service: whatever reads it through <c>IOptionsMonitor</c> or <c>IReloadable</c> sees the
+    /// new value, and what was built from it at startup keeps the old one until a restart.
+    /// </summary>
+    private void StartReloading()
+    {
+        if (_reloadTimer is not null || !_options.IsConfigured || _options.ReloadSeconds <= 0)
+            return;
+
+        var period = TimeSpan.FromSeconds(_options.ReloadSeconds);
+        _reloadTimer = new Timer(_ => _ = ReloadAsync(), null, period, period);
+    }
+
+    /// <summary>
+    /// One reload: new values replace the old and raise the change token; a store that does not answer
+    /// leaves the values as they are and says so in <see cref="ReloadErrorKey"/>.
+    /// </summary>
+    internal async Task ReloadAsync()
+    {
+        // A slow store must not stack reloads on top of each other.
+        if (Interlocked.Exchange(ref _reloading, 1) == 1)
+            return;
+
+        try
+        {
+            Dictionary<string, string?> loaded;
+            try
+            {
+                loaded = await ReadStoreAsync();
+            }
+            catch (ConfigurationException exception)
+            {
+                Data = new Dictionary<string, string?>(Data, StringComparer.OrdinalIgnoreCase)
+                {
+                    [ReloadErrorKey] = $"{DateTime.UtcNow:yyyy-MM-dd HH:mm} UTC: {exception.Message}",
+                };
+                return;
+            }
+
+            var changed = !SameValues(loaded, Data);
+            KeepSnapshot(loaded);
+            loaded[LoadedFromKey] = "store";
+            Data = loaded;
+            if (changed)
+                RaiseReload();
+        }
+        finally
+        {
+            Volatile.Write(ref _reloading, 0);
+        }
+    }
+
+    public void Dispose() => _reloadTimer?.Dispose();
+
+    // A listener that throws, such as options whose new value fails validation, must not stop the reloads
+    // that come after: the values are already in, and the next change raises the token again.
+    private void RaiseReload()
+    {
+        try
+        {
+            OnReload();
+        }
+        catch (Exception)
+        {
+        }
+    }
+
+    private static bool SameValues(IDictionary<string, string?> next, IDictionary<string, string?> current)
+    {
+        var values = current.Where(pair => !StatusKeys.Contains(pair.Key, StringComparer.OrdinalIgnoreCase)).ToList();
+        var nextValues = next.Where(pair => !StatusKeys.Contains(pair.Key, StringComparer.OrdinalIgnoreCase)).ToList();
+        return values.Count == nextValues.Count
+               && nextValues.All(pair => current.TryGetValue(pair.Key, out var value) && value == pair.Value);
     }
 
     private async Task LoadAsync()
@@ -54,17 +140,10 @@ public sealed class SecretsConfigurationProvider : ConfigurationProvider
             return;
         }
 
-        var loaded = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
-
+        Dictionary<string, string?> loaded;
         try
         {
-            foreach (var path in PathsToRead())
-            {
-                foreach (var (key, value) in await _store.ReadAsync(path))
-                {
-                    loaded[ToConfigurationKey(key)] = value;
-                }
-            }
+            loaded = await ReadStoreAsync();
         }
         catch (ConfigurationException)
         {
@@ -83,8 +162,29 @@ public sealed class SecretsConfigurationProvider : ConfigurationProvider
             throw;
         }
 
-        // A snapshot that cannot be written does not stop the service, which has its values; the reason is
-        // kept for the startup warning, so a missing snapshot is found now rather than during an outage.
+        KeepSnapshot(loaded);
+        loaded[LoadedFromKey] = "store";
+        Data = loaded;
+    }
+
+    private async Task<Dictionary<string, string?>> ReadStoreAsync()
+    {
+        var loaded = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+        foreach (var path in PathsToRead())
+        {
+            foreach (var (key, value) in await _store.ReadAsync(path))
+            {
+                loaded[ToConfigurationKey(key)] = value;
+            }
+        }
+
+        return loaded;
+    }
+
+    // A snapshot that cannot be written does not stop the service, which has its values; the reason is kept
+    // for the startup warning, so a missing snapshot is found now rather than during an outage.
+    private void KeepSnapshot(Dictionary<string, string?> loaded)
+    {
         try
         {
             WriteSnapshot(loaded);
@@ -93,9 +193,6 @@ public sealed class SecretsConfigurationProvider : ConfigurationProvider
         {
             loaded[SnapshotErrorKey] = exception.Message;
         }
-
-        loaded[LoadedFromKey] = "store";
-        Data = loaded;
     }
 
     private void WriteSnapshot(Dictionary<string, string?> values)
@@ -158,15 +255,15 @@ public sealed class SecretsConfigurationProvider : ConfigurationProvider
 /// </summary>
 public sealed class SecretsConfigurationSource : IConfigurationSource
 {
-    private readonly InfisicalOptions _options;
-    private readonly Func<InfisicalOptions, ISecretStore> _storeFactory;
+    private readonly SecretStoreOptions _options;
+    private readonly Func<ISecretStore> _storeFactory;
 
-    public SecretsConfigurationSource(InfisicalOptions options, Func<InfisicalOptions, ISecretStore>? storeFactory = null)
+    public SecretsConfigurationSource(SecretStoreOptions options, Func<ISecretStore> storeFactory)
     {
         _options = options;
-        _storeFactory = storeFactory ?? (o => new InfisicalSecretStore(o));
+        _storeFactory = storeFactory;
     }
 
     public IConfigurationProvider Build(IConfigurationBuilder builder) =>
-        new SecretsConfigurationProvider(_options, _storeFactory(_options));
+        new SecretsConfigurationProvider(_options, _storeFactory());
 }

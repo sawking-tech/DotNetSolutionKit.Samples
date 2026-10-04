@@ -230,7 +230,8 @@ public static class DependencyInjection
     {
         bus.AddEntityFrameworkOutbox<TDbContext>(outbox =>
         {
-            // NOTE: Change to UseSqlServer() if switching database provider
+            // The lock statements of the outbox's database. The template's own sources keep both, and
+            // PostgreSQL, the default, is set last.
             outbox.UsePostgres();
             outbox.UseBusOutbox();
             outbox.DuplicateDetectionWindow = TimeSpan.FromSeconds(30);

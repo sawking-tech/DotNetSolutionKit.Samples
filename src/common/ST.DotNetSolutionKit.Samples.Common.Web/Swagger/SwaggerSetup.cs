@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
+using ST.DotNetSolutionKit.Samples.Common.Web.Gateway;
 using ST.DotNetSolutionKit.Samples.Common.Web.Pagination;
 using ST.DotNetSolutionKit.Samples.Common.Web.Swagger.Filters;
 
@@ -142,6 +143,10 @@ public static class SwaggerSetup
             var versions = ApiVersionHelper.DiscoverAllVersions(serviceAssembly);
             foreach (var version in versions)
                 c.SwaggerEndpoint($"/swagger/{version}/swagger.json", $"{displayName} - {version.ToUpper()}");
+
+            // The gateway lists the documents of the services behind it too (Gateway/GatewaySwagger).
+            foreach (var document in app.Services.GetServices<ServiceSwaggerDocument>())
+                c.SwaggerEndpoint(document.Url, document.Name);
 
             c.ConfigObject.AdditionalItems["persistAuthorization"] = true;
             c.DisplayOperationId();

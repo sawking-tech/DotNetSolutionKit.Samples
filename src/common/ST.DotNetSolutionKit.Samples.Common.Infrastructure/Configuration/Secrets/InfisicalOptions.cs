@@ -1,14 +1,9 @@
 namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration.Secrets;
 
 /// <summary>
-/// Where a service reads its secrets from.
+/// Infisical as the secret store: the <c>Infisical</c> section.
 /// </summary>
-/// <remarks>
-/// The credentials themselves come from the environment, never from a file in the repository: the whole
-/// point of the secret store is that the repository does not contain the values, and a repository holding
-/// the key to the store would only move the problem one step.
-/// </remarks>
-public sealed class InfisicalOptions
+public sealed class InfisicalOptions : SecretStoreOptions
 {
     public const string SectionName = "Infisical";
 
@@ -27,19 +22,8 @@ public sealed class InfisicalOptions
     /// </summary>
     public string EnvironmentSlug { get; set; } = string.Empty;
 
-    /// <summary>
-    /// The folder holding this service's own secrets, for example <c>/auth</c>.
-    /// </summary>
-    /// <remarks>
-    /// Read after the shared folder, so a service can override a shared value without the shared value
-    /// having to know which services exist.
-    /// </remarks>
-    public string ServicePath { get; set; } = string.Empty;
-
-    /// <summary>
-    /// The folder holding secrets every service needs.
-    /// </summary>
-    public string SharedPath { get; set; } = "/";
+    /// <inheritdoc />
+    public override string SharedPath { get; set; } = "/";
 
     /// <summary>
     /// Machine identity client id. Supplied through the environment.
@@ -51,39 +35,8 @@ public sealed class InfisicalOptions
     /// </summary>
     public string ClientSecret { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Whether a service may start when the store cannot be read.
-    /// </summary>
-    /// <remarks>
-    /// False everywhere it matters: a service that starts without its secrets does not fail, it
-    /// misbehaves - connecting to nothing, signing with an empty key - and the cause surfaces far from
-    /// here. It is left configurable only so a developer can run locally without the store.
-    /// </remarks>
-    public bool Optional { get; set; }
-
-    /// <summary>
-    /// Whether the store is read at all. Off, the service takes every value from its files and
-    /// environment: for a service generated with the store and run before one exists.
-    /// </summary>
-    public bool Enabled { get; set; } = true;
-
-    /// <summary>
-    /// A file the values read from the store are copied to, and read from when the store cannot be
-    /// reached. Empty, the default: no copy is kept.
-    /// </summary>
-    /// <remarks>
-    /// The copy holds the secrets themselves, so it is off unless whoever runs the service turns it on,
-    /// and then belongs on a volume only the service can read; it is written readable by its owner alone.
-    /// Its use is an outage of the store: the service starts on the values it last read, instead of not
-    /// starting at all. On a filesystem that does not outlive the container the copy is gone with it, and
-    /// so is the point.
-    /// </remarks>
-    public string SnapshotPath { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Whether enough is configured to read anything at all.
-    /// </summary>
-    public bool IsConfigured =>
+    /// <inheritdoc />
+    public override bool IsConfigured =>
         !string.IsNullOrWhiteSpace(ProjectId)
         && !string.IsNullOrWhiteSpace(EnvironmentSlug)
         && !string.IsNullOrWhiteSpace(ClientId)

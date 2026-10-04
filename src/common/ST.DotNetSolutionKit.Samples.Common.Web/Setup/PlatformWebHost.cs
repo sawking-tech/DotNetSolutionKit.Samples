@@ -46,12 +46,13 @@ public static class PlatformWebHost
         // Errors are RFC 9457 problems with a correlation identifier; see Common.Web/Errors.
         builder.Services.AddPlatformErrorHandling(builder.Environment);
 
-        // Every action marked [RequiredPermissions] is checked; the permissions come from the token
-        // unless the service registers its own IPermissionService.
+        // Every action marked [RequiredPermissions] is checked; the permissions come from the token, or
+        // from a separate service with Permissions:Source = remote, unless the service registers its own
+        // IPermissionService.
         var mvc = builder.Services.AddControllers(options => options.Filters.Add<PermissionAuthorizationFilter>());
         configureMvc?.Invoke(mvc);
         builder.Services.AddHttpContextAccessor();
-        builder.Services.TryAddScoped<IPermissionService, ClaimsPermissionService>();
+        builder.Services.AddPlatformPermissions(builder.Configuration);
 
         builder.Services.AddValidation(serviceAssembly);
         builder.SetupSwaggerPage(serviceAssembly);

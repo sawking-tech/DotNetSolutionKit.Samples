@@ -2,7 +2,7 @@
 
 The flags of full, generated from the template's master once a day when it has moved. A red CI here is a break in master before a release.
 
-Generated from DotNetSolutionKit master at [10aeed4](https://github.com/sawking-tech/DotNetSolutionKit/commit/10aeed48216ee512effa47f57d53afa22f537983), not a release, with:
+Generated from DotNetSolutionKit master at [7017c78](https://github.com/sawking-tech/DotNetSolutionKit/commit/7017c78caf68d4b09312dadc88bcbf79e0ae8208), not a release, with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true
