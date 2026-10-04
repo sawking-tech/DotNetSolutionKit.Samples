@@ -21,9 +21,9 @@ jobs:
   report:
     # A pull request's CI reports nothing: only what lands on a sample branch does.
     if: github.event.workflow_run.event != 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: automation
 

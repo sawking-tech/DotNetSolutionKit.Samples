@@ -29,13 +29,13 @@ env:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       tag: ${{ steps.release.outputs.tag }}
       regenerate: ${{ steps.release.outputs.regenerate }}
       branches: ${{ steps.release.outputs.branches }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - id: release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -67,17 +67,17 @@ jobs:
   regenerate:
     needs: check
     if: needs.check.outputs.regenerate == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         include: ${{ fromJSON(needs.check.outputs.branches) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: automation
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 8.0.x
 
@@ -114,9 +114,9 @@ jobs:
   keep-alive:
     needs: check
     if: needs.check.outputs.regenerate != 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - env:
           DEPLOY_KEY: ${{ secrets.SAMPLES_DEPLOY_KEY }}
         run: |
