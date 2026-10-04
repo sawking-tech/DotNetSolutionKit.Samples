@@ -25,6 +25,7 @@ public static class DomainEventsTestExtensions
         this IServiceCollection services,
         params Type[] handlerTypes)
     {
+        DomainEventHandlerPhases.ThrowIfOneHandleServesTwoPhases(handlerTypes);
         services.AddDomainEventCore().AddDomainEventPersistence();
 
         foreach (var handlerType in handlerTypes)

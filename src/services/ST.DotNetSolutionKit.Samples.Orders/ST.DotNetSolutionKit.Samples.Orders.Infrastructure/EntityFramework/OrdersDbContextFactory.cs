@@ -11,7 +11,7 @@ public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContex
 {
     private const string PlaceholderConnectionString = "Host=localhost;Database=design-time-placeholder";
 
-    private static DbContextOptions<OrdersDbContext> GetNpgsqlOptions(string connectionString)
+    private static DbContextOptions<OrdersDbContext> GetOptions(string connectionString)
     {
         return new DbContextOptionsBuilder<OrdersDbContext>()
             .UseNpgsql(connectionString,
@@ -76,6 +76,6 @@ public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContex
         var target = new NpgsqlConnectionStringBuilder(connectionString);
         Console.WriteLine($"Database: {target.Host}:{target.Port}/{target.Database} as {target.Username ?? "(no user)"}");
 
-        return new OrdersDbContext(GetNpgsqlOptions(connectionString));
+        return new OrdersDbContext(GetOptions(connectionString));
     }
 }
