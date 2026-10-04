@@ -37,10 +37,11 @@
     "branch": "preview",
     "ref": "master",
     "onDemand": true,
-    "about": "The flags of full, generated on demand from a branch of the template under review: its pull request merges only when this CI is green too.",
+    "about": "The flags of full and a gateway in front, generated on demand from a branch of the template under review: its pull request merges only when this CI is green too.",
     "generate": [
       "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true",
-      "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true"
+      "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true",
+      "-N ST -P DotNetSolutionKit.Samples -S Gateway --ApiGateway true"
     ]
   }
 ]
