@@ -2,7 +2,7 @@
 
 Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse; two services.
 
-Generated from [DotNetSolutionKit v2.6.1](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.6.1) with:
+Generated from [DotNetSolutionKit v2.6.2](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.6.2) with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true
@@ -24,5 +24,5 @@ Once a day [regenerate](.github/workflows/regenerate.yml) checks for a new relea
 When there is one, every release branch is generated again from it and pushed, and its CI runs.
 nightly follows master instead: it is generated again when master has moved, and may be red.
 After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's
-reports/ folder: tests, coverage, time and the branch's files, one file per release.
+reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release.
 The automation is in [.samples](.samples).
