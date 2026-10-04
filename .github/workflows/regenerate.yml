@@ -1,8 +1,9 @@
 name: Regenerate
 
-# Once a day, checks for a new release of the template. When there is one, every release branch is replaced
-# by a fresh generation from it; the commits between releases never reach them. A branch with a "ref" in
-# variants.json (nightly) follows that branch of the template instead and is replaced when it has moved.
+# Once a day, checks the template's master: whatever reaches master is a release, tagged by its release.yml.
+# When master carries a release these samples are not generated from yet, every release branch is replaced
+# by a fresh generation from that tag. A branch with a "ref" in variants.json (nightly, on dev) follows that
+# branch of the template instead and is replaced when it has moved.
 #
 # The branches carry workflow files, which GITHUB_TOKEN may not push, and a push by GITHUB_TOKEN starts no
 # workflows. The push uses SAMPLES_DEPLOY_KEY, a deploy key of this repository with write access: it does
@@ -41,9 +42,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           FORCE: ${{ inputs.force }}
         run: |
-          tag=$(gh release view -R "$TEMPLATE_REPO" --json tagName -q .tagName)
+          # The release is the tag on master's last commit. None there yet: release.yml is still publishing it,
+          # and the release branches wait for the next check.
+          master=$(gh api "repos/$TEMPLATE_REPO/commits/master" -q .sha)
+          tag=$(gh api "repos/$TEMPLATE_REPO/tags" --paginate -q ".[] | select(.commit.sha == \"$master\") | .name" | head -1)
           here=$(cat template-version 2>/dev/null || echo none)
-          echo "latest release $tag, release samples from $here"
+          echo "master ${master:0:7} is release ${tag:-(not tagged yet)}, release samples from $here"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           todo='[]'
           for row in $(jq -c '.[] | {branch, ref}' .samples/variants.json); do
@@ -54,6 +58,7 @@ jobs:
               have=$(gh api "repos/$GITHUB_REPOSITORY/contents/template-version?ref=$branch" -q .content 2>/dev/null | base64 -d || echo none)
               from="$ref"
             else
+              [ -n "$tag" ] || { echo "$branch: waits for master to be tagged"; continue; }
               want="$tag"; have="$here"; from="$tag"
             fi
             echo "$branch: $have -> $want"
