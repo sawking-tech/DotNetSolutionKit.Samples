@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+#
 #
 # Builds an image for every service, or for the services named:
 #

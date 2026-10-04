@@ -3,7 +3,6 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Domain;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
-using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +32,12 @@ public class DomainEventPreSaveInterceptorCascadeTests
             new AddsChildPreSaveHandler(preSaveCalls));
         ctx.Services.AddScoped<IDomainPreSaveHandler<ChildCreatedEvent>>(_ =>
             new RecordingPreSaveHandler<ChildCreatedEvent>(preSaveCalls));
+        var postCommitCalls = new List<string>();
+        ctx.Services.AddScoped<IDomainPostCommitHandler<RootCreatedEvent>>(_ =>
+            new RecordingPostCommitHandler<RootCreatedEvent>(postCommitCalls));
+        ctx.Services.AddScoped<IDomainPostCommitHandler<ChildCreatedEvent>>(_ =>
+            new RecordingPostCommitHandler<ChildCreatedEvent>(postCommitCalls));
 
-        IDomainEventStorage? capturedStorage = null;
         IServiceProvider? scopeSp = null;
         await ctx.ExecuteAsync<TestDbContext>(
             async db =>
@@ -43,17 +46,14 @@ public class DomainEventPreSaveInterceptorCascadeTests
                 {
                     db.Roots.Add(new RootEntity());
                     await db.SaveChangesAsync();
-                    capturedStorage = scopeSp!.GetRequiredService<IDomainEventStorage>();
                 }
             },
             configure: sp => scopeSp = sp);
 
-        // Both events should be in storage so PostCommit phase sees them - the bug was that
-        // ChildCreatedEvent stayed on the entity and never reached storage.
-        capturedStorage.ShouldNotBeNull();
-        var stored = capturedStorage.GetEvents().Select(e => e.GetType().Name).ToList();
-        stored.ShouldContain(nameof(RootCreatedEvent));
-        stored.ShouldContain(nameof(ChildCreatedEvent));
+        // Both events reach the post-commit phase - the bug was that ChildCreatedEvent stayed on the
+        // entity and never reached storage, so nothing after the save saw it.
+        postCommitCalls.ShouldContain(nameof(RootCreatedEvent));
+        postCommitCalls.ShouldContain(nameof(ChildCreatedEvent));
 
         // PreSave handlers should have fired for both events.
         preSaveCalls.ShouldContain(nameof(RootCreatedEvent));
@@ -150,6 +150,16 @@ public class DomainEventPreSaveInterceptorCascadeTests
     }
 
     private sealed class RecordingPreSaveHandler<T>(List<string> calls) : IDomainPreSaveHandler<T>
+        where T : IDomainEvent
+    {
+        public Task Handle(T @event, CancellationToken ct, object? data = null)
+        {
+            calls.Add(typeof(T).Name);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class RecordingPostCommitHandler<T>(List<string> calls) : IDomainPostCommitHandler<T>
         where T : IDomainEvent
     {
         public Task Handle(T @event, CancellationToken ct, object? data = null)

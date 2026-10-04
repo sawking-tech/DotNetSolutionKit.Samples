@@ -4,11 +4,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
+using ST.DotNetSolutionKit.Samples.Common.Web.Gateway;
 using ST.DotNetSolutionKit.Samples.Common.Web.Pagination;
 using ST.DotNetSolutionKit.Samples.Common.Web.Swagger.Filters;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Web.Swagger;
 
@@ -28,6 +31,10 @@ public static class SwaggerSetup
         Assembly serviceAssembly)
     {
         builder.Services.AddEndpointsApiExplorer();
+
+        // Swagger:PublicServers and Swagger:ScrubPatterns, checked at startup.
+        builder.Services.AddValidatedOptions<ISwaggerSettings, SwaggerSettings>(SwaggerSettings.SectionName);
+        builder.Services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerServers>();
 
         builder.Services.AddSwaggerGen(options =>
         {
@@ -105,6 +112,7 @@ public static class SwaggerSetup
             options.OperationFilter<PaginationOperationFilter>();
             options.SchemaFilter<SchemaValuesFromFilter>();
             options.DocumentFilter<VersionedDocumentFilter>();
+            options.DocumentFilter<ScrubDescriptionsFilter>();
 
             var xmlFile = $"{serviceAssembly.GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -142,6 +150,10 @@ public static class SwaggerSetup
             var versions = ApiVersionHelper.DiscoverAllVersions(serviceAssembly);
             foreach (var version in versions)
                 c.SwaggerEndpoint($"/swagger/{version}/swagger.json", $"{displayName} - {version.ToUpper()}");
+
+            // The gateway lists the documents of the services behind it too (Gateway/GatewaySwagger).
+            foreach (var document in app.Services.GetServices<ServiceSwaggerDocument>())
+                c.SwaggerEndpoint(document.Url, document.Name);
 
             c.ConfigObject.AdditionalItems["persistAuthorization"] = true;
             c.DisplayOperationId();

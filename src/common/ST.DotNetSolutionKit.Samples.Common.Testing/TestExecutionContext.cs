@@ -222,43 +222,10 @@ public class ServiceDbTestExecutionContext<TService, TDbContext> : DbTestExecuti
 {
     public ServiceDbTestExecutionContext() => Services.AddScoped<TService>();
 
-    public Task ActAsync(Func<TService, Task> act, Action<IServiceProvider>? configure = null) =>
-        ExecuteAsync(act, configure);
-
-    public Task<TResult> ActAsync<TResult>(Func<TService, Task<TResult>> act, Action<IServiceProvider>? configure = null) =>
-        ExecuteAsync(act, configure);
-
-    public TResult Act<TResult>(Func<TService, TResult> act, Action<IServiceProvider>? configure = null) =>
-        Execute(act, configure);
-
-    public void Act(Action<TService> act, Action<IServiceProvider>? configure = null) =>
-        Execute(act, configure);
-}
-
-/// <summary>
-/// InMemory variant for unit tests.
-/// Automatically sets <see cref="DomainEventScopeContext"/> per ActAsync call when domain event
-/// interceptors are registered — this allows <see cref="DomainEventInfrastructureResolver"/>
-/// to resolve scoped storage/dispatcher from within singleton EF interceptors.
-/// Without this, interceptors silently skip domain events (no HTTP context, no ambient scope).
-/// </summary>
-public class InMemoryTestExecutionContext<TService, TDbContext> : ServiceDbTestExecutionContext<TService, TDbContext>
-    where TService : class
-    where TDbContext : DbContext
-{
-    public InMemoryTestExecutionContext() =>
-        Services.AddDbContext<TDbContext>((sp, options) =>
-        {
-            options.UseInMemoryDatabase($"TestDb_{Guid.NewGuid():N}");
-            options.ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
-            if (sp.GetService<DomainEventPreSaveInterceptor>() != null)
-                options.ApplyDomainEventInterceptors(sp);
-        });
-
-    public override Task EnsureDatabaseCreatedAsync() => Task.CompletedTask;
-    public override Task EnsureDatabaseDeletedAsync() => Task.CompletedTask;
-
-    public new Task ActAsync(Func<TService, Task> act, Action<IServiceProvider>? configure = null)
+    // The act publishes its scope as the ambient one, so the singleton EF interceptors find the scoped event
+    // storage and dispatcher of this act (DomainEventInfrastructureResolver); without it they skip the
+    // events, as there is no HTTP context in a test. The same for every provider.
+    public Task ActAsync(Func<TService, Task> act, Action<IServiceProvider>? configure = null)
     {
         IServiceProvider? scopeSp = null;
         return ExecuteAsync<TService>(
@@ -274,7 +241,7 @@ public class InMemoryTestExecutionContext<TService, TDbContext> : ServiceDbTestE
             });
     }
 
-    public new Task<TResult> ActAsync<TResult>(Func<TService, Task<TResult>> act, Action<IServiceProvider>? configure = null)
+    public Task<TResult> ActAsync<TResult>(Func<TService, Task<TResult>> act, Action<IServiceProvider>? configure = null)
     {
         IServiceProvider? scopeSp = null;
         return ExecuteAsync<TService, TResult>(
@@ -289,4 +256,37 @@ public class InMemoryTestExecutionContext<TService, TDbContext> : ServiceDbTestE
                 configure?.Invoke(sp);
             });
     }
+
+    public TResult Act<TResult>(Func<TService, TResult> act, Action<IServiceProvider>? configure = null) =>
+        Execute(act, configure);
+
+    public void Act(Action<TService> act, Action<IServiceProvider>? configure = null) =>
+        Execute(act, configure);
+}
+
+/// <summary>
+/// InMemory variant for unit tests: one database per test, and the domain event interceptors applied when
+/// the test registers domain events; ActAsync publishes its scope to them, as on every provider.
+/// </summary>
+public class InMemoryTestExecutionContext<TService, TDbContext> : ServiceDbTestExecutionContext<TService, TDbContext>
+    where TService : class
+    where TDbContext : DbContext
+{
+    public InMemoryTestExecutionContext()
+    {
+        // The name is taken once, for the test: the options are built per scope, and a name taken inside
+        // the callback would give every scope a database of its own - an arrange the act cannot see, an
+        // act the assert cannot see.
+        var database = $"TestDb_{Guid.NewGuid():N}";
+        Services.AddDbContext<TDbContext>((sp, options) =>
+        {
+            options.UseInMemoryDatabase(database);
+            options.ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+            if (sp.GetService<DomainEventPreSaveInterceptor>() != null)
+                options.ApplyDomainEventInterceptors(sp);
+        });
+    }
+
+    public override Task EnsureDatabaseCreatedAsync() => Task.CompletedTask;
+    public override Task EnsureDatabaseDeletedAsync() => Task.CompletedTask;
 }

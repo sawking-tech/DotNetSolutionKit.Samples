@@ -49,6 +49,13 @@ internal class CaseInsensitiveSearchTests
     public void Should_MatchWildcardsLiterally(string term, string expected) =>
         Search(term).ShouldBe([expected]);
 
+    [Test(Description = "Spaces around the term are part of it, as in ILIKE: trimming is the caller's")]
+    public void Should_KeepTheSpacesAroundTheTerm()
+    {
+        Search("smith ").ShouldBeEmpty();
+        Search(" smith").ShouldBe(["Anna Smith"]);
+    }
+
     [Test(Description = "A wildcard in the term does not widen the match")]
     public void Should_NotTreatAWildcardAsAWildcard() =>
         Search("a%s").ShouldBeEmpty();
@@ -66,6 +73,7 @@ internal class CaseInsensitiveSearchTests
     [TestCase("a_b", "%a/_b%", TestName = "An underscore is escaped")]
     [TestCase("a/b", "%a//b%", TestName = "The escape character is escaped")]
     [TestCase("", "%", TestName = "An empty term matches everything")]
+    [TestCase(" a ", "% a %", TestName = "Spaces around the term are kept")]
     public void Should_EscapeThePatternForIlike(string term, string expected)
     {
         var expression = new PostgresCaseInsensitiveSearch().GetSpecification<Customer>(c => c.Name, term).ToExpression();

@@ -23,6 +23,7 @@ internal class ServiceContainerTests
         ["Database__Enabled"] = "false",
         ["RabbitMq__Enabled"] = "false",
         ["Infisical__Enabled"] = "false",
+        ["Vault__Enabled"] = "false",
         ["S3__Enabled"] = "false",
         ["ClickHouse__Enabled"] = "false",
     };

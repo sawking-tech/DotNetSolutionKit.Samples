@@ -1,10 +1,12 @@
+// Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
 using System.Reflection;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Web.Authentication;
 using ST.DotNetSolutionKit.Samples.Common.Web.Gateway;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+using ST.DotNetSolutionKit.Samples.Gateway.API.Setup;
 using Serilog;
-using Yarp.ReverseProxy.Transforms;
 
 // The gateway: the one public entry point. It validates the caller's token, routes the request to a
 // service (ReverseProxy in appsettings.json) and tells the service who the caller is - headers the
@@ -27,21 +29,20 @@ try
     builder.SetupGatewayAuthentication();
     builder.Services.AddAuthorization();
 
+    // The services' Swagger documents on the gateway's page, listed by their /swagger/<cluster>/ routes and
+    // cut to the paths the gateway's routes reach.
+    builder.Services.AddGatewaySwagger(builder.Configuration.GetSection("ReverseProxy"));
+
     builder.Services.AddReverseProxy()
         .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
-        .AddTransforms(context => context.AddRequestTransform(transform =>
-        {
-            var internalApiKey = transform.HttpContext.RequestServices
-                .GetRequiredService<IInternalApiConfiguration>().ApiKey;
-            GatewayForwarding.ForwardUser(transform.ProxyRequest.Headers, transform.HttpContext.User, internalApiKey);
-            return ValueTask.CompletedTask;
-        }));
+        .AddGatewayTransforms();
 
     var app = builder.Build();
 
     // A token that failed validation stops here; no token goes on, and the service decides whether
     // its endpoint is public.
     app.UsePlatformPipeline(typeof(Program).Assembly, beforeEndpoints: pipeline => pipeline.UseRejectInvalidCredentials());
+    app.MapGatewaySwagger(builder.Configuration.GetSection("ReverseProxy"));
     app.MapReverseProxy();
 
     app.Run();

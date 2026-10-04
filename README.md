@@ -2,7 +2,9 @@
 
 Two services behind a YARP gateway that validates the token and forwards the user.
 
-Generated from [DotNetSolutionKit v2.6.2](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.6.2) with:
+[![CI of gateway by day](reports/gateway/ci.svg)](https://dnsk.sawking.tech/samples.html#gateway)
+
+Generated from [DotNetSolutionKit v2.7.0](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.7.0) with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true

@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Common.Web", "..\..\common\ST.DotNetSolutionKit.Samples.Common.Web\ST.DotNetSolutionKit.Samples.Common.Web.csproj", "{67E0EB86-55EE-48AE-A394-BFDB6B2A7FCA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Gateway.Tests", "ST.DotNetSolutionKit.Samples.Gateway.Tests\ST.DotNetSolutionKit.Samples.Gateway.Tests.csproj", "{2835B21B-4178-4275-94EF-1BA9908B379B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,18 @@ Global
 		{67E0EB86-55EE-48AE-A394-BFDB6B2A7FCA}.Release|x64.Build.0 = Release|Any CPU
 		{67E0EB86-55EE-48AE-A394-BFDB6B2A7FCA}.Release|x86.ActiveCfg = Release|Any CPU
 		{67E0EB86-55EE-48AE-A394-BFDB6B2A7FCA}.Release|x86.Build.0 = Release|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Debug|x64.Build.0 = Debug|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Debug|x86.Build.0 = Debug|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Release|x64.ActiveCfg = Release|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Release|x64.Build.0 = Release|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Release|x86.ActiveCfg = Release|Any CPU
+		{2835B21B-4178-4275-94EF-1BA9908B379B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

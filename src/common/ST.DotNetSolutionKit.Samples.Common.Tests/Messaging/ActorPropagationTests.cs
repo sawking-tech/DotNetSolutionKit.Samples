@@ -1,5 +1,6 @@
 ﻿using ST.DotNetSolutionKit.Samples.Common.Application.Tracing;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -222,7 +223,8 @@ public class ActorPropagationTests
 
         public void Set(string key, object? value, bool overwrite = true) => values[key] = value;
 
-        public bool TryGetHeader(string key, out object? value) => values.TryGetValue(key, out value);
+        public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value) =>
+            values.TryGetValue(key, out value) && value is not null;
 
         public IEnumerable<KeyValuePair<string, object>> GetAll() =>
             values.Where(p => p.Value is not null)

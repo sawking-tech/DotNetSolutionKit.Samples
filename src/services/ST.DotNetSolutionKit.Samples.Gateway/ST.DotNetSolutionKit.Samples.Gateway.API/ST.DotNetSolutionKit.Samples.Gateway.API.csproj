@@ -2,11 +2,15 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <!-- The template version this service was generated from; Directory.Build.props checks its major -->
+        <DotNetSolutionKitServiceVersion>2.7.0</DotNetSolutionKitServiceVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
+        <!-- No API contract of its own: scripts/generate-api-schemas.sh passes it by. -->
+        <IsApiGateway>true</IsApiGateway>
     </PropertyGroup>
 
     <ItemGroup>
