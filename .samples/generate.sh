@@ -45,6 +45,10 @@ about=$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .about' "$here/va
     echo
     echo "$about"
     echo
+    # The report of the branch's CI draws it after each run; a branch generated for the first time shows it
+    # from its first run on.
+    echo "[![CI of $branch by day](reports/$branch/ci.svg)](https://dnsk.sawking.tech/samples.html#$branch)"
+    echo
     if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .ref // empty' "$here/variants.json")" ]; then
         echo "Generated from DotNetSolutionKit $tag at [${commit:0:7}](https://github.com/$template_repo/commit/$commit), not a release, with:"
     else
@@ -68,7 +72,7 @@ done
 
 if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false' "$here/variants.json")" = "true" ]; then
     mkdir -p .samples .github/workflows
-    cp "$here/generate.sh" "$here/report.sh" "$here/variants.json" .samples/
+    cp "$here/generate.sh" "$here/report.sh" "$here/ci-svg.py" "$here/variants.json" .samples/
     cp "$here/../.github/workflows/regenerate.yml" "$here/../.github/workflows/report.yml" .github/workflows/
     {
         echo
@@ -79,11 +83,16 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
         repo="https://github.com/${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
         jq -r --arg r "$repo" '.[] | "| [`\(.branch)`](\($r)/tree/\(.branch)) | \(.about) | [![CI](\($r)/actions/workflows/ci.yml/badge.svg?branch=\(.branch))](\($r)/actions/workflows/ci.yml?query=branch%3A\(.branch)) |"' "$here/variants.json"
         echo
+        echo "The CI of each branch by day, as [the samples page](https://dnsk.sawking.tech/samples.html) shows it:"
+        echo
+        raw="https://raw.githubusercontent.com/${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
+        jq -r --arg raw "$raw" '.[] | "[![CI of \(.branch) by day](\($raw)/\(.branch)/reports/\(.branch)/ci.svg)](https://dnsk.sawking.tech/samples.html#\(.branch))\n"' "$here/variants.json"
         echo "Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches"
         echo "master is a release, and every release branch is generated again from a new one, pushed, and its CI runs."
         echo "nightly follows dev instead, where the next release is built: it is generated again when dev has moved."
         echo "After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's"
-        echo "reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release."
+        echo "reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release, and"
+        echo "ci.svg, the picture of its days above."
         echo "The automation is in [.samples](.samples)."
     } >> README.md
 fi
