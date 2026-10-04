@@ -1,5 +1,25 @@
 [
   {
+    "version": "v2.6.2",
+    "file": "v2.6.2.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T05:12:21Z",
+      "tests": {
+        "failed": 0,
+        "passed": 281,
+        "skipped": 0,
+        "total": 281
+      },
+      "coverage": {
+        "line": 62.2,
+        "branch": 61.8
+      },
+      "seconds": 74
+    }
+  },
+  {
     "version": "v2.6.1",
     "file": "v2.6.1.json",
     "runs": 2,
