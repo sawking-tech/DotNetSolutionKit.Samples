@@ -20,6 +20,10 @@ on:
         description: Regenerate even when the latest release is already here
         type: boolean
         default: false
+      ref:
+        description: A branch of the template to generate the preview branch from, for a pull request under review; empty for the daily check
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -40,13 +44,21 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           FORCE: ${{ inputs.force }}
+          PREVIEW_REF: ${{ inputs.ref }}
         run: |
+          # A pull request of the template under review: only the preview branch, from its branch.
+          if [ -n "$PREVIEW_REF" ]; then
+            echo "tag=$PREVIEW_REF" >> "$GITHUB_OUTPUT"
+            echo "branches=$(jq -cn --arg f "$PREVIEW_REF" '[{branch: "preview", from: $f}]')" >> "$GITHUB_OUTPUT"
+            echo "regenerate=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           tag=$(gh release view -R "$TEMPLATE_REPO" --json tagName -q .tagName)
           here=$(cat template-version 2>/dev/null || echo none)
           echo "latest release $tag, release samples from $here"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           todo='[]'
-          for row in $(jq -c '.[] | {branch, ref}' .samples/variants.json); do
+          for row in $(jq -c '.[] | select(.onDemand != true) | {branch, ref}' .samples/variants.json); do
             branch=$(jq -r .branch <<< "$row"); ref=$(jq -r '.ref // empty' <<< "$row")
             if [ -n "$ref" ]; then
               # A branch of the template: regenerated when that branch has moved.
