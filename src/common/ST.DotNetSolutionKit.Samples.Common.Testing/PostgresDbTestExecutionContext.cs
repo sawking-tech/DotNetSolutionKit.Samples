@@ -3,6 +3,7 @@
 using System.Collections.Concurrent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using Npgsql;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests;
@@ -188,7 +189,13 @@ public abstract class PostgresIntegrationTestBase<TService, TDbContext>
         _testDbName   = testDbName;
         _testConnStr  = testConnStr;
 
-        Services.AddDbContext<TDbContext>(opts => opts.UseNpgsql(testConnStr));
+        // Domain events run as in the service once the test registers them, as on the in-memory context.
+        Services.AddDbContext<TDbContext>((sp, opts) =>
+        {
+            opts.UseNpgsql(testConnStr);
+            if (sp.GetService<DomainEventPreSaveInterceptor>() != null)
+                opts.ApplyDomainEventInterceptors(sp);
+        });
         configure?.Invoke(Services);
     }
 

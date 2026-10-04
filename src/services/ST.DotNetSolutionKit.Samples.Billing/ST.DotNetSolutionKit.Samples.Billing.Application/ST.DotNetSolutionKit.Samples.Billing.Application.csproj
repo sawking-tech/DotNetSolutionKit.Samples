@@ -8,6 +8,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing\ST.DotNetSolutionKit.Samples.Billing.csproj" />
     </ItemGroup>
 

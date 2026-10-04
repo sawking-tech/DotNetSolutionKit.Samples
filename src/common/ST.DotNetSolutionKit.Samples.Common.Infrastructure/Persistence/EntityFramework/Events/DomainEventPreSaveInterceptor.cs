@@ -93,4 +93,28 @@ public sealed class DomainEventPreSaveInterceptor : SaveChangesInterceptor
 
         return await base.SavingChangesAsync(data, result, ct);
     }
+
+    /// <summary>
+    /// A save with no transaction open around it is final when it returns: EF Core sends a single statement
+    /// without a transaction, so no transaction event would ever start the post-commit phase.
+    /// </summary>
+    public override async ValueTask<int> SavedChangesAsync(
+        SaveChangesCompletedEventData eventData, int result, CancellationToken ct = default)
+    {
+        if (eventData.Context is { } context && DomainEventCompletion.SavesOnItsOwn(context))
+            await DomainEventCompletion.CommittedAsync(context, ct);
+
+        return await base.SavedChangesAsync(eventData, result, ct);
+    }
+
+    /// <summary>
+    /// A failed save with no transaction open around it is final too: nothing was written.
+    /// </summary>
+    public override async Task SaveChangesFailedAsync(DbContextErrorEventData eventData, CancellationToken ct = default)
+    {
+        if (eventData.Context is { } context && DomainEventCompletion.SavesOnItsOwn(context))
+            await DomainEventCompletion.RolledBackAsync(context, ct);
+
+        await base.SaveChangesFailedAsync(eventData, ct);
+    }
 }

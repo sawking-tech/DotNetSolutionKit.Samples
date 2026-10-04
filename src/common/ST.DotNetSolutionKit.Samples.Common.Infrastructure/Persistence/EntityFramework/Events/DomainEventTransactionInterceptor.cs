@@ -15,74 +15,27 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
 public sealed class DomainEventTransactionInterceptor : DbTransactionInterceptor
 {
     public override async Task TransactionCommittedAsync(
-        DbTransaction transaction, 
-        TransactionEndEventData eventData, 
+        DbTransaction transaction,
+        TransactionEndEventData eventData,
         CancellationToken ct = default)
     {
-        var context = eventData.Context;
-        
-        // Resolve infrastructure. Skip if in Root Provider or outside of a valid Scope.
-        if (context is null || !DomainEventInfrastructureResolver.TryResolve(context, out var storage, out var dispatcher))
-        {
-            await base.TransactionCommittedAsync(transaction, eventData, ct);
-            return;
-        }
-
-        // Snapshot + IsDispatching guard (the recursion protection the pipeline Readme promises):
-        // a PostCommit handler that commits its own transaction on another DbContext in the SAME
-        // scope re-enters this interceptor and resolves the SAME scoped storage. Without the guard
-        // the nested commit re-dispatches the outer events and Clear()s the live list the outer
-        // dispatch is still iterating (GetEvents returns a view, not a copy).
-        var events = storage.GetEvents().ToList();
-        if (events.Count > 0 && !storage.IsDispatching)
-        {
-            storage.IsDispatching = true;
-            try
-            {
-                // PHASE 2: Post-Commit (side effects after successful DB commit).
-                await dispatcher.DispatchPostCommitAsync(events, ct);
-            }
-            finally
-            {
-                // Ensure storage is cleared even if dispatch fails to prevent event duplication.
-                storage.IsDispatching = false;
-                storage.Clear();
-            }
-        }
+        // PHASE 2: Post-Commit. The snapshot and the IsDispatching guard live in DomainEventCompletion:
+        // a PostCommit handler that commits its own transaction on another DbContext in the SAME scope
+        // re-enters here and must neither re-dispatch the outer events nor clear them mid-flight.
+        if (eventData.Context is { } context)
+            await DomainEventCompletion.CommittedAsync(context, ct);
 
         await base.TransactionCommittedAsync(transaction, eventData, ct);
     }
 
     public override async Task TransactionRolledBackAsync(
-        DbTransaction transaction, 
-        TransactionEndEventData eventData, 
+        DbTransaction transaction,
+        TransactionEndEventData eventData,
         CancellationToken ct = default)
     {
-        var context = eventData.Context;
-
-        if (context is null || !DomainEventInfrastructureResolver.TryResolve(context, out var storage, out var dispatcher))
-        {
-            await base.TransactionRolledBackAsync(transaction, eventData, ct);
-            return;
-        }
-
-        // Same snapshot + reentrancy guard as the commit side - a rollback of a nested
-        // same-scope transaction must not re-dispatch or clear the outer events mid-flight.
-        var events = storage.GetEvents().ToList();
-        if (events.Count > 0 && !storage.IsDispatching)
-        {
-            storage.IsDispatching = true;
-            try
-            {
-                // PHASE 3: Rollback (notifying subscribers about failure with the captured exception).
-                await dispatcher.DispatchRollbackAsync(events, storage.LastException, ct);
-            }
-            finally
-            {
-                storage.IsDispatching = false;
-                storage.Clear();
-            }
-        }
+        // PHASE 3: Rollback, with the exception the pre-save phase captured.
+        if (eventData.Context is { } context)
+            await DomainEventCompletion.RolledBackAsync(context, ct);
 
         await base.TransactionRolledBackAsync(transaction, eventData, ct);
     }

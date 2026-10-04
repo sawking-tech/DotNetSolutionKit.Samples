@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -9,8 +8,7 @@ namespace ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
 public static class FeatureManagementServiceCollectionExtensions
 {
     /// <summary>
-    /// Registers the platform's feature flags: the catalogue, the store, and the library that
-    /// evaluates them.
+    /// Registers the platform's feature flags: the catalogue and the library that evaluates them.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -19,14 +17,12 @@ public static class FeatureManagementServiceCollectionExtensions
     /// <c>FeatureKeys</c> for a flag its own code reads.
     /// </para>
     /// <para>
-    /// After this, three things work: <c>IFeatureCatalog</c> for the platform view with owners,
-    /// expiry and value sources; <c>IFeatureManager</c> and <c>[FeatureGate]</c> from the library for
-    /// evaluation; and <c>IFeatureStore</c> for changing a value.
+    /// After this, two things work: <c>IFeatureCatalog</c> for the platform view with owners, expiry
+    /// and value sources; <c>IFeatureManager</c> and <c>[FeatureGate]</c> from the library for
+    /// evaluation.
     /// </para>
     /// </remarks>
-    public static IServiceCollection AddPlatformFeatureManagement(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddPlatformFeatureManagement(this IServiceCollection services)
     {
         services.TryAddSingleton<IFeatureCatalog, ConfigurationFeatureCatalog>();
 
@@ -35,11 +31,6 @@ public static class FeatureManagementServiceCollectionExtensions
         services.TryAddSingleton<IFeatureDefinitionProvider, CatalogFeatureDefinitionProvider>();
         services.AddFeatureManagement();
 
-        var storeOptions = configuration.GetSection(FeatureStoreOptions.SectionName).Get<FeatureStoreOptions>()
-            ?? new FeatureStoreOptions();
-
-        services.TryAddSingleton(storeOptions);
-        services.TryAddSingleton<IFeatureStore, FileFeatureStore>();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, PinnedFeaturesAnnouncer>());
 
         return services;

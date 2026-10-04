@@ -1,8 +1,8 @@
 namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration.Secrets;
 
 /// <summary>
-/// What every secret store shares: which folders a service reads, whether it may start without them, and
-/// the copy kept for an outage. Each store adds where it lives and how a service signs in.
+/// What every secret store shares: which folders a service reads and whether it may start without them.
+/// Each store adds where it lives and how a service signs in.
 /// </summary>
 /// <remarks>
 /// The credentials themselves come from the environment, never from a file in the repository: the whole
@@ -40,19 +40,6 @@ public abstract class SecretStoreOptions
     /// environment: for a service generated with the store and run before one exists.
     /// </summary>
     public bool Enabled { get; set; } = true;
-
-    /// <summary>
-    /// A file the values read from the store are copied to, and read from when the store cannot be
-    /// reached. Empty, the default: no copy is kept.
-    /// </summary>
-    /// <remarks>
-    /// The copy holds the secrets themselves, so it is off unless whoever runs the service turns it on,
-    /// and then belongs on a volume only the service can read; it is written readable by its owner alone.
-    /// Its use is an outage of the store: the service starts on the values it last read, instead of not
-    /// starting at all. On a filesystem that does not outlive the container the copy is gone with it, and
-    /// so is the point.
-    /// </remarks>
-    public string SnapshotPath { get; set; } = string.Empty;
 
     /// <summary>
     /// How often a running service reads the store again, in seconds; 0 reads it at startup only.

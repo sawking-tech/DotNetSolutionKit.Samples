@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 
@@ -16,20 +15,11 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration.Secre
 public sealed class SecretsConfigurationProvider : ConfigurationProvider, IDisposable
 {
     /// <summary>
-    /// Where this run's values came from: <c>store</c>, or <c>snapshot</c> with the time the snapshot was
-    /// written. Read at startup to warn that a service runs on a copy.
-    /// </summary>
-    public const string LoadedFromKey = "Secrets:LoadedFrom";
-
-    /// <summary>Why the snapshot could not be written, when it could not; read at startup to warn.</summary>
-    public const string SnapshotErrorKey = "Secrets:SnapshotError";
-
-    /// <summary>
     /// When and why the last reload could not read the store; the service keeps the values it had.
     /// </summary>
     public const string ReloadErrorKey = "Secrets:ReloadError";
 
-    private static readonly string[] StatusKeys = [LoadedFromKey, SnapshotErrorKey, ReloadErrorKey];
+    private static readonly string[] StatusKeys = [ReloadErrorKey];
 
     private readonly SecretStoreOptions _options;
     private readonly ISecretStore _store;
@@ -91,8 +81,6 @@ public sealed class SecretsConfigurationProvider : ConfigurationProvider, IDispo
             }
 
             var changed = !SameValues(loaded, Data);
-            KeepSnapshot(loaded);
-            loaded[LoadedFromKey] = "store";
             Data = loaded;
             if (changed)
                 RaiseReload();
@@ -147,23 +135,15 @@ public sealed class SecretsConfigurationProvider : ConfigurationProvider, IDispo
         }
         catch (ConfigurationException)
         {
-            // The store was configured but could not be read. The values it gave last time come first,
-            // when a snapshot was kept; without one, running without the store is allowed only where the
-            // service was told it may.
-            if (ReadSnapshot() is { } snapshot)
-            {
-                Data = snapshot;
-                return;
-            }
-
+            // The store was configured but could not be read. The secrets live there and in the memory of a
+            // running service, nowhere else, so a service that starts now has none: running without the store
+            // is allowed only where the service was told it may.
             if (_options.Optional)
                 return;
 
             throw;
         }
 
-        KeepSnapshot(loaded);
-        loaded[LoadedFromKey] = "store";
         Data = loaded;
     }
 
@@ -179,52 +159,6 @@ public sealed class SecretsConfigurationProvider : ConfigurationProvider, IDispo
         }
 
         return loaded;
-    }
-
-    // A snapshot that cannot be written does not stop the service, which has its values; the reason is kept
-    // for the startup warning, so a missing snapshot is found now rather than during an outage.
-    private void KeepSnapshot(Dictionary<string, string?> loaded)
-    {
-        try
-        {
-            WriteSnapshot(loaded);
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
-        {
-            loaded[SnapshotErrorKey] = exception.Message;
-        }
-    }
-
-    private void WriteSnapshot(Dictionary<string, string?> values)
-    {
-        if (string.IsNullOrWhiteSpace(_options.SnapshotPath))
-            return;
-
-        var path = Path.GetFullPath(_options.SnapshotPath);
-        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-
-        // Written beside and moved over: a process stopped mid-write leaves the previous snapshot whole.
-        var temporary = path + ".tmp";
-        File.WriteAllText(temporary, JsonSerializer.Serialize(values));
-        if (!OperatingSystem.IsWindows())
-            File.SetUnixFileMode(temporary, UnixFileMode.UserRead | UnixFileMode.UserWrite);
-        File.Move(temporary, path, overwrite: true);
-    }
-
-    private Dictionary<string, string?>? ReadSnapshot()
-    {
-        if (string.IsNullOrWhiteSpace(_options.SnapshotPath) || !File.Exists(_options.SnapshotPath))
-            return null;
-
-        var values = JsonSerializer.Deserialize<Dictionary<string, string?>>(File.ReadAllText(_options.SnapshotPath));
-        if (values is null)
-            return null;
-
-        var snapshot = new Dictionary<string, string?>(values, StringComparer.OrdinalIgnoreCase)
-        {
-            [LoadedFromKey] = $"snapshot of {File.GetLastWriteTimeUtc(_options.SnapshotPath):yyyy-MM-dd HH:mm} UTC",
-        };
-        return snapshot;
     }
 
     private IEnumerable<string> PathsToRead()
