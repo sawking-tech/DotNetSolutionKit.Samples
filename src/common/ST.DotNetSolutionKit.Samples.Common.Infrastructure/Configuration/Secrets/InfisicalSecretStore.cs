@@ -1,3 +1,5 @@
+// Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
 using Infisical.Sdk;
 using Infisical.Sdk.Model;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;

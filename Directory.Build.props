@@ -1,4 +1,5 @@
 <Project>
+  <!-- Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin. -->
   <!--
     The version of every assembly under src/ comes from version.json next to this file.
     To release a new version, edit "version" there and add an entry under "releaseNotes".
@@ -9,6 +10,10 @@
     running container instead.
   -->
   <PropertyGroup>
+    <!-- The version of DotNetSolutionKit the solution was generated from, written when the template is packed;
+         "source" when it was installed from the template's sources. What changed since: the template's
+         release notes after this version, and its sources at the tag v<version>. -->
+    <DotNetSolutionKitVersion>source</DotNetSolutionKitVersion>
     <VersionJsonPath>$(MSBuildThisFileDirectory)version.json</VersionJsonPath>
     <_VersionJsonContent>$([System.IO.File]::ReadAllText('$(VersionJsonPath)'))</_VersionJsonContent>
     <Version>$([System.Text.RegularExpressions.Regex]::Match($(_VersionJsonContent), '&quot;version&quot;\s*:\s*&quot;([^&quot;]+)&quot;').Groups[1].Value)</Version>

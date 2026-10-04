@@ -1,3 +1,5 @@
+# Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
 name: API diff
 
 # Answers one question for a pull request: what changes in the API a caller can see?

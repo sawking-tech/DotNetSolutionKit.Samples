@@ -123,3 +123,8 @@ public static class SampleRoutes
    enforces them.
 7. XML comments on every action and parameter. They become the Swagger descriptions.
 8. Status codes match the operation: `201` for creation, `404` when a resource is looked up by id.
+
+---
+
+Part of [DotNetSolutionKit](https://dnsk.sawking.tech/), MIT License, Copyright (c) 2025 Vladimir Savkin.
+The current version of the web layer: [dnsk.sawking.tech](https://dnsk.sawking.tech/docs.html#web-layer).

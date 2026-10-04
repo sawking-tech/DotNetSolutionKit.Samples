@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+#
 #
 # Generates the API contract of every service.
 #

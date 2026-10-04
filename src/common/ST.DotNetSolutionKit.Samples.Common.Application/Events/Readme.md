@@ -164,3 +164,8 @@ options.UseNpgsql(connectionString);
 options.ApplyDomainEventInterceptors(sp);
 });
 ```
+
+---
+
+Part of [DotNetSolutionKit](https://dnsk.sawking.tech/), MIT License, Copyright (c) 2025 Vladimir Savkin.
+The current version of domain events: [dnsk.sawking.tech](https://dnsk.sawking.tech/docs.html#domain-events).

@@ -1,3 +1,5 @@
+# Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
 name: CI
 
 # Every pull request and every push to the main branch: the solution builds, the tests pass on real

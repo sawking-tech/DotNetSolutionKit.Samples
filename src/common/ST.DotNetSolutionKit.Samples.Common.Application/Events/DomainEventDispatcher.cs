@@ -1,3 +1,5 @@
+// Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
 using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
 using Microsoft.Extensions.DependencyInjection;
