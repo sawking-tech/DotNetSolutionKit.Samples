@@ -43,5 +43,15 @@
       "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true",
       "-N ST -P DotNetSolutionKit.Samples -S Gateway --ApiGateway true"
     ]
+  },
+  {
+    "branch": "preview-vault",
+    "ref": "master",
+    "onDemand": true,
+    "about": "Secrets from HashiCorp Vault instead of Infisical, with the bus, the audit journal and the API diff; generated on demand with preview, from the branch of the template under review.",
+    "generate": [
+      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Vault true --Messaging outbox --Audit true --DiffApi true",
+      "-N ST -P DotNetSolutionKit.Samples -S Billing --Vault true --Messaging outbox --Audit true --DiffApi true"
+    ]
   }
 ]
