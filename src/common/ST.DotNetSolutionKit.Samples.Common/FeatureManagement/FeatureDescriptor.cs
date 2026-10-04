@@ -33,12 +33,12 @@ public sealed record FeatureDescriptor
     public bool Enabled { get; init; }
 
     /// <summary>
-    /// Whether the value in the shared file wins over every other layer: an external store, its
-    /// snapshot, environment variables.
+    /// Whether the value in the shared file wins over every other layer: an external store and
+    /// environment variables.
     /// </summary>
     /// <remarks>
-    /// For a flag that has to change now while the store cannot be reached, or must not follow it: the
-    /// file is edited, the flag pinned, and the store is left as it is until the pin is taken off.
+    /// For a flag whose value in the store must not apply here for a while: the file is edited, the flag
+    /// pinned, and the store is left as it is until the pin is taken off.
     /// </remarks>
     public bool Pinned { get; init; }
 

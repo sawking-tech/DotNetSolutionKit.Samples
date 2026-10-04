@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0",
+  "version": "0.1.0",
   "releaseNotes": {
-    "1.0.0": {
+    "0.1.0": {
       "headline": "First version of the solution.",
       "highlights": []
     }

@@ -157,7 +157,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationS
         if (claims.All(c => c.Type != AuthClaims.UserRole))
         {
             claims.Add(new Claim(AuthClaims.UserRole, "User"));
-            _logger.LogDebug("Added default User role for internal API key user {UserId}", userIdHeader);
+            _logger.LogDebug("Added default User role for internal API key user {UserId}", userIdHeader.ToString());
         }
 
         return CreateAuthenticationTicket(claims, "InternalApiKey");

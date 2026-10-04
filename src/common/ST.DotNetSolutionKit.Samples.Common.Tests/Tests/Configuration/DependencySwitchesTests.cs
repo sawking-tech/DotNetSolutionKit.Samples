@@ -59,7 +59,7 @@ internal class DependencySwitchesTests
     }
 
     private sealed class Catalogue() : DbContext(new DbContextOptionsBuilder<Catalogue>()
-        .UseNpgsql(SwitchedOffDatabase.ConnectionString)
+        .UseSolutionDatabase(SwitchedOffDatabase.ConnectionString)
         .UseSwitchedOffDatabase()
         .Options)
     {

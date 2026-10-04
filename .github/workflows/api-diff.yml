@@ -1,3 +1,5 @@
+# Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
 name: API diff
 
 # Answers one question for a pull request: what changes in the API a caller can see?
@@ -18,15 +20,15 @@ permissions:
 jobs:
   api-diff:
     name: Diff the public API
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # The base ref has to be reachable locally: its contract is generated from a worktree.
           fetch-depth: 0
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
 
@@ -180,7 +182,7 @@ jobs:
           done
           exit $failed
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: api-changelog

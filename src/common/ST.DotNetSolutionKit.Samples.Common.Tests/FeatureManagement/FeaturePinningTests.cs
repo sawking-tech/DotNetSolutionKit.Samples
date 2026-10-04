@@ -114,7 +114,7 @@ public class FeaturePinningTests
         await new PinnedFeaturesAnnouncer(catalog, log).StartAsync(CancellationToken.None);
 
         log.Warnings.ShouldHaveSingleItem().ShouldContain($"{Key}=True",
-            customMessage: "a pin left after the outage would otherwise keep overriding the store unnoticed");
+            customMessage: "a forgotten pin would otherwise keep overriding the store unnoticed");
     }
 
     [Test]

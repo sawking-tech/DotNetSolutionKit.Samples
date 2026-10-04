@@ -110,8 +110,6 @@ public static class DependencyInjection
 
         // Data Seeding
         services.AddScoped<DataSeeder>();
-        
-        // Polly Policies
 
         return services;
     }
@@ -131,7 +129,7 @@ public static class DependencyInjection
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
             .UseSimpleAssemblyNameTypeSerializer()
             .UseRecommendedSerializerSettings()
-            .UsePostgreSqlStorage(c => 
+            .UsePostgreSqlStorage(c =>
                 c.UseNpgsqlConnection(connectionString), new PostgreSqlStorageOptions
             {
                 SchemaName = hangfireSchemaName,

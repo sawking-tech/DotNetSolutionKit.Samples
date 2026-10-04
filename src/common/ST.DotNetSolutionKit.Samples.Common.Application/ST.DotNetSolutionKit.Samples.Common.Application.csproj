@@ -18,7 +18,7 @@
         <!-- IHostEnvironment, to resolve a flag against the environment the service is running as. -->
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
         <!-- IFeatureManager, [FeatureGate] and the snapshots are already written and tested; what we add
-             is the schema, the shared file and the write path, not another evaluation engine. -->
+             is the schema, the shared file and the source reporting, not another evaluation engine. -->
         <PackageReference Include="Microsoft.FeatureManagement" />
     </ItemGroup>
 

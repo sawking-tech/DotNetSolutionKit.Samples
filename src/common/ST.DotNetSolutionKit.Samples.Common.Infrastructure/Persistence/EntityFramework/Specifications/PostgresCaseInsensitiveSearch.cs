@@ -79,7 +79,7 @@ public class PostgresCaseInsensitiveSearch : ICaseInsensitiveSearch
     /// Escapes SQL wildcard characters (_, %) and wraps the pattern for a "contains" search.
     /// Responsibility for trimming or null-checking business logic lies with the caller.
     /// </summary>
-    private static string EscapeAndWrapPattern(string? pattern)
+    public static string EscapeAndWrapPattern(string? pattern)
     {
         if (string.IsNullOrEmpty(pattern))
             return "%";

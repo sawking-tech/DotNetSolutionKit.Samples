@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+#
 #
 # Generates the API contract of every service.
 #
@@ -46,6 +48,11 @@ for csproj in src/services/*/*.API/*.API.csproj; do
     key=$(echo "$service" | tr '[:upper:]' '[:lower:]')
     log=$(mktemp)
     echo "==> $key"
+    # The gateway serves the services' documents and has none of its own to compare.
+    if grep -q "<IsApiGateway>true</IsApiGateway>" "$csproj"; then
+        echo "    a gateway: no contract of its own"
+        continue
+    fi
 
     if ! dotnet build "$csproj" --nologo -v q >"$log" 2>&1; then
         echo "build failed for $key:" >&2; cat "$log" >&2; exit 1

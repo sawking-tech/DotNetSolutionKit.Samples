@@ -41,7 +41,7 @@ public class DomainEventDispatcherTests
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains("ThrowingPostCommitHandler")
+                It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("ThrowingPostCommitHandler")
                                               && v.ToString()!.Contains("PostCommit")
                                               && v.ToString()!.Contains(nameof(TestEvent))),
                 It.IsAny<Exception>(),
@@ -62,7 +62,7 @@ public class DomainEventDispatcherTests
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains("ThrowingRollbackHandler")
+                It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("ThrowingRollbackHandler")
                                               && v.ToString()!.Contains("Rollback")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),

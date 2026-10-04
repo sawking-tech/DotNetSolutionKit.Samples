@@ -1,3 +1,5 @@
+// Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
 using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,13 +43,8 @@ public sealed class DomainEventDispatcher(
     public Task DispatchRollbackAsync(IEnumerable<IDomainEvent> events, Exception? exception, CancellationToken ct = default)
         => DispatchAsync(typeof(IDomainRollbackHandler<>), events, ct, exception);
 
-    // TODO: Known limitation - a class implementing both IDomainPreSaveHandler<T> and IDomainPostCommitHandler<T>
-    //       for the same event type will be resolved and called in BOTH phases (same Handle method twice).
-    //       DI registers it under both interfaces via .AsImplementedInterfaces().
-    //       Fix options:
-    //       a) Enforce single-phase per class at registration time (scan + guard).
-    //       b) Deduplicate resolved instances per dispatch call by checking implemented interfaces.
-    //       Until fixed: one class = one phase only.
+    // A class with one Handle for two phases of one event is refused at registration
+    // (DomainEventHandlerPhases), so a handler resolved here belongs to this phase only.
 
     /// <summary>
     /// Dispatches events to handlers matching the specific phase interface and event type.

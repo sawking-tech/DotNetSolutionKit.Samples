@@ -274,3 +274,6 @@ deploy/compose/.bluegreen/
 #ignore local files (for developers)
 *.Local.cs
 .env.local
+
+# The plans and notes of an AI agent (plan-and-iterate): working memory, never committed
+.claude/session-context/

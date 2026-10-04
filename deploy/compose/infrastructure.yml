@@ -1,4 +1,4 @@
-# What the services need from outside: PostgreSQL, and RabbitMQ when a service uses the bus.
+# What the services need from outside: the database, and RabbitMQ when a service uses the bus.
 # Started by deploy/compose/compose.sh together with every service's src/services/*/deploy/compose.yml.
 services:
   postgres:

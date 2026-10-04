@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Npgsql;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.Postgres;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 
@@ -23,20 +23,20 @@ public sealed class MigrationRunner
         var connectionString = context.Database.GetDbConnection().ConnectionString;
 
         logger.LogInformation(
-            "Acquiring Postgres advisory lock for migrations. Scope={Scope}, Key={Key}",
+            "Acquiring the migration lock. Scope={Scope}, Key={Key}",
             lockName, lockKey);
 
         var sw = Stopwatch.StartNew();
 
-        using var lockConnection = new NpgsqlConnection(connectionString);
-        lockConnection.Open();
+        var migrationLock = LockFor(context);
+        using var lockConnection = migrationLock.Connect(connectionString);
 
         try
         {
-            AcquireAdvisoryLock(lockConnection, lockKey);
+            migrationLock.Acquire(lockConnection, lockKey);
 
             logger.LogInformation(
-                "Advisory lock acquired for {Scope} after {ElapsedMs} ms. Checking schema state...",
+                "Migration lock acquired for {Scope} after {ElapsedMs} ms. Checking schema state...",
                 lockName, sw.ElapsedMilliseconds);
 
             preMigrationHook?.Invoke(context);
@@ -79,14 +79,14 @@ public sealed class MigrationRunner
         {
             try
             {
-                ReleaseAdvisoryLock(lockConnection, lockKey);
-                logger.LogInformation("Advisory lock released for {Scope}.", lockName);
+                migrationLock.Release(lockConnection, lockKey);
+                logger.LogInformation("Migration lock released for {Scope}.", lockName);
             }
             catch (Exception releaseEx)
             {
                 logger.LogError(
                     releaseEx,
-                    "Failed to release advisory lock for {Scope}, key {Key}. " +
+                    "Failed to release the migration lock for {Scope}, key {Key}. " +
                     "Lock will be auto-released when the session ends.",
                     lockName, lockKey);
             }
@@ -99,17 +99,11 @@ public sealed class MigrationRunner
         return BitConverter.ToInt64(hash, 0);
     }
 
-    private static void AcquireAdvisoryLock(NpgsqlConnection connection, long key)
+    // One provider per generated solution; the template's own sources keep every one, so each is asked in turn.
+    private static IMigrationLock LockFor(DbContext context)
     {
-        using var command = new NpgsqlCommand("SELECT pg_advisory_lock(@key)", connection);
-        command.Parameters.AddWithValue("key", key);
-        command.ExecuteNonQuery();
-    }
-
-    private static void ReleaseAdvisoryLock(NpgsqlConnection connection, long key)
-    {
-        using var command = new NpgsqlCommand("SELECT pg_advisory_unlock(@key)", connection);
-        command.Parameters.AddWithValue("key", key);
-        command.ExecuteNonQuery();
+        if (context.Database.IsNpgsql())
+            return new PostgresMigrationLock();
+        throw new InvalidOperationException($"No migration lock for the provider {context.Database.ProviderName}.");
     }
 }

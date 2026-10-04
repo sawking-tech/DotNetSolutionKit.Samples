@@ -35,8 +35,8 @@ internal class PermissionAuthorizationTests
             mvc => mvc.AddApplicationPart(typeof(PermissionAuthorizationTests).Assembly));
         builder.Services.AddHealthChecks();
         builder.Services
-            .AddAuthentication(HeaderAuthenticationHandler.Scheme)
-            .AddScheme<AuthenticationSchemeOptions, HeaderAuthenticationHandler>(HeaderAuthenticationHandler.Scheme, _ => { });
+            .AddAuthentication(HeaderAuthenticationHandler.SchemeName)
+            .AddScheme<AuthenticationSchemeOptions, HeaderAuthenticationHandler>(HeaderAuthenticationHandler.SchemeName, _ => { });
         builder.Services.AddAuthorization();
 
         _app = builder.Build();
@@ -118,7 +118,7 @@ internal class PermissionAuthorizationTests
         ILoggerFactory logger,
         UrlEncoder encoder) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
     {
-        public const string Scheme = "TestHeaders";
+        public const string SchemeName = "TestHeaders";
         public const string UserHeader = "X-Test-User";
         public const string PermissionHeader = "X-Test-Permission";
         public const string SystemHeader = "X-Test-System";
@@ -133,8 +133,8 @@ internal class PermissionAuthorizationTests
             if (Request.Headers.ContainsKey(SystemHeader))
                 claims.Add(new Claim(AuthClaims.AuthType, "System"));
 
-            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme));
-            return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(principal, Scheme)));
+            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, SchemeName));
+            return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(principal, SchemeName)));
         }
     }
 }

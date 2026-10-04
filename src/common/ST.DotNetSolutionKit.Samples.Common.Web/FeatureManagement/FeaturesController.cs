@@ -17,7 +17,11 @@ namespace ST.DotNetSolutionKit.Samples.Common.Web.FeatureManagement;
 /// <para>
 /// Reading is anonymous. Nothing here is secret — a key, a value and a sentence about what it turns
 /// on — and a client needs the list before anyone has signed in, to decide what to render on the way
-/// to the login screen. Writing is not: it changes platform behaviour and sits behind authorisation.
+/// to the login screen.
+/// </para>
+/// <para>
+/// There is no write. A flag is switched by editing the configuration it comes from - <c>features.json</c>
+/// on disk or the secret store - and services re-read it.
 /// </para>
 /// <para>
 /// There is deliberately no per-key read. A client resolves flags synchronously while rendering, so
@@ -34,7 +38,7 @@ namespace ST.DotNetSolutionKit.Samples.Common.Web.FeatureManagement;
 [ApiController]
 [Route("api/v1/features")]
 [Tags("Platform — Features")]
-public sealed class FeaturesController(IFeatureCatalog catalog, IFeatureStore store) : ControllerBase
+public sealed class FeaturesController(IFeatureCatalog catalog) : ControllerBase
 {
     /// <summary>Every declared feature with its current value, source and expiry.</summary>
     [HttpGet]
@@ -43,32 +47,6 @@ public sealed class FeaturesController(IFeatureCatalog catalog, IFeatureStore st
     public ActionResult<FeaturesResponse> Get() =>
         Ok(new FeaturesResponse { Features = catalog.GetAll() });
 
-    /// <summary>
-    /// Sets a feature's value, either as the default or for one environment.
-    /// </summary>
-    /// <remarks>
-    /// Writes to whichever store is configured. The change reaches services the way every other
-    /// configuration change does — they re-read it — so nothing here is a second source of truth.
-    /// </remarks>
-    [HttpPut("{key}")]
-    [Authorize]
-    [ProducesResponseType(typeof(FeatureState), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<FeatureState>> Set(
-        [FromRoute] string key,
-        [FromBody] SetFeatureRequest request,
-        CancellationToken cancellationToken)
-    {
-        if (catalog.Find(key) is null)
-            return NotFound();
-
-        await store.SetAsync(key, request.Enabled, request.Environment, cancellationToken);
-
-        // Read back rather than echo: the caller sees what the platform now answers, including a
-        // value still overridden by a later configuration layer.
-        return catalog.Find(key) is { } state ? Ok(state) : NotFound();
-    }
 }
 
 /// <summary>Body of <c>GET /api/v1/features</c>.</summary>
@@ -79,17 +57,4 @@ public sealed record FeaturesResponse
     /// features — not that the call failed.
     /// </summary>
     public required IReadOnlyList<FeatureState> Features { get; init; }
-}
-
-/// <summary>Body of <c>PUT /api/v1/features/{key}</c>.</summary>
-public sealed record SetFeatureRequest
-{
-    /// <summary>The value to store.</summary>
-    public required bool Enabled { get; init; }
-
-    /// <summary>
-    /// Environment the value applies to. Omit to change the default that applies wherever no
-    /// environment says otherwise.
-    /// </summary>
-    public string? Environment { get; init; }
 }
