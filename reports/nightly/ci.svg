@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="188" viewBox="0 0 900 188" role="img" aria-label="CI of nightly by day: last run 2026-10-04: passed, tests 387 / 387, coverage 65.1% lines, 63.4% branches">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="188" viewBox="0 0 900 188" role="img" aria-label="CI of nightly by day: last run 2026-10-04: passed, tests 399 / 399, coverage 65.9% lines, 64.4% branches">
 <style>text{font:11px system-ui,-apple-system,'Segoe UI',sans-serif}
 .t{font-size:13px;font-weight:600}
 .g{fill:#ffffff}
@@ -33,7 +33,7 @@
 @media (prefers-color-scheme: dark){.l0d1{fill:#3fb950}}</style>
 <rect class="g" width="900" height="188" rx="6"/>
 <text class="t x" x="34" y="20">CI of nightly by day</text>
-<text class="m" x="34" y="35">last run 2026-10-04: passed, tests 387 / 387, coverage 65.1% lines, 63.4% branches</text>
+<text class="m" x="34" y="35">last run 2026-10-04: passed, tests 399 / 399, coverage 65.9% lines, 64.4% branches</text>
 <text class="m" x="4" y="55">Mon</text>
 <text class="m" x="4" y="83">Wed</text>
 <text class="m" x="4" y="111">Fri</text>
