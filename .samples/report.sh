@@ -7,6 +7,7 @@
 # The reports live in reports/<branch>/, so two branches merged together keep each other's reports.
 # reports/<branch>/<version>.json keeps every run of the branch generated from that version (a release tag,
 # or the template's commit for nightly) and the branch's files; <version>.md is the same for a reader.
+# reports/<branch>/ci.svg draws the branch's runs by day for its README (ci-svg.py).
 # reports/<branch>/index.json lists the reports with their last run: the site reads it from
 # raw.githubusercontent.com, which cannot list a folder. Reports an earlier run left directly in reports/
 # are moved into the branch's folder. Needs gh with access to the run, its log and its coverage artifact.
@@ -62,4 +63,6 @@ mv "$work/report.json" "$file"
 } > "$dir/$version.md"
 jq -s 'map(select(.runs | length > 0) | {version, file: "\(.version).json", runs: (.runs | length), last: (.runs[-1] | {conclusion, started, tests, coverage, seconds})})
     | sort_by(.last.started) | reverse' $(ls "$dir"/*.json | grep -v '/index.json$') > "$dir/index.json"
+# The same days as a picture, for the README: GitHub shows an image there, not the site's script.
+python3 "$(dirname "$0")/ci-svg.py" "$dir" "$branch" "$dir/ci.svg"
 echo "$file: $(jq -c '.runs[-1] | {conclusion, tests, coverage, seconds}' "$file")"
