@@ -173,8 +173,12 @@ public class SecretsConfigurationTests
     [Test]
     public void The_snapshot_is_readable_by_its_owner_alone()
     {
+        // the return tells the platform analyzer what Assert.Ignore, which throws, does not
         if (OperatingSystem.IsWindows())
+        {
             Assert.Ignore("Unix file modes; checked on the Linux CI.");
+            return;
+        }
 
         var snapshot = SnapshotPath();
         Build(Store("Host=prod-db"), snapshotPath: snapshot);

@@ -18,16 +18,16 @@ permissions:
 jobs:
   build-and-test:
     name: Build and test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 8.0.x
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.props') }}
@@ -137,7 +137,7 @@ jobs:
           echo "branch coverage ${actual}%, required ${{ vars.COVERAGE_MIN_BRANCH }}%"
           awk -v a="$actual" -v m="${{ vars.COVERAGE_MIN_BRANCH }}" 'BEGIN { exit (a + 0 < m + 0) }'
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage

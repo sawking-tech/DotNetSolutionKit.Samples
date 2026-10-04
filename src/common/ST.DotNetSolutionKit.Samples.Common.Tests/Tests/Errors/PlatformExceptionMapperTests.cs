@@ -73,7 +73,7 @@ internal class PlatformExceptionMapperTests
 
         problem.Status.ShouldBe(400);
         Code(problem).ShouldBe("INVALID_SORT_FIELD");
-        problem.Detail.ShouldContain("Available: name");
+        problem.Detail.ShouldNotBeNull().ShouldContain("Available: name");
     }
 
     [Test]
@@ -101,7 +101,7 @@ internal class PlatformExceptionMapperTests
 
         problem.Status.ShouldBe(409);
         problem.Detail.ShouldBe(ErrorConstants.Messages.ConcurrencyConflict);
-        problem.Detail.ShouldNotContain("version 7");
+        problem.Detail.ShouldNotBeNull().ShouldNotContain("version 7");
     }
 
     [Test]
@@ -174,7 +174,7 @@ internal class PlatformExceptionMapperTests
         var problem = Mapper().Map(new JsonException("Unexpected token at line 3"));
 
         problem.Status.ShouldBe(400);
-        problem.Detail.ShouldContain(ErrorConstants.Messages.MalformedJson);
+        problem.Detail.ShouldNotBeNull().ShouldContain(ErrorConstants.Messages.MalformedJson);
     }
 
     [Test]
@@ -194,7 +194,7 @@ internal class PlatformExceptionMapperTests
 
         problem.Status.ShouldBe(500);
         problem.Detail.ShouldBe(ErrorConstants.Messages.InternalServerError);
-        problem.Detail.ShouldNotContain("token");
+        problem.Detail.ShouldNotBeNull().ShouldNotContain("token");
     }
 
     [Test]
@@ -204,7 +204,7 @@ internal class PlatformExceptionMapperTests
 
         problem.Status.ShouldBe(500);
         problem.Detail.ShouldBe(ErrorConstants.Messages.InternalServerError);
-        problem.Detail.ShouldNotContain("10.0.0.5");
+        problem.Detail.ShouldNotBeNull().ShouldNotContain("10.0.0.5");
     }
 
     [Test]

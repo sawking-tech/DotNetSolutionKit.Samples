@@ -139,7 +139,7 @@ public class JobActorPropagationTests
         var connection = new Mock<IStorageConnection>();
         connection
             .Setup(c => c.GetJobParameter("job-1", It.IsAny<string>()))
-            .Returns((string _, string name) => stored.GetValueOrDefault(name));
+            .Returns((string _, string name) => stored.GetValueOrDefault(name)!); // null for a missing one, as Hangfire's storages answer
 
         var job = new BackgroundJob("job-1", Job.FromExpression(() => Work()), DateTime.UtcNow, stored);
         var perform = new PerformContext(

@@ -3,7 +3,6 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Domain;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
-using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
 using Microsoft.EntityFrameworkCore;
