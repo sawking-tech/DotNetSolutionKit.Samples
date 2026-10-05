@@ -14,9 +14,8 @@ namespace ST.DotNetSolutionKit.Samples.Orders.Tests.Tests;
 /// The switches are environment variables because the service reads them after its files; they are set
 /// for the duration of the test, so the fixture does not run in parallel with others.
 /// </remarks>
-[TestFixture]
-[NonParallelizable]
-internal class ServiceContainerTests
+[RunsAlone]
+public sealed class ServiceContainerTests : IDisposable
 {
     private static readonly Dictionary<string, string> SwitchedOff = new()
     {
@@ -30,8 +29,7 @@ internal class ServiceContainerTests
 
     private readonly Dictionary<string, string?> _previous = new();
 
-    [SetUp]
-    public void SwitchDependenciesOff()
+    public ServiceContainerTests()
     {
         foreach (var (name, value) in SwitchedOff)
         {
@@ -40,8 +38,7 @@ internal class ServiceContainerTests
         }
     }
 
-    [TearDown]
-    public void Restore()
+    public void Dispose()
     {
         foreach (var (name, value) in _previous)
             Environment.SetEnvironmentVariable(name, value);

@@ -4,7 +4,7 @@ The flags of full, generated from the template's dev once a day when it has move
 
 [![CI of nightly by day](reports/nightly/ci.svg)](https://dnsk.sawking.tech/samples.html#nightly)
 
-Generated from DotNetSolutionKit dev at [cfed0de](https://github.com/sawking-tech/DotNetSolutionKit/commit/cfed0deec35a44c4e907562f27e8fe7992d75c9f), not a release, with:
+Generated from DotNetSolutionKit dev at [978b089](https://github.com/sawking-tech/DotNetSolutionKit/commit/978b089237f9ef4c16615d18a8f26f8d8372c178), not a release, with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true

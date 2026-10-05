@@ -52,7 +52,7 @@ for the same thing.
 ## Test base
 
 ```csharp
-internal abstract class OrderServiceTestBase
+public abstract class OrderServiceTestBase
 {
     protected InMemoryTestExecutionContext<OrderService, OrdersDbContext> CreateTestContext()
     {
@@ -78,10 +78,9 @@ verified after it.
 ## Fixture
 
 ```csharp
-[TestFixture]
 [TestOf(typeof(OrderService))]
-[Parallelizable(ParallelScope.All)]
-internal class OrderServicePlaceTests : OrderServiceTestBase
+[RunsInParallel]
+public class OrderServicePlaceTests : OrderServiceTestBase
 {
     [Test(Description = "A placed order is saved with its lines")]
     public async Task Should_SaveTheOrder_When_TheCartHasLines()
@@ -101,8 +100,10 @@ internal class OrderServicePlaceTests : OrderServiceTestBase
 not an entity still tracked by the context that changed it. Every test has its own in-memory database,
 so fixtures run in parallel.
 
-With `--TestFramework xunit` the same test is a `[Fact]` in a class, without `[TestFixture]`; the contexts
-are the same.
+The test is the same under NUnit and xUnit: the attributes come from `TestFramework.cs` in the test
+project, the one file that knows the framework. Never put a framework's own attribute (`[Fact]`,
+`[TestFixture]`, `[Parallelizable]`, `[Trait]`, `[Category]`) or a `#if` on the framework into a test. Test
+classes are `public`, since xUnit runs only public ones.
 
 ## Domain event handlers in a service test - selective, never an assembly scan
 
@@ -136,7 +137,7 @@ indexes and other constraints; case-insensitive search and raw SQL; migrations a
 concurrency tokens.
 
 ```csharp
-[Test, Category(TestCategories.Integration)]
+[Test, Integration]
 public async Task Should_RejectADuplicateNumber()
 {
     await using var ctx = await PostgresDbTestExecutionContext<OrderService>.CreateAsync();

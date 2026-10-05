@@ -6,7 +6,6 @@ namespace ST.DotNetSolutionKit.Samples.Orders.Tests.Tests;
 /// <summary>
 /// What the service's controllers answer with.
 /// </summary>
-[TestFixture]
 public class ResponseContractTests
 {
     [Test]

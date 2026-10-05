@@ -2,15 +2,30 @@
 
 name: CI
 
-# Every pull request and every push to the main branch: the solution builds, the tests pass on real
-# servers, and coverage is reported. A run on the main branch checks what merged on its own, rather
-# than on the strength of the pull request it came from.
+# Every pull request and every push to the main branch: the solution builds and the tests pass on real
+# servers. A run on the main branch checks what merged on its own, rather than on the strength of the pull
+# request it came from.
+#
+# Coverage only when asked for (coverage: true): measuring every branch of thousands of tests on each pull
+# request costs more than it tells, and what a pull request needs is tests of the code it changes. It is
+# asked for by hand, on any branch, through coverage.yml; another workflow, a release, can call this one
+# with coverage on.
 
 on:
   pull_request:
   push:
     branches: [main, master, nightly]
   workflow_dispatch:
+    inputs:
+      coverage:
+        description: Measure coverage, a report per service and one for Common
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      coverage:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -19,6 +34,9 @@ jobs:
   build-and-test:
     name: Build and test
     runs-on: ubuntu-24.04
+    env:
+      # empty on a pull request or a push, where there is no input
+      COVERAGE: ${{ inputs.coverage }}
 
     steps:
       - uses: actions/checkout@v7
@@ -83,10 +101,11 @@ jobs:
       # Split from the integration tests so a failure says which kind broke. Selected as "not
       # Integration": only tests that need a server carry a category.
       - name: Unit tests
-        run: >
-          dotnet test src/services/*.All.sln --configuration Release --no-build
-          --filter "TestCategory!=Integration"
-          --collect:"XPlat Code Coverage" --results-directory coverage/unit
+        run: |
+          collect=()
+          [ "$COVERAGE" = true ] && collect=(--collect:"XPlat Code Coverage" --results-directory coverage/unit)
+          dotnet test src/services/*.All.sln --configuration Release --no-build \
+            --filter "TestCategory!=Integration" "${collect[@]}"
 
       - name: Wait for the test servers
         run: |
@@ -107,39 +126,74 @@ jobs:
           TEST_POSTGRES: Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=test-do-not-use
           TEST_CLICKHOUSE: Host=localhost;Port=8123;Username=tester;Password=test-do-not-use
           TEST_S3: ServiceUrl=http://localhost:8333;Bucket=tests;AccessKey=tester;SecretKey=test-do-not-use
-        run: >
-          dotnet test src/services/*.All.sln --configuration Release --no-build
-          --filter "TestCategory=Integration"
-          --collect:"XPlat Code Coverage" --results-directory coverage/integration
+        run: |
+          collect=()
+          [ "$COVERAGE" = true ] && collect=(--collect:"XPlat Code Coverage" --results-directory coverage/integration)
+          dotnet test src/services/*.All.sln --configuration Release --no-build \
+            --filter "TestCategory=Integration" "${collect[@]}"
 
-      # One report over unit and integration runs. The threshold below is on branch coverage, which
-      # counts whether each branch of a condition ran; line coverage counts a line with an untested
-      # branch as covered. Left out is wiring with no logic of its own: EF migrations and model
-      # configuration, DI composition, host setup, seeding.
+      # A report per service and one for Common, over the unit and integration runs together: a service's
+      # owner sees the coverage of their service. The threshold is on branch coverage, which counts whether
+      # each branch of a condition ran; line coverage counts a line with an untested branch as covered.
+      # Left out is wiring with no logic of its own: EF migrations and model configuration, DI composition
+      # and its extensions, host setup, seeding, controllers - a controller holds no logic, so there is
+      # nothing in it to measure - and the security handlers and filters, which the integration tests cover.
+      # The gateway keeps its API.Setup: what it does, its transforms, lives there. A report also leaves out
+      # the services whose names continue its own (Orders.Archive is not part of Orders). Run even when a
+      # test failed, so the coverage of what ran is still there to read.
       - name: Coverage report
         if: always()
         run: |
+          [ "$COVERAGE" = true ] || exit 0
           dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.4.*
-          reportgenerator \
-            -reports:"coverage/**/coverage.cobertura.xml" \
-            -targetdir:coverage/report \
-            -reporttypes:"Html;JsonSummary;MarkdownSummaryGithub" \
-            -assemblyfilters:"+ST.DotNetSolutionKit.Samples.*;-*.Tests" \
-            -classfilters:"-*.Migrations.*;-*EntityConfiguration*;-*.Designer;-*Program;-*DependencyInjection*;-*.API.Setup.*;-*.DataSeeding.*;-*MigrationRunner;-*DbContextFactory"
-          cat coverage/report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+          wiring="-*.Migrations.*;-*EntityConfiguration*;-*.Designer;-*Program;-*Startup;-*DependencyInjection*;-*ServiceCollectionExtensions;-*.Controllers.*;-*Controller;-*.DataSeeding.*;-*Seeder;-*MigrationRunner;-*DbContextFactory;-*.Security.Handlers.*;-*.Security.Filters.*"
+          report() {
+            reportgenerator \
+              -reports:"coverage/**/coverage.cobertura.xml" \
+              -targetdir:"coverage/report/$1" \
+              -reporttypes:"Html;JsonSummary;MarkdownSummaryGithub;Badges" \
+              -assemblyfilters:"$2;-*.Tests;-*.Testing" \
+              -classfilters:"$3"
+            { echo "## $1"; cat "coverage/report/$1/SummaryGithub.md"; } >> "$GITHUB_STEP_SUMMARY"
+          }
+          report Common "+ST.DotNetSolutionKit.Samples.Common;+ST.DotNetSolutionKit.Samples.Common.*" "$wiring;-*.API.Setup.*"
+          for path in src/services/ST.DotNetSolutionKit.Samples.*/; do
+            folder=$(basename "$path")
+            assemblies="+$folder;+$folder.*"
+            for other in src/services/"$folder".*/; do
+              [ -d "$other" ] && assemblies="$assemblies;-$(basename "$other");-$(basename "$other").*"
+            done
+            classes="$wiring;-*.API.Setup.*"
+            grep -qs "Yarp.ReverseProxy" "$path"*.API/*.API.csproj && classes="$wiring"
+            report "${folder#ST.DotNetSolutionKit.Samples.}" "$assemblies" "$classes"
+          done
 
-      # The threshold is a repository variable, so a team raises it as the tests grow instead of
-      # editing this file. Not set, the report is shown and nothing fails on it.
+      # The threshold is a repository variable, so a team raises it as the tests grow instead of editing
+      # this file. Not set, the reports are shown and nothing fails on them. Every report is held to it, but
+      # one with no branches at all - a new service with nothing yet to decide - has nothing to hold.
       - name: Branch coverage threshold
-        if: vars.COVERAGE_MIN_BRANCH != ''
+        if: inputs.coverage == true
+        env:
+          MIN: ${{ vars.COVERAGE_MIN_BRANCH }}
         run: |
-          actual=$(jq '.summary.branchcoverage // 0' coverage/report/Summary.json)
-          echo "branch coverage ${actual}%, required ${{ vars.COVERAGE_MIN_BRANCH }}%"
-          awk -v a="$actual" -v m="${{ vars.COVERAGE_MIN_BRANCH }}" 'BEGIN { exit (a + 0 < m + 0) }'
+          [ -n "$MIN" ] || { echo "COVERAGE_MIN_BRANCH is not set: nothing is held to a threshold"; exit 0; }
+          failed=0
+          for summary in coverage/report/*/Summary.json; do
+            name=$(basename "$(dirname "$summary")")
+            if [ "$(jq '.summary.totalbranches // 0' "$summary")" = 0 ]; then
+              echo "$name: no branches, nothing to hold"
+              continue
+            fi
+            actual=$(jq '.summary.branchcoverage // 0' "$summary")
+            echo "$name: branch coverage ${actual}%, required ${MIN}%"
+            awk -v a="$actual" -v m="$MIN" 'BEGIN { exit (a + 0 < m + 0) }' || failed=1
+          done
+          exit $failed
 
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage
           path: coverage/report/
+          if-no-files-found: ignore
           retention-days: 30

@@ -3,7 +3,6 @@
     using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.Postgres;
     using Microsoft.EntityFrameworkCore.Storage;
 
     using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
@@ -47,13 +46,8 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
 
         private const string ConcurrencyMessage = "The row was changed by another write since it was read.";
 
-        // One provider per generated solution; the template's own sources keep every one.
-        private static bool IsUniqueViolation(DbUpdateException exception)
-        {
-            if (PostgresErrors.IsUniqueViolation(exception))
-                return true;
-            return false;
-        }
+        private static bool IsUniqueViolation(DbUpdateException exception) =>
+            DatabaseProvider.IsUniqueViolation(exception);
 
         public Dictionary<string, (Type Type, object? OriginalValue, object? CurrentValue)> GetChangesFor(
             object entity, bool isNewEntity = false)
