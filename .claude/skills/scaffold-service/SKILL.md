@@ -33,7 +33,7 @@ Some flags hold one value for the whole solution and must be passed again, uncha
 
 Others add files to `Common` and were chosen when `Common` was generated. A service that should use
 them passes them again: `-I`, `--Vault`, `--DiffApi`, `--FeatureFlags`, `--Storage`, `--ClickHouse`,
-`--MongoDB`, `--Audit`. A service generated without them leaves them out. Pass only the flags whose part `Common`
+`--MongoDB`, `--Notify`, `--Audit`. A service generated without them leaves them out. Pass only the flags whose part `Common`
 already has.
 
 Per service, freely: `-H` (Hangfire), `--Messaging` (`none`, `outbox`, `direct`), `--TestFramework`
@@ -42,7 +42,7 @@ Per service, freely: `-H` (Hangfire), `--Messaging` (`none`, `outbox`, `direct`)
 Read what the solution has before choosing:
 
 ```bash
-ls src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure        # Persistence/SqlServer -> mssql; ClickHouse, Mongo, Storage; Configuration/Secrets -> -I or --Vault
+ls src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure        # Persistence/SqlServer -> mssql; ClickHouse, Mongo, Notifications, Storage; Configuration/Secrets -> -I or --Vault
 ls src/common/ST.DotNetSolutionKit.Samples.Common.Web/FeatureManagement  # present -> --FeatureFlags
 ls deploy                                                             # compose or k8s
 ```
