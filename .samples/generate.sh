@@ -43,6 +43,7 @@ about=$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .about' "$here/va
 home=$(jq -r '.[] | select(.default) | .branch' "$here/variants.json")
 raw="https://raw.githubusercontent.com/${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
 fade=$(sed -n 's/^FADE_DAYS = //p' "$here/ci-svg.py")
+step=$(sed -n 's/^PASS_STEP_DAYS = //p' "$here/ci-svg.py")
 
 # What the colours of the days mean: one legend for every branch, drawn by ci-svg.py on the default
 # branch, and the same in words.
@@ -50,10 +51,11 @@ legend() {
     echo "![How to read the days]($raw/$home/.samples/legend.svg)"
     echo
     echo "Each square is a day in UTC, Monday at the top and Sunday at the bottom. A day shows the result of the"
-    echo "last CI run up to it: green for a pass, red for a failure. With no new run the colour changes over $fade"
-    echo "days, a pass fading to ice blue and a failure turning dark red, so an old result is told apart from a"
-    echo "fresh one. A pale square is a day before the first run; the fading squares on the right are the weeks"
-    echo "to come."
+    echo "last CI run up to it: green for a pass, red for a failure. A day without a run shows how long ago the"
+    echo "run was: after a pass it turns a step bluer every $step days, after a failure a little darker every day,"
+    echo "ice blue or dark red from day $fade on. A day keeps its colour; a new run makes its day green or red"
+    echo "again. A pale square is a day before the first run; the fading squares on the right are the weeks to"
+    echo "come."
 }
 {
     echo "# Sample: $branch"
