@@ -11,8 +11,9 @@ The README of a branch shows the picture: GitHub shows images there without runn
 of the site cannot be the page itself. The same data (every run of every version in the folder), the same
 rules and the same colours as site/samples.js and samples.css of DotNetSolutionKit:
 
-- a day keeps the result of the branch's last run; a pass fades to ice and a failure rots to dark red over
-  30 days without a run, the colours mixed in OKLab as the site's color-mix does;
+- a day keeps the result of the branch's last run and its colour; a day without a run shows how long ago
+  the run was: a pass a step bluer every 2 days, a failure a little darker every day, ice or dark red from
+  day 30 on, the colours mixed in OKLab as the site's color-mix does;
 - 52 weeks back, the weeks to come fading out, Monday at the top and Sunday at the bottom;
 - light and dark follow the reader's colour scheme.
 
@@ -25,6 +26,7 @@ import os
 import sys
 
 FADE_DAYS = 30
+PASS_STEP_DAYS = 2
 PAST_WEEKS = 52
 FUTURE_WEEKS = 8
 CELL, GAP = 11, 3
@@ -117,8 +119,14 @@ def fill(cell, theme):
         return t["empty"], max(0.15, 1 - cell["future"] / (7 * FUTURE_WEEKS))
     if "ok" not in cell:
         return t["empty"], 1.0
-    fade = min(cell["age"] / FADE_DAYS, 1)
+    fade = fade_of(cell["ok"], cell["age"])
     return (mix(t["sleep"], fade, t["ok"]) if cell["ok"] else mix(t["rot"], fade, t["bad"])), 1.0
+
+
+def fade_of(ok, age):
+    """How far a day has gone from its result, 0 to 1: a pass in steps of PASS_STEP_DAYS, a failure evenly."""
+    days = age // PASS_STEP_DAYS * PASS_STEP_DAYS if ok else age
+    return min(days / FADE_DAYS, 1)
 
 
 # ---- the picture ----------------------------------------------------------------------------------------
@@ -184,12 +192,16 @@ def svg(branch, runs, today):
 
 def legend():
     """What the colours of a day mean: one picture for every branch, under its days in the README."""
-    rows = (("passed", ("ok", "sleep"), f"a pass, fading to ice over {FADE_DAYS} days without a run"),
-            ("failed", ("bad", "rot"), f"a failure, rotting to dark red over {FADE_DAYS} days without a run"))
-    swatches, label_w = 5, 48
+    ages = (0, PASS_STEP_DAYS, FADE_DAYS // 4, FADE_DAYS // 2, FADE_DAYS)
+    rows = (("passed", True, f"the day of a pass, then a step bluer every {PASS_STEP_DAYS} days without a run"),
+            ("failed", False, "the day of a failure, then a little darker every day without a run"))
+    notes = (f"the squares: {', '.join(map(str, ages[:-1]))} and {ages[-1]} days after the run",
+             "a day keeps its colour; a new run makes its day green or red again")
+    swatches, label_w = len(ages), 48
     words_x = LEFT + label_w + swatches * (CELL + GAP) + 8
-    width = words_x + 330
-    height = 34 + 4 * 20 + 4
+    # 11px text averages under 6px a character: the widest line sets the width
+    width = words_x + 6 * max(len(w) for w in [r[2] for r in rows] + list(notes)) + 16
+    height = 34 + (len(rows) + len(notes) + 2) * 20 + 4
 
     css = ["text{font:11px system-ui,-apple-system,'Segoe UI',sans-serif}", ".t{font-size:13px;font-weight:600}"]
 
@@ -207,12 +219,17 @@ def legend():
         body.append(f'<rect class="{cls}" x="{x}" y="{y}" width="{CELL}" height="{CELL}" rx="2"{extra}/>')
 
     y = 34
-    for label, (start, end), words in rows:
+    for label, ok, words in rows:
+        start, end = ("ok", "sleep") if ok else ("bad", "rot")
         body.append(f'<text class="m" x="{LEFT}" y="{y + 9}">{label}</text>')
-        for k in range(swatches):
+        for k, age in enumerate(ages):
             cls = f"L{label}{k}"
-            themed(lambda t, cls=cls, k=k: f".{cls}{{fill:{mix(t[end], k / (swatches - 1), t[start])}}}")
+            fade = fade_of(ok, age)
+            themed(lambda t, cls=cls, fade=fade, start=start, end=end: f".{cls}{{fill:{mix(t[end], fade, t[start])}}}")
             cell(cls, k, y)
+        body.append(f'<text class="m" x="{words_x}" y="{y + 9}">{words}</text>')
+        y += 20
+    for words in notes:
         body.append(f'<text class="m" x="{words_x}" y="{y + 9}">{words}</text>')
         y += 20
     cell("e", 0, y)
@@ -223,8 +240,9 @@ def legend():
     body.append(f'<text class="m" x="{words_x}" y="{y + 9}">the weeks to come</text>')
 
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" '
-            f'role="img" aria-label="How to read the days: a day keeps the result of the last run, a pass fades to ice '
-            f'and a failure rots to dark red over {FADE_DAYS} days without a run">\n'
+            f'role="img" aria-label="How to read the days: a day keeps the result of the last run; without a new run a '
+            f'pass turns a step bluer every {PASS_STEP_DAYS} days and a failure a little darker every day, ice or dark '
+            f'red from day {FADE_DAYS} on; a day keeps its colour">\n'
             f'<style>{chr(10).join(css)}</style>\n' + "\n".join(body) + "\n</svg>\n")
 
 
