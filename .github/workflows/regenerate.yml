@@ -100,7 +100,9 @@ jobs:
           export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
           git clone -q "git@github.com:${GITHUB_REPOSITORY}.git" branch
           cd branch
-          if git ls-remote --exit-code --heads origin "${{ matrix.branch }}" >/dev/null; then
+          # The exact ref: a bare name matches by its tail, and a pull request's branch such as
+          # feat/full-alt would pass for full-alt.
+          if git ls-remote --exit-code origin "refs/heads/${{ matrix.branch }}" >/dev/null; then
             git checkout -q "${{ matrix.branch }}"
           else
             git checkout -q --orphan "${{ matrix.branch }}"
