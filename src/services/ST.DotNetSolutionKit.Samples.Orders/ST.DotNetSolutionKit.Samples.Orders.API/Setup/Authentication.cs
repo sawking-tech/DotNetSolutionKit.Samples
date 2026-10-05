@@ -4,10 +4,9 @@ using ST.DotNetSolutionKit.Samples.Orders.Infrastructure.Security.Handlers;
 namespace ST.DotNetSolutionKit.Samples.Orders.API.Setup;
 
 /// <summary>
-/// Authentication and authorization for this service: the API key forwarded by the gateway, with JWT as
-/// an optional fallback when a "Jwt" section is configured. The handler lives in this service's
-/// infrastructure; the shared setup is <see cref="ServiceAuthenticationSetup"/>. The middleware is added
-/// by the platform pipeline.
+/// Authentication and authorization for this service, by the shared composite scheme of
+/// <see cref="ServiceAuthenticationSetup"/>, which says which request goes where. The API key handler lives
+/// in this service's infrastructure. The middleware is added by the platform pipeline.
 /// </summary>
 internal static class Authentication
 {

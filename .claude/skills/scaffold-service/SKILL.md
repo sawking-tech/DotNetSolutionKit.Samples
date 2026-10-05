@@ -34,7 +34,8 @@ Some flags hold one value for the whole solution and must be passed again, uncha
 Others add files to `Common` and were chosen when `Common` was generated. A service that should use
 them passes them again: `-I`, `--Vault`, `--DiffApi`, `--FeatureFlags`, `--Storage`, `--ClickHouse`,
 `--MongoDB`, `--Notify`, `--Audit`. A service generated without them leaves them out. Pass only the flags whose part `Common`
-already has.
+already has. With `--Messaging`, `--Notify email` also gives the service the consumer of `SendEmailCommandV1`;
+keep it in the one service that owns notifications.
 
 Per service, freely: `-H` (Hangfire), `--Messaging` (`none`, `outbox`, `direct`), `--TestFramework`
 (`nunit`, `xunit`), `--HttpPort`.
