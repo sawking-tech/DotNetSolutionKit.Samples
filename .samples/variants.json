@@ -25,6 +25,14 @@
     "default": true
   },
   {
+    "branch": "full-alt",
+    "about": "SQL Server, xUnit, secrets from Vault, Kubernetes manifests and the audit journal, which rides on the bus with an outbox; two services.",
+    "generate": [
+      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Database mssql --TestFramework xunit --Vault true --Deploy k8s --Messaging outbox --Audit true",
+      "-N ST -P DotNetSolutionKit.Samples -S Billing --Database mssql --TestFramework xunit --Vault true --Deploy k8s --Messaging outbox --Audit true"
+    ]
+  },
+  {
     "branch": "nightly",
     "ref": "dev",
     "about": "The flags of full, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release.",
