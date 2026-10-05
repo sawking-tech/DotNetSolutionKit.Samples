@@ -46,6 +46,19 @@ services:
       timeout: 3s
       retries: 20
 
+  mongo:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-app}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Set MONGO_PASSWORD in deploy/compose/.env}
+    volumes:
+      - mongo:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
   # S3-compatible storage. SeaweedFS (Apache 2.0): MinIO no longer publishes images.
   s3:
     image: chrislusf/seaweedfs:latest
@@ -69,4 +82,5 @@ volumes:
   postgres:
   rabbitmq:
   clickhouse:
+  mongo:
   s3:

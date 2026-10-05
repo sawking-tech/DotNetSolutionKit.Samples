@@ -60,7 +60,7 @@ write_override() {
         echo "# project, and runs on a network the script creates and connects the infrastructure to."
         echo "services:"
         for s in $services; do
-            case "$s" in postgres|sqlserver|rabbitmq|clickhouse|s3|s3-bucket) continue ;; esac
+            case "$s" in postgres|sqlserver|rabbitmq|clickhouse|mongo|s3|s3-bucket) continue ;; esac
             printf '  %s:\n    ports: !reset []\n    depends_on: !reset {}\n' "$s"
         done
         printf 'networks:\n  default:\n    name: ${BLUEGREEN_NETWORK}\n    external: true\n'
@@ -68,7 +68,7 @@ write_override() {
 
     if [ -z "${ENTRY:-}" ]; then
         local candidates
-        candidates=$(printf '%s\n' $services | grep -vx -e postgres -e sqlserver -e rabbitmq -e clickhouse -e s3 -e s3-bucket)
+        candidates=$(printf '%s\n' $services | grep -vx -e postgres -e sqlserver -e rabbitmq -e clickhouse -e mongo -e s3 -e s3-bucket)
         [ "$(echo "$candidates" | wc -l)" -eq 1 ] || { echo "Set ENTRY to the service the edge proxies to: $(echo $candidates)" >&2; exit 1; }
         ENTRY="$candidates"
     fi
@@ -77,7 +77,7 @@ write_override() {
 prepare_network() {
     local net="$PREFIX-$1"
     docker network inspect "$net" >/dev/null 2>&1 || docker network create "$net" >/dev/null
-    for s in postgres sqlserver rabbitmq clickhouse s3; do
+    for s in postgres sqlserver rabbitmq clickhouse mongo s3; do
         local id
         id=$(infra ps -q "$s" 2>/dev/null || true)
         [ -n "$id" ] && docker network connect --alias "$s" "$net" "$id" 2>/dev/null || true

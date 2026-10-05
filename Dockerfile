@@ -55,7 +55,7 @@ RUN apt-get update \
 WORKDIR /app
 EXPOSE 8080
 
-# A fixed uid, so a mounted volume (logs, keys) has the same owner on every host.
+# A fixed uid, so a mounted volume (keys, certificates) has the same owner on every host.
 RUN mkdir -p /app/https && chown -R 1000:1000 /app
 COPY --chown=1000:1000 --from=service /app/publish .
 USER 1000:1000

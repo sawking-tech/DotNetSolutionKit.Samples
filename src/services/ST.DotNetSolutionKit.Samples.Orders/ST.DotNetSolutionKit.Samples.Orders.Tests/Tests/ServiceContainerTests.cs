@@ -25,6 +25,7 @@ public sealed class ServiceContainerTests : IDisposable
         ["Vault__Enabled"] = "false",
         ["S3__Enabled"] = "false",
         ["ClickHouse__Enabled"] = "false",
+        ["MongoDB__Enabled"] = "false",
     };
 
     private readonly Dictionary<string, string?> _previous = new();
