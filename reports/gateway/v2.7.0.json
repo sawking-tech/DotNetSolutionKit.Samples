@@ -59,6 +59,26 @@
         "line": 65.4,
         "branch": 63.6
       }
+    },
+    {
+      "run": 37281882827,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/37281882827",
+      "commit": "5c63cc8340e9620fc04f0b9873a0bf746ebcf400",
+      "conclusion": "success",
+      "event": "push",
+      "started": "2026-10-05T08:09:27Z",
+      "finished": "2026-10-05T08:10:28Z",
+      "seconds": 61,
+      "tests": {
+        "failed": 0,
+        "passed": 323,
+        "skipped": 0,
+        "total": 323
+      },
+      "coverage": {
+        "line": 65.4,
+        "branch": 63.6
+      }
     }
   ],
   "branch": "gateway",
