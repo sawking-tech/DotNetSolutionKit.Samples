@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="154" viewBox="0 0 900 154" role="img" aria-label="CI of nightly by day, UTC: last run 2026-10-05: passed, tests 406 / 406">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="154" viewBox="0 0 900 154" role="img" aria-label="CI of nightly by day, UTC: last run 2026-10-05: passed, tests 428 / 428">
 <style>text{font:11px system-ui,-apple-system,'Segoe UI',sans-serif}
 .t{font-size:13px;font-weight:600}
 .g{fill:#ffffff}
@@ -13,7 +13,7 @@
 @media (prefers-color-scheme: dark){.l0d1{fill:#3fb950}}</style>
 <rect class="g" width="900" height="154" rx="6"/>
 <text class="t x" x="34" y="20">CI of nightly by day, UTC</text>
-<text class="m" x="34" y="35">last run 2026-10-05: passed, tests 406 / 406</text>
+<text class="m" x="34" y="35">last run 2026-10-05: passed, tests 428 / 428</text>
 <text class="m" x="4" y="55">Mon</text>
 <text class="m" x="4" y="83">Wed</text>
 <text class="m" x="4" y="111">Fri</text>
