@@ -1,0 +1,132 @@
+# Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
+name: CI
+
+# Every pull request and every push to the main branch: the solution builds, the tests pass on real
+# servers, and coverage is reported. A run on the main branch checks what merged on its own, rather
+# than on the strength of the pull request it came from.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master, full-alt]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.props') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      # A service is added to All.sln by src/services/manual-add-projects.sh. Forgotten, the service
+      # drops out of this build and its tests without anything failing.
+      - name: Every service project is in All.sln
+        run: |
+          solution=$(ls src/services/*.All.sln)
+          listed=$(dotnet sln "$solution" list | tr '\\' '/')
+          missing=0
+          for project in $(find src/services -mindepth 3 -maxdepth 3 -name '*.csproj'); do
+            relative=${project#src/services/}
+            if ! grep -qF "$relative" <<< "$listed"; then
+              echo "::error file=$project::not in $solution; run src/services/manual-add-projects.sh"
+              missing=1
+            fi
+          done
+          exit $missing
+
+      # The integration tests restore a database of their own per test from one migrated once. SQL
+      # Server on Linux does not run its files on a ramdisk, so they stay on the runner's disk.
+      - name: Start SQL Server for the tests
+        run: |
+          docker run -d --name tests-mssql -p 1433:1433 \
+            -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=Test-do-not-use-1 \
+            mcr.microsoft.com/mssql/server:2022-latest
+
+      - name: Start Vault for the tests
+        run: |
+          docker run -d --name tests-vault -p 8200:8200 \
+            -e VAULT_DEV_ROOT_TOKEN_ID=test-do-not-use -e VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200 \
+            hashicorp/vault:1.17
+
+      - name: Restore
+        run: dotnet restore src/services/*.All.sln
+
+      - name: Build
+        run: dotnet build src/services/*.All.sln --configuration Release --no-restore
+
+      # Split from the integration tests so a failure says which kind broke. Selected as "not
+      # Integration": only tests that need a server carry a category.
+      - name: Unit tests
+        run: >
+          dotnet test src/services/*.All.sln --configuration Release --no-build
+          --filter "TestCategory!=Integration"
+          --collect:"XPlat Code Coverage" --results-directory coverage/unit
+
+      - name: Wait for the test servers
+        run: |
+          for attempt in $(seq 1 60); do
+            ready=1
+            docker exec tests-mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Test-do-not-use-1 \
+              -Q "SELECT 1" -b >/dev/null 2>&1 || ready=0
+            curl -fsS http://localhost:8200/v1/sys/health >/dev/null 2>&1 || ready=0
+            [ $ready = 1 ] && exit 0
+            sleep 1
+          done
+          docker logs tests-mssql
+          exit 1
+
+      - name: Integration tests
+        env:
+          TEST_SQLSERVER: Server=localhost,1433;User Id=sa;Password=Test-do-not-use-1;TrustServerCertificate=true
+          TEST_VAULT: Address=http://localhost:8200;Token=test-do-not-use
+        run: >
+          dotnet test src/services/*.All.sln --configuration Release --no-build
+          --filter "TestCategory=Integration"
+          --collect:"XPlat Code Coverage" --results-directory coverage/integration
+
+      # One report over unit and integration runs. The threshold below is on branch coverage, which
+      # counts whether each branch of a condition ran; line coverage counts a line with an untested
+      # branch as covered. Left out is wiring with no logic of its own: EF migrations and model
+      # configuration, DI composition, host setup, seeding.
+      - name: Coverage report
+        if: always()
+        run: |
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.4.*
+          reportgenerator \
+            -reports:"coverage/**/coverage.cobertura.xml" \
+            -targetdir:coverage/report \
+            -reporttypes:"Html;JsonSummary;MarkdownSummaryGithub" \
+            -assemblyfilters:"+ST.DotNetSolutionKit.Samples.*;-*.Tests" \
+            -classfilters:"-*.Migrations.*;-*EntityConfiguration*;-*.Designer;-*Program;-*DependencyInjection*;-*.API.Setup.*;-*.DataSeeding.*;-*MigrationRunner;-*DbContextFactory"
+          cat coverage/report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+
+      # The threshold is a repository variable, so a team raises it as the tests grow instead of
+      # editing this file. Not set, the report is shown and nothing fails on it.
+      - name: Branch coverage threshold
+        if: vars.COVERAGE_MIN_BRANCH != ''
+        run: |
+          actual=$(jq '.summary.branchcoverage // 0' coverage/report/Summary.json)
+          echo "branch coverage ${actual}%, required ${{ vars.COVERAGE_MIN_BRANCH }}%"
+          awk -v a="$actual" -v m="${{ vars.COVERAGE_MIN_BRANCH }}" 'BEGIN { exit (a + 0 < m + 0) }'
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage
+          path: coverage/report/
+          retention-days: 30
