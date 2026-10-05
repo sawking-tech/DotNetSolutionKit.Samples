@@ -2,6 +2,10 @@
 """Draws the CI of a sample branch by day, as the samples page of the template's site draws it:
 
     ci-svg.py <reports/branch folder> <branch> <out.svg>
+    ci-svg.py --legend <out.svg>
+
+The legend is a picture of its own, drawn once for every branch: a README shows it under the days and says
+the same in words.
 
 The README of a branch shows the picture: GitHub shows images there without running a script, so the grid
 of the site cannot be the page itself. The same data (every run of every version in the folder), the same
@@ -9,7 +13,7 @@ rules and the same colours as site/samples.js and samples.css of DotNetSolutionK
 
 - a day keeps the result of the branch's last run; a pass fades to ice and a failure rots to dark red over
   30 days without a run, the colours mixed in OKLab as the site's color-mix does;
-- 52 weeks back, the weeks to come fading out, Monday at the top;
+- 52 weeks back, the weeks to come fading out, Monday at the top and Sunday at the bottom;
 - light and dark follow the reader's colour scheme.
 
 Days are UTC: the picture is drawn once, for every reader.
@@ -122,8 +126,7 @@ def svg(branch, runs, today):
     grid = cells(runs, today)
     weeks = grid[-1]["week"] + 1
     width = LEFT + weeks * (CELL + GAP) + 12
-    legend_y = TOP + 7 * (CELL + GAP) + 18
-    height = legend_y + 26
+    height = TOP + 7 * (CELL + GAP) + 10
 
     last = runs[-1] if runs else None
     if last:
@@ -148,9 +151,9 @@ def svg(branch, runs, today):
     dark = {c: k for k, c in enumerate(sorted({fill(c, "dark")[0] for c in grid}))}
     css_dark_alias = []
     body = [f'<rect class="g" width="{width}" height="{height}" rx="6"/>',
-            f'<text class="t x" x="{LEFT}" y="20">CI of {branch} by day</text>',
+            f'<text class="t x" x="{LEFT}" y="20">CI of {branch} by day, UTC</text>',
             f'<text class="m" x="{LEFT}" y="35">{facts}</text>']
-    for label, row in (("Mon", 0), ("Wed", 2), ("Fri", 4)):
+    for label, row in (("Mon", 0), ("Wed", 2), ("Fri", 4), ("Sun", 6)):
         body.append(f'<text class="m" x="4" y="{TOP + row * (CELL + GAP) + CELL - 2}">{label}</text>')
     shown = set()
     for cell in grid:
@@ -168,23 +171,6 @@ def svg(branch, runs, today):
         body.append(f'<rect class="{cls}" x="{x}" y="{y}" width="{CELL}" height="{CELL}" rx="2"'
                     + (f' opacity="{op:.2f}"' if op < 1 else "") + f'><title>{title}</title></rect>')
 
-    # the legend: what a pass and a failure become without a run
-    lx = LEFT
-    for label, colours in (("passed", ("ok", "sleep")), ("failed", ("bad", "rot"))):
-        body.append(f'<text class="m" x="{lx}" y="{legend_y + 9}">{label}</text>')
-        lx += 44
-        for k in range(5):
-            share = k / 4
-            body.append(f'<rect class="L{label}{k}" x="{lx}" y="{legend_y}" width="{CELL}" height="{CELL}" rx="2"/>')
-            for theme in ("light", "dark"):
-                t = THEMES[theme]
-                colour = mix(t[colours[1]], share, t[colours[0]])
-                rule = f".L{label}{k}{{fill:{colour}}}"
-                css.append(rule if theme == "light" else "@media (prefers-color-scheme: dark){" + rule + "}")
-            lx += CELL + GAP
-        body.append(f'<text class="m" x="{lx + 4}" y="{legend_y + 9}">over {FADE_DAYS} days without a run</text>')
-        lx += 190
-
     for cls, lk, dk in css_dark_alias:
         lfill = sorted({fill(c, "light")[0] for c in grid})[lk]
         dfill = sorted({fill(c, "dark")[0] for c in grid})[dk]
@@ -192,11 +178,60 @@ def svg(branch, runs, today):
         css.append("@media (prefers-color-scheme: dark){." + cls + "{fill:" + dfill + "}}")
 
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" '
-            f'role="img" aria-label="CI of {branch} by day: {facts}">\n'
+            f'role="img" aria-label="CI of {branch} by day, UTC: {facts}">\n'
+            f'<style>{chr(10).join(css)}</style>\n' + "\n".join(body) + "\n</svg>\n")
+
+
+def legend():
+    """What the colours of a day mean: one picture for every branch, under its days in the README."""
+    rows = (("passed", ("ok", "sleep"), f"a pass, fading to ice over {FADE_DAYS} days without a run"),
+            ("failed", ("bad", "rot"), f"a failure, rotting to dark red over {FADE_DAYS} days without a run"))
+    swatches, label_w = 5, 48
+    words_x = LEFT + label_w + swatches * (CELL + GAP) + 8
+    width = words_x + 330
+    height = 34 + 4 * 20 + 4
+
+    css = ["text{font:11px system-ui,-apple-system,'Segoe UI',sans-serif}", ".t{font-size:13px;font-weight:600}"]
+
+    def themed(rule_of):
+        for theme in ("light", "dark"):
+            rule = rule_of(THEMES[theme])
+            css.append(rule if theme == "light" else "@media (prefers-color-scheme: dark){" + rule + "}")
+
+    themed(lambda t: f".g{{fill:{t['ground']}}}.x{{fill:{t['text']}}}.m{{fill:{t['muted']}}}.e{{fill:{t['empty']}}}")
+    body = [f'<rect class="g" width="{width}" height="{height}" rx="6"/>',
+            f'<text class="t x" x="{LEFT}" y="20">How to read the days</text>']
+
+    def cell(cls, k, y, extra=""):
+        x = LEFT + label_w + k * (CELL + GAP)
+        body.append(f'<rect class="{cls}" x="{x}" y="{y}" width="{CELL}" height="{CELL}" rx="2"{extra}/>')
+
+    y = 34
+    for label, (start, end), words in rows:
+        body.append(f'<text class="m" x="{LEFT}" y="{y + 9}">{label}</text>')
+        for k in range(swatches):
+            cls = f"L{label}{k}"
+            themed(lambda t, cls=cls, k=k: f".{cls}{{fill:{mix(t[end], k / (swatches - 1), t[start])}}}")
+            cell(cls, k, y)
+        body.append(f'<text class="m" x="{words_x}" y="{y + 9}">{words}</text>')
+        y += 20
+    cell("e", 0, y)
+    body.append(f'<text class="m" x="{words_x}" y="{y + 9}">no run yet</text>')
+    y += 20
+    for k in range(swatches):
+        cell("e", k, y, f' opacity="{max(0.15, 1 - k / (swatches - 1)):.2f}"')
+    body.append(f'<text class="m" x="{words_x}" y="{y + 9}">the weeks to come</text>')
+
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" '
+            f'role="img" aria-label="How to read the days: a day keeps the result of the last run, a pass fades to ice '
+            f'and a failure rots to dark red over {FADE_DAYS} days without a run">\n'
             f'<style>{chr(10).join(css)}</style>\n' + "\n".join(body) + "\n</svg>\n")
 
 
 def main():
+    if len(sys.argv) == 3 and sys.argv[1] == "--legend":
+        open(sys.argv[2], "w", encoding="utf-8", newline="\n").write(legend())
+        return
     if len(sys.argv) != 4:
         raise SystemExit(__doc__)
     folder, branch, out = sys.argv[1:]

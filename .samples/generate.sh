@@ -40,6 +40,21 @@ done < "$work/commands"
 bash src/services/manual-add-projects.sh < /dev/null
 
 about=$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .about' "$here/variants.json")
+home=$(jq -r '.[] | select(.default) | .branch' "$here/variants.json")
+raw="https://raw.githubusercontent.com/${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
+fade=$(sed -n 's/^FADE_DAYS = //p' "$here/ci-svg.py")
+
+# What the colours of the days mean: one legend for every branch, drawn by ci-svg.py on the default
+# branch, and the same in words.
+legend() {
+    echo "![How to read the days]($raw/$home/.samples/legend.svg)"
+    echo
+    echo "Each square is a day in UTC, Monday at the top and Sunday at the bottom. A day shows the result of the"
+    echo "last CI run up to it: green for a pass, red for a failure. With no new run the colour changes over $fade"
+    echo "days, a pass fading to ice blue and a failure turning dark red, so an old result is told apart from a"
+    echo "fresh one. A pale square is a day before the first run; the fading squares on the right are the weeks"
+    echo "to come."
+}
 {
     echo "# Sample: $branch"
     echo
@@ -49,6 +64,8 @@ about=$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .about' "$here/va
     # from its first run on.
     echo "[![CI of $branch by day](reports/$branch/ci.svg)](https://dnsk.sawking.tech/samples.html#$branch)"
     echo
+    # The default branch shows the legend once, under the days of every branch further down.
+    [ "$branch" = "$home" ] || { legend; echo; }
     if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .ref // empty' "$here/variants.json")" ]; then
         echo "Generated from DotNetSolutionKit $tag at [${commit:0:7}](https://github.com/$template_repo/commit/$commit), not a release, with:"
     else
@@ -73,6 +90,7 @@ done
 if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false' "$here/variants.json")" = "true" ]; then
     mkdir -p .samples .github/workflows
     cp "$here/generate.sh" "$here/report.sh" "$here/ci-svg.py" "$here/variants.json" .samples/
+    python3 "$here/ci-svg.py" --legend .samples/legend.svg
     cp "$here/../.github/workflows/regenerate.yml" "$here/../.github/workflows/report.yml" .github/workflows/
     {
         echo
@@ -85,8 +103,9 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
         echo
         echo "The CI of each branch by day, as [the samples page](https://dnsk.sawking.tech/samples.html) shows it:"
         echo
-        raw="https://raw.githubusercontent.com/${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
         jq -r --arg raw "$raw" '.[] | "[![CI of \(.branch) by day](\($raw)/\(.branch)/reports/\(.branch)/ci.svg)](https://dnsk.sawking.tech/samples.html#\(.branch))\n"' "$here/variants.json"
+        legend
+        echo
         echo "Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches"
         echo "master is a release, and every release branch is generated again from a new one, pushed, and its CI runs."
         echo "nightly follows dev instead, where the next release is built: it is generated again when dev has moved."
