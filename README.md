@@ -20,6 +20,7 @@ Nothing here is edited by hand: the branch is replaced when the template moves o
 | [`single`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/single) | One service with the defaults: PostgreSQL, Hangfire, docker compose files, and CI. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=single)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Asingle) |
 | [`gateway`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/gateway) | Two services behind a YARP gateway that validates the token and forwards the user. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=gateway)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Agateway) |
 | [`full`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full) | Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse; two services. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull) |
+| [`full-alt`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full-alt) | SQL Server, xUnit, secrets from Vault, Kubernetes manifests and the audit journal, which rides on the bus with an outbox; two services. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full-alt)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull-alt) |
 | [`nightly`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/nightly) | The flags of full, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=nightly)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Anightly) |
 
 The CI of each branch by day, as [the samples page](https://dnsk.sawking.tech/samples.html) shows it:
@@ -29,6 +30,8 @@ The CI of each branch by day, as [the samples page](https://dnsk.sawking.tech/sa
 [![CI of gateway by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/gateway/reports/gateway/ci.svg)](https://dnsk.sawking.tech/samples.html#gateway)
 
 [![CI of full by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/reports/full/ci.svg)](https://dnsk.sawking.tech/samples.html#full)
+
+[![CI of full-alt by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full-alt/reports/full-alt/ci.svg)](https://dnsk.sawking.tech/samples.html#full-alt)
 
 [![CI of nightly by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/nightly/reports/nightly/ci.svg)](https://dnsk.sawking.tech/samples.html#nightly)
 
