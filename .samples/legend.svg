@@ -1,29 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="490" height="118" viewBox="0 0 490 118" role="img" aria-label="How to read the days: a day keeps the result of the last run, a pass fades to ice and a failure rots to dark red over 30 days without a run">
+<svg xmlns="http://www.w3.org/2000/svg" width="572" height="158" viewBox="0 0 572 158" role="img" aria-label="How to read the days: a day keeps the result of the last run; without a new run a pass turns a step bluer every 2 days and a failure a little darker every day, ice or dark red from day 30 on; a day keeps its colour">
 <style>text{font:11px system-ui,-apple-system,'Segoe UI',sans-serif}
 .t{font-size:13px;font-weight:600}
 .g{fill:#ffffff}.x{fill:#14203a}.m{fill:#5a6a8a}.e{fill:#eef2fa}
 @media (prefers-color-scheme: dark){.g{fill:#0e1526}.x{fill:#e6ecf5}.m{fill:#93a2bc}.e{fill:#141d33}}
 .Lpassed0{fill:#1f9d4c}
 @media (prefers-color-scheme: dark){.Lpassed0{fill:#3fb950}}
-.Lpassed1{fill:#3aa472}
-@media (prefers-color-scheme: dark){.Lpassed1{fill:#55bd7a}}
-.Lpassed2{fill:#4fa994}
-@media (prefers-color-scheme: dark){.Lpassed2{fill:#69c19d}}
-.Lpassed3{fill:#62afb5}
-@media (prefers-color-scheme: dark){.Lpassed3{fill:#7cc3bf}}
+.Lpassed1{fill:#279f57}
+@media (prefers-color-scheme: dark){.Lpassed1{fill:#45ba5c}}
+.Lpassed2{fill:#35a26b}
+@media (prefers-color-scheme: dark){.Lpassed2{fill:#51bc72}}
+.Lpassed3{fill:#4ca990}
+@media (prefers-color-scheme: dark){.Lpassed3{fill:#67c099}}
 .Lpassed4{fill:#74b3d6}
 @media (prefers-color-scheme: dark){.Lpassed4{fill:#8ec5e0}}
 .Lfailed0{fill:#cf3b2e}
 @media (prefers-color-scheme: dark){.Lfailed0{fill:#e08d79}}
-.Lfailed1{fill:#b13127}
-@media (prefers-color-scheme: dark){.Lfailed1{fill:#b86c5c}}
-.Lfailed2{fill:#932721}
-@media (prefers-color-scheme: dark){.Lfailed2{fill:#924c41}}
-.Lfailed3{fill:#771d1a}
-@media (prefers-color-scheme: dark){.Lfailed3{fill:#6d2e28}}
+.Lfailed1{fill:#c7382c}
+@media (prefers-color-scheme: dark){.Lfailed1{fill:#d58471}}
+.Lfailed2{fill:#b33128}
+@media (prefers-color-scheme: dark){.Lfailed2{fill:#bb6e5e}}
+.Lfailed3{fill:#932721}
+@media (prefers-color-scheme: dark){.Lfailed3{fill:#924c41}}
 .Lfailed4{fill:#5c1414}
 @media (prefers-color-scheme: dark){.Lfailed4{fill:#4a1010}}</style>
-<rect class="g" width="490" height="118" rx="6"/>
+<rect class="g" width="572" height="158" rx="6"/>
 <text class="t x" x="34" y="20">How to read the days</text>
 <text class="m" x="34" y="43">passed</text>
 <rect class="Lpassed0" x="82" y="34" width="11" height="11" rx="2"/>
@@ -31,20 +31,22 @@
 <rect class="Lpassed2" x="110" y="34" width="11" height="11" rx="2"/>
 <rect class="Lpassed3" x="124" y="34" width="11" height="11" rx="2"/>
 <rect class="Lpassed4" x="138" y="34" width="11" height="11" rx="2"/>
-<text class="m" x="160" y="43">a pass, fading to ice over 30 days without a run</text>
+<text class="m" x="160" y="43">the day of a pass, then a step bluer every 2 days without a run</text>
 <text class="m" x="34" y="63">failed</text>
 <rect class="Lfailed0" x="82" y="54" width="11" height="11" rx="2"/>
 <rect class="Lfailed1" x="96" y="54" width="11" height="11" rx="2"/>
 <rect class="Lfailed2" x="110" y="54" width="11" height="11" rx="2"/>
 <rect class="Lfailed3" x="124" y="54" width="11" height="11" rx="2"/>
 <rect class="Lfailed4" x="138" y="54" width="11" height="11" rx="2"/>
-<text class="m" x="160" y="63">a failure, rotting to dark red over 30 days without a run</text>
-<rect class="e" x="82" y="74" width="11" height="11" rx="2"/>
-<text class="m" x="160" y="83">no run yet</text>
-<rect class="e" x="82" y="94" width="11" height="11" rx="2" opacity="1.00"/>
-<rect class="e" x="96" y="94" width="11" height="11" rx="2" opacity="0.75"/>
-<rect class="e" x="110" y="94" width="11" height="11" rx="2" opacity="0.50"/>
-<rect class="e" x="124" y="94" width="11" height="11" rx="2" opacity="0.25"/>
-<rect class="e" x="138" y="94" width="11" height="11" rx="2" opacity="0.15"/>
-<text class="m" x="160" y="103">the weeks to come</text>
+<text class="m" x="160" y="63">the day of a failure, then a little darker every day without a run</text>
+<text class="m" x="160" y="83">the squares: 0, 2, 7, 15 and 30 days after the run</text>
+<text class="m" x="160" y="103">a day keeps its colour; a new run makes its day green or red again</text>
+<rect class="e" x="82" y="114" width="11" height="11" rx="2"/>
+<text class="m" x="160" y="123">no run yet</text>
+<rect class="e" x="82" y="134" width="11" height="11" rx="2" opacity="1.00"/>
+<rect class="e" x="96" y="134" width="11" height="11" rx="2" opacity="0.75"/>
+<rect class="e" x="110" y="134" width="11" height="11" rx="2" opacity="0.50"/>
+<rect class="e" x="124" y="134" width="11" height="11" rx="2" opacity="0.25"/>
+<rect class="e" x="138" y="134" width="11" height="11" rx="2" opacity="0.15"/>
+<text class="m" x="160" y="143">the weeks to come</text>
 </svg>

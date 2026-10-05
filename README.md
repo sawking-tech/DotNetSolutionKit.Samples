@@ -38,10 +38,11 @@ The CI of each branch by day, as [the samples page](https://dnsk.sawking.tech/sa
 ![How to read the days](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/.samples/legend.svg)
 
 Each square is a day in UTC, Monday at the top and Sunday at the bottom. A day shows the result of the
-last CI run up to it: green for a pass, red for a failure. With no new run the colour changes over 30
-days, a pass fading to ice blue and a failure turning dark red, so an old result is told apart from a
-fresh one. A pale square is a day before the first run; the fading squares on the right are the weeks
-to come.
+last CI run up to it: green for a pass, red for a failure. A day without a run shows how long ago the
+run was: after a pass it turns a step bluer every 2 days, after a failure a little darker every day,
+ice blue or dark red from day 30 on. A day keeps its colour; a new run makes its day green or red
+again. A pale square is a day before the first run; the fading squares on the right are the weeks to
+come.
 
 Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches
 master is a release, and every release branch is generated again from a new one, pushed, and its CI runs.
