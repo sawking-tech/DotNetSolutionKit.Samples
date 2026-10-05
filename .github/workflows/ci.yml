@@ -86,6 +86,9 @@ jobs:
             -e CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1 \
             clickhouse/clickhouse-server:24.8-alpine
 
+      - name: Start an SMTP server for the tests
+        run: docker run -d --name tests-smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog:v1.0.1
+
       - name: Start MongoDB for the tests
         run: |
           docker run -d --name tests-mongo -p 27017:27017 \
@@ -119,6 +122,7 @@ jobs:
             ready=1
             docker exec tests-pg pg_isready -U postgres >/dev/null 2>&1 || ready=0
             curl -fsS http://localhost:8123/ping >/dev/null 2>&1 || ready=0
+            curl -fsS "http://localhost:8025/api/v2/messages?limit=1" >/dev/null 2>&1 || ready=0
             docker exec tests-mongo mongosh --quiet -u tester -p test-do-not-use \
               --eval "db.adminCommand('ping').ok" >/dev/null 2>&1 || ready=0
             echo "s3.bucket.create -name tests" | docker exec -i tests-s3 weed shell -master=localhost:9333 2>&1 \
@@ -133,6 +137,8 @@ jobs:
         env:
           TEST_POSTGRES: Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=test-do-not-use
           TEST_CLICKHOUSE: Host=localhost;Port=8123;Username=tester;Password=test-do-not-use
+          TEST_SMTP: localhost:1025
+          TEST_SMTP_API: http://localhost:8025/
           TEST_MONGO: mongodb://tester:test-do-not-use@localhost:27017/?authSource=admin
           TEST_S3: ServiceUrl=http://localhost:8333;Bucket=tests;AccessKey=tester;SecretKey=test-do-not-use
         run: |

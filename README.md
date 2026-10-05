@@ -16,8 +16,8 @@ come.
 Generated from DotNetSolutionKit dev at [dbf9313](https://github.com/sawking-tech/DotNetSolutionKit/commit/dbf9313c29fd9cc08523e627ab66151b90dee700), not a release, with:
 
 ```bash
-dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true
-dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --MongoDB true
+dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --Notify email
+dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --MongoDB true --Notify email
 ```
 
 Nothing here is edited by hand: the branch is replaced when the template moves on.

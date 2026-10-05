@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageVersion Include="Azure.Identity" Version="1.17.1" />
     <PackageVersion Include="ClickHouse.Client" Version="7.14.0" />
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
@@ -46,8 +47,11 @@
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
     <PackageVersion Include="Microsoft.FeatureManagement" Version="4.8.0" />
     <PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="4.8.0" />
-    <!-- Held on 7.7.3, here and for System.IdentityModel.Tokens.Jwt: the version JwtBearer 8.0.x depends on. -->
-    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="7.7.3" />
+    <!-- 8.15.0 with email, here and for System.IdentityModel.Tokens.Jwt: the Graph SDK needs 8.x, and JwtBearer
+         8.0.x runs on it in production. -->
+    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
+    <PackageVersion Include="MailKit" Version="4.18.1" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.102.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageVersion Include="MongoDB.Driver" Version="3.12.0" />
     <PackageVersion Include="Moq" Version="4.21.0" />
@@ -68,7 +72,7 @@
     <!-- Held on 9: version 10 moves to Microsoft.OpenApi 2, whose types (OpenApiDocument, OpenApiOperation,
          the Models and Writers namespaces) the Swagger filters in Common.Web are written against. -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.7.3" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.4" />
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
