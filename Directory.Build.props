@@ -1,0 +1,39 @@
+<Project>
+  <!--
+    The version of every assembly under src/ comes from version.json next to this file.
+    To release a new version, edit "version" there and add an entry under "releaseNotes".
+
+    The short git SHA is recorded separately, as AssemblyMetadata "GitCommit", so the version
+    stays exactly what version.json says and /healthz reports the commit in its own field.
+    Where there is no .git folder, as in a Docker build context, pass GIT_SHA to the
+    running container instead.
+  -->
+  <PropertyGroup>
+    <VersionJsonPath>$(MSBuildThisFileDirectory)version.json</VersionJsonPath>
+    <_VersionJsonContent>$([System.IO.File]::ReadAllText('$(VersionJsonPath)'))</_VersionJsonContent>
+    <Version>$([System.Text.RegularExpressions.Regex]::Match($(_VersionJsonContent), '&quot;version&quot;\s*:\s*&quot;([^&quot;]+)&quot;').Groups[1].Value)</Version>
+    <!-- The SDK appends the commit to the informational version on its own; the commit has its own field. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <!-- A project sees only the projects it references itself, so a layer cannot reach another one by accident. -->
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+  </PropertyGroup>
+
+  <!-- Web projects carry version.json next to their binaries, where VersionInfo reads it at runtime. -->
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdkWeb)' == 'true'">
+    <None Include="$(VersionJsonPath)" Link="version.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="AddGitCommitMetadata" BeforeTargets="GetAssemblyAttributes">
+    <Exec Command="git rev-parse --short=7 HEAD"
+          ConsoleToMSBuild="true"
+          IgnoreExitCode="true"
+          StandardOutputImportance="low"
+          StandardErrorImportance="low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitShortSha" />
+      <Output TaskParameter="ExitCode" PropertyName="_GitExitCode" />
+    </Exec>
+    <ItemGroup Condition="'$(_GitExitCode)' == '0' AND '$(_GitShortSha)' != ''">
+      <AssemblyMetadata Include="GitCommit" Value="$(_GitShortSha)" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,0 +1,40 @@
+# This service under docker compose; started by deploy/compose/compose.sh with the infrastructure.
+# Paths are relative to the solution root.
+services:
+  orders:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: ST.DotNetSolutionKit.Samples.Orders
+        GIT_SHA: ${GIT_SHA:-local}
+    image: ${REGISTRY:-local}/dotnetsolutionkit_samples-orders:${TAG:-latest}
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DefaultConnection: Host=postgres;Database=${POSTGRES_DB:-app};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in deploy/compose/.env}
+      InternalApi__ApiKey: ${INTERNAL_API_KEY:-}
+      HangfireSettings__DashboardPassword: ${HANGFIRE_DASHBOARD_PASSWORD:?Set HANGFIRE_DASHBOARD_PASSWORD in deploy/compose/.env}
+      RabbitMq__Host: rabbitmq
+      RabbitMq__UserName: ${RABBITMQ_USER:-guest}
+      RabbitMq__Password: ${RABBITMQ_PASSWORD:-guest}
+      S3__ServiceUrl: http://s3:8333
+      S3__BucketName: ${S3_BUCKET:-app}
+      S3__AccessKey: ${S3_ACCESS_KEY:-app}
+      S3__SecretKey: ${S3_SECRET_KEY:-}
+    # Only on the host's loopback: a reverse proxy or a gateway in front publishes it.
+    ports:
+      - "127.0.0.1:5076:8080"
+    # Ready, not merely alive: whatever depends on this service starts once its database is reachable.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/ready"]
+      interval: 10s
+      timeout: 3s
+      start_period: 30s
+      retries: 12
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      s3-bucket:
+        condition: service_completed_successfully
