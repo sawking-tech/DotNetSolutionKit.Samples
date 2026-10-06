@@ -27,6 +27,7 @@
         <PackageReference Include="SharpGrip.FluentValidation.AutoValidation.Mvc" />
         <PackageReference Include="Swashbuckle.AspNetCore" />
         <!-- [FeatureGate] for endpoints behind a flag. -->
+        <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" />
     </ItemGroup>
 
     <ItemGroup>

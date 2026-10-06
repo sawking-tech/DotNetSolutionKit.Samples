@@ -45,6 +45,9 @@ public static class SchemaHost
         // --- Web layer shared by every service (Common.Web), with this service's own MVC additions ---
         builder.AddPlatformWebApi(typeof(SchemaHost).Assembly, mvc =>
         {
+            // The feature list endpoint ships with the platform, so every service answers about flags
+            // the same way instead of each writing its own endpoint.
+            mvc.AddApplicationPart(typeof(Common.Web.FeatureManagement.FeaturesController).Assembly);
         });
 
         // --- This service's own registrations ---
