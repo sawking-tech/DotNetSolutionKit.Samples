@@ -1,8 +1,8 @@
-# Sample: nightly
+# Sample: full-dev
 
 The flags of full and the ones dev adds before a release, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release.
 
-[![CI of nightly by day](reports/nightly/ci.svg)](https://dnsk.sawking.tech/samples.html#nightly)
+[![CI of full-dev by day](reports/full-dev/ci.svg)](https://dnsk.sawking.tech/samples.html#full-dev)
 
 ![How to read the days](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/.samples/legend.svg)
 
