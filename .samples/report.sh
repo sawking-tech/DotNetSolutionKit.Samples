@@ -6,7 +6,7 @@
 #
 # The reports live in reports/<branch>/, so two branches merged together keep each other's reports.
 # reports/<branch>/<version>.json keeps every run of the branch generated from that version (a release tag,
-# or the template's commit for nightly) and the branch's files; <version>.md is the same for a reader.
+# or the template's commit for full-dev) and the branch's files; <version>.md is the same for a reader.
 # reports/<branch>/ci.svg draws the branch's runs by day for its README (ci-svg.py).
 # reports/<branch>/index.json lists the reports with their last run: the site reads it from
 # raw.githubusercontent.com, which cannot list a folder. Reports an earlier run left directly in reports/

@@ -2,7 +2,7 @@ name: Regenerate
 
 # Once a day, checks the template's master: whatever reaches master is a release, tagged by its release.yml.
 # When master carries a release these samples are not generated from yet, every release branch is replaced
-# by a fresh generation from that tag. A branch with a "ref" in variants.json (nightly, on dev) follows that
+# by a fresh generation from that tag. A branch with a "ref" in variants.json (full-dev, on dev) follows that
 # branch of the template instead and is replaced when it has moved.
 #
 # The branches carry workflow files, which GITHUB_TOKEN may not push, and a push by GITHUB_TOKEN starts no

@@ -33,7 +33,7 @@
     ]
   },
   {
-    "branch": "nightly",
+    "branch": "full-dev",
     "ref": "dev",
     "about": "The flags of full and the ones dev adds before a release, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release.",
     "generate": [
