@@ -10,6 +10,7 @@ using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.ClickHouse;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Storage;
 using ST.DotNetSolutionKit.Samples.Orders.Application;
 using ST.DotNetSolutionKit.Samples.Orders.Infrastructure.EntityFramework;
@@ -82,6 +83,9 @@ public static partial class DependencyInjection
         // entity is created
         services.AddDatabaseQueries<OrdersDbContext>();
         
+        // ClickHouse, the ClickHouse section: connections, the schema check, readiness
+        services.AddClickHouse(configuration);
+
         // Object storage, the S3 section; S3:Enabled=false keeps nothing
         services.AddS3ObjectStorage(configuration);
 

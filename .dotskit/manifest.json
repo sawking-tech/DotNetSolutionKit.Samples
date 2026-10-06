@@ -10,8 +10,10 @@
     "--Hangfire",
     "true",
     "--Messaging",
-    "direct",
+    "outbox",
     "--Storage",
+    "true",
+    "--ClickHouse",
     "true",
     "--MongoDB",
     "true",
@@ -32,6 +34,8 @@
       "--Messaging",
       "outbox",
       "--Storage",
+      "true",
+      "--ClickHouse",
       "true"
     ],
     [
