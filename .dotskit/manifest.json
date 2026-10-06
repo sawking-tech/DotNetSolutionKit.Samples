@@ -1,0 +1,49 @@
+{
+  "_comment_template": "The version of DotNetSolutionKit the solution is generated with; dotskit upgrade moves it to the tool\u0027s",
+  "template": "2.6.2",
+  "_comment_solution": "The template\u0027s arguments of Common and the root: the names, the database, the deployment, the flags the services share",
+  "solution": [
+    "--NamespaceRoot",
+    "ST",
+    "--ProductName",
+    "DotNetSolutionKit.Samples",
+    "--Agent",
+    "none",
+    "--Storage",
+    "true",
+    "--GitHubCiCd",
+    "true",
+    "--Messaging",
+    "direct"
+  ],
+  "_comment_services": "Each service by its own arguments; dotskit new adds one or joins flags to one",
+  "services": [
+    [
+      "--ServiceNameOrCustom",
+      "Orders",
+      "--HttpPort",
+      "5076",
+      "--Messaging",
+      "outbox",
+      "--Storage",
+      "true"
+    ],
+    [
+      "--ServiceNameOrCustom",
+      "Billing",
+      "--HttpPort",
+      "5733",
+      "--Messaging",
+      "outbox",
+      "--Storage",
+      "true"
+    ]
+  ],
+  "_comment_packages": "How much of the template\u0027s package versions an upgrade brings",
+  "packages": {
+    "_comment_updates": "minor: patches and minor versions of packages come with an upgrade; patch: patches only; none: no package version changes",
+    "updates": "minor",
+    "_comment_pinned": "Packages kept on the version given here, whatever the template brings; the upgrade report names each one",
+    "pinned": {}
+  }
+}
