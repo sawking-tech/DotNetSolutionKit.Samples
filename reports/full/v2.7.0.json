@@ -299,6 +299,26 @@
         "line": 65.9,
         "branch": 64.4
       }
+    },
+    {
+      "run": 37531664661,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/37531664661",
+      "commit": "71912d310d18f33717e8c81ca9ae6cbcb49e591d",
+      "conclusion": "success",
+      "event": "push",
+      "started": "2026-10-06T21:08:02Z",
+      "finished": "2026-10-06T21:09:45Z",
+      "seconds": 103,
+      "tests": {
+        "failed": 0,
+        "passed": 399,
+        "skipped": 0,
+        "total": 399
+      },
+      "coverage": {
+        "line": 65.9,
+        "branch": 64.4
+      }
     }
   ],
   "branch": "full",
@@ -322,6 +342,7 @@
     ".gitattributes",
     ".github/workflows/api-diff.yml",
     ".github/workflows/ci.yml",
+    ".github/workflows/lifecycle.yml",
     ".github/workflows/regenerate.yml",
     ".github/workflows/report.yml",
     ".github/workflows/secret-scan.yml",
@@ -329,6 +350,7 @@
     ".samples/ci-svg.py",
     ".samples/generate.sh",
     ".samples/legend.svg",
+    ".samples/lifecycle.sh",
     ".samples/report.sh",
     ".samples/variants.json",
     "CLAUDE.md",
