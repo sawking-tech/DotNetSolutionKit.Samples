@@ -4,8 +4,6 @@ Every flag: the bus with an outbox, Infisical, feature flags, the API diff, acce
 
 [![CI of full by day](reports/full/ci.svg)](https://dnsk.sawking.tech/samples.html#full)
 
-![How to read the days](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/.samples/legend.svg)
-
 Generated from [DotNetSolutionKit v2.7.0](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.7.0) with:
 
 ```bash
@@ -37,6 +35,7 @@ The CI of each branch by day, as [the samples page](https://dnsk.sawking.tech/sa
 
 [![CI of full-dev by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full-dev/reports/full-dev/ci.svg)](https://dnsk.sawking.tech/samples.html#full-dev)
 
+![How to read the days](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/.samples/legend.svg)
 
 Each square is a day in UTC, Monday at the top and Sunday at the bottom. A day shows the result of the
 last CI run up to it: green for a pass, red for a failure. A day without a run shows how long ago the
