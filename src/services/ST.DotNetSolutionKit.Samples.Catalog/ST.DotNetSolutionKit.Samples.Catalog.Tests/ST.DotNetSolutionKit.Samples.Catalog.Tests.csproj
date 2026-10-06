@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="NUnit" />
+        <PackageReference Include="NUnit3TestAdapter" />
+        <PackageReference Include="coverlet.collector" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="Moq" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Web\ST.DotNetSolutionKit.Samples.Common.Web.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Catalog\ST.DotNetSolutionKit.Samples.Catalog.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Catalog.Application\ST.DotNetSolutionKit.Samples.Catalog.Application.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Catalog.Infrastructure\ST.DotNetSolutionKit.Samples.Catalog.Infrastructure.csproj" />
+      <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Catalog.API\ST.DotNetSolutionKit.Samples.Catalog.API.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Testing\ST.DotNetSolutionKit.Samples.Common.Testing.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Mongo\ST.DotNetSolutionKit.Samples.Capabilities.Mongo.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Notifications\ST.DotNetSolutionKit.Samples.Capabilities.Notifications.csproj" />
+    </ItemGroup>
+
+</Project>
