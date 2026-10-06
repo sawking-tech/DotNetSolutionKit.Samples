@@ -27,7 +27,7 @@
   },
   {
     "branch": "full",
-    "about": "Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse; two services.",
+    "about": "Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse, MongoDB and email; three services, the third, Notifications, added by dotskit after the template made the first two.",
     "generate": [
       {
         "since": "2.7.0",
@@ -39,8 +39,10 @@
       {
         "since": "2.8.0",
         "commands": [
-          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --Notify email",
-          "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true"
+          "-N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --allow-scripts yes",
+          "dotskit init",
+          "dotskit new -S Notifications --Notify email --Messaging outbox"
         ]
       }
     ],
@@ -62,13 +64,15 @@
   {
     "branch": "full-dev",
     "ref": "dev",
-    "about": "The flags of full and the ones dev adds before a release, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release.",
+    "about": "The flags of full and the ones dev adds before a release, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release. Its third service, Notifications, is added by dotskit after the template made the first two.",
     "generate": [
       {
         "since": "2.8.0",
         "commands": [
-          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --Notify email",
-          "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true"
+          "-N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --allow-scripts yes",
+          "dotskit init",
+          "dotskit new -S Notifications --Notify email --Messaging outbox"
         ]
       }
     ]
