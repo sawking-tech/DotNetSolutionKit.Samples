@@ -6,9 +6,12 @@
 #
 # The template comes from the release's package when it has one, from the sources at that tag or branch
 # otherwise.
-# What to generate for each branch is in variants.json. The branch marked "default" is the repository's
-# default branch: it also carries this automation (.samples/ and the regenerate workflow), so a
-# regeneration of it does not delete what regenerates it.
+# What to generate for each branch is in variants.json, as entries of commands, each with the version of
+# the template it holds from ("since"). The newest entry the version being generated has reached is used:
+# the release's tag, or the version.json of a branch of the template without its label (2.8.0-rc is 2.8.0).
+# So the flags of the next release are written down before it, and an old entry goes when nothing needs it.
+# The branch marked "default" is the repository's default branch: it also carries this automation
+# (.samples/ and the regenerate workflow), so a regeneration of it does not delete what regenerates it.
 set -euo pipefail
 
 tag="$1" branch="$2" out="$3"
@@ -22,16 +25,31 @@ hive=()
 
 if gh release download "$tag" -R "$template_repo" -p '*.nupkg' -D "$work/package" 2>/dev/null; then
     dotnet new install "$work"/package/*.nupkg --force "${hive[@]}"
+    version="${tag#v}"
 else
     git clone -q --depth 1 --branch "$tag" "https://github.com/$template_repo.git" "$work/template"
     commit=$(git -C "$work/template" rev-parse HEAD)
     dotnet new install "$work/template/template" --force "${hive[@]}"
+    version=$(jq -r .version "$work/template/version.json")
+    version="${version%%-*}"
 fi
+
+# The newest "since" the version has reached.
+newest() { printf '%s\n%s\n' "$1" "$2" | sort -V | tail -1; }
+since=""
+while read -r entry; do
+    if [ "$(newest "$entry" "$version")" = "$version" ] && { [ -z "$since" ] || [ "$(newest "$entry" "$since")" = "$entry" ]; }; then
+        since="$entry"
+    fi
+done < <(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .generate[].since' "$here/variants.json" | tr -d '\r')
+[ -n "$since" ] || { echo "variants.json has no commands for $branch at $version" >&2; exit 1; }
+echo "$branch at $version: the commands since $since"
 
 mkdir -p "$out"
 cd "$out"
-jq -r --arg b "$branch" '.[] | select(.branch == $b) | .generate[]' "$here/variants.json" | tr -d '\r' > "$work/commands"
-[ -s "$work/commands" ] || { echo "variants.json has no branch $branch" >&2; exit 1; }
+jq -r --arg b "$branch" --arg s "$since" '.[] | select(.branch == $b) | .generate[] | select(.since == $s) | .commands[]' \
+    "$here/variants.json" | tr -d '\r' > "$work/commands"
+[ -s "$work/commands" ] || { echo "variants.json has no commands for $branch since $since" >&2; exit 1; }
 while read -r args; do
     # Word splitting of the arguments is intended.
     # shellcheck disable=SC2086

@@ -3,24 +3,46 @@
     "branch": "single",
     "about": "One service with the defaults: PostgreSQL, Hangfire, docker compose files, and CI.",
     "generate": [
-      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true"
+      {
+        "since": "2.7.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true"
+        ]
+      }
     ]
   },
   {
     "branch": "gateway",
     "about": "Two services behind a YARP gateway that validates the token and forwards the user.",
     "generate": [
-      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true",
-      "-N ST -P DotNetSolutionKit.Samples -S Billing",
-      "-N ST -P DotNetSolutionKit.Samples -S Gateway --ApiGateway true"
+      {
+        "since": "2.7.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing",
+          "-N ST -P DotNetSolutionKit.Samples -S Gateway --ApiGateway true"
+        ]
+      }
     ]
   },
   {
     "branch": "full",
     "about": "Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse; two services.",
     "generate": [
-      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true",
-      "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true"
+      {
+        "since": "2.7.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true"
+        ]
+      },
+      {
+        "since": "2.8.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --Notify email",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true"
+        ]
+      }
     ],
     "default": true
   },
@@ -28,8 +50,13 @@
     "branch": "full-alt",
     "about": "SQL Server, xUnit, secrets from Vault, Kubernetes manifests and the audit journal, which rides on the bus with an outbox; two services.",
     "generate": [
-      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Database mssql --TestFramework xunit --Vault true --Deploy k8s --Messaging outbox --Audit true",
-      "-N ST -P DotNetSolutionKit.Samples -S Billing --Database mssql --TestFramework xunit --Vault true --Deploy k8s --Messaging outbox --Audit true"
+      {
+        "since": "2.7.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Database mssql --TestFramework xunit --Vault true --Deploy k8s --Messaging outbox --Audit true",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --Database mssql --TestFramework xunit --Vault true --Deploy k8s --Messaging outbox --Audit true"
+        ]
+      }
     ]
   },
   {
@@ -37,8 +64,13 @@
     "ref": "dev",
     "about": "The flags of full and the ones dev adds before a release, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release.",
     "generate": [
-      "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --Notify email",
-      "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --MongoDB true --Notify email"
+      {
+        "since": "2.8.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --Notify email",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true"
+        ]
+      }
     ]
   }
 ]
