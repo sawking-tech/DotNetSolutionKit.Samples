@@ -30,6 +30,7 @@
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.Infrastructure\ST.DotNetSolutionKit.Samples.Billing.Infrastructure.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.API\ST.DotNetSolutionKit.Samples.Billing.API.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Testing\ST.DotNetSolutionKit.Samples.Common.Testing.csproj" />
+      <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

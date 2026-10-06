@@ -10,10 +10,11 @@ using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
 namespace ST.DotNetSolutionKit.Samples.Common.Web.Authentication;
 
 /// <summary>
-/// Unified authentication setup for all services.
-/// Primary scheme: API Key (internal key forwarded by the Gateway after verifying the caller).
-/// JWT Bearer: optional fallback, registered only when "Jwt:PublicKeyPath" is configured
-/// (e.g. for direct developer access without the Gateway in local/dev environments).
+/// Unified authentication setup for all services: one composite scheme. A request with a token - the
+/// Bearer header or the access-token cookie - goes to JWT, registered only when "Jwt:PublicKeyPath" is
+/// configured; any other goes to the API key handler: calls between services and from the platform. The
+/// Gateway forwards the caller it verified with its internal key and passes the token on, so a service
+/// without "Jwt:PublicKeyPath", the default, takes it by the key, and one with it validates the token.
 /// </summary>
 public static class ServiceAuthenticationSetup
 {

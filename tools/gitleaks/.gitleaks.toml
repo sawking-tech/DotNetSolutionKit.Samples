@@ -38,6 +38,7 @@ regexTarget = "match"
 regexes = [
   '''://(?:postgres:postgres|guest:guest|root:root|admin:admin|user:password)@''',
   '''://[^\s:@/]+:(?:\$\{[^}]+\}|<[^>]+>)@''',
+  '''(?i)://[^\s:@/]+:[^\s:@/]*do-not-use@''',
 ]
 
 [[rules]]

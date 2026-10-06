@@ -1,6 +1,6 @@
 {
   "_comment_template": "The version of DotNetSolutionKit the solution is generated with; dotskit upgrade moves it to the tool\u0027s",
-  "template": "2.6.2",
+  "template": "source",
   "_comment_solution": "The template\u0027s arguments of Common and the root: the names, the database, the deployment, the flags the services share",
   "solution": [
     "--NamespaceRoot",

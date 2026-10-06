@@ -1,3 +1,5 @@
+// Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
 using Microsoft.AspNetCore.Http;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;

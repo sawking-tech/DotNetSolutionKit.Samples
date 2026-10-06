@@ -21,14 +21,15 @@ internal class PostgresShortIdGeneratorTests
     {
         _sequence = $"public.test_seq_{Guid.NewGuid():N}";
         await using var db = new Db(Postgres.ConnectionString());
-        await db.Database.ExecuteSqlRawAsync($"CREATE SEQUENCE {_sequence}");
+        // the name is made above from a Guid; a sequence name cannot be a SQL parameter
+        await db.Database.ExecuteSqlRawAsync("CREATE SEQUENCE " + _sequence);
     }
 
     [TearDown]
     public async Task DropSequence()
     {
         await using var db = new Db(Postgres.ConnectionString());
-        await db.Database.ExecuteSqlRawAsync($"DROP SEQUENCE IF EXISTS {_sequence}");
+        await db.Database.ExecuteSqlRawAsync("DROP SEQUENCE IF EXISTS " + _sequence);
     }
 
     [Test(Description = "Each call takes the next number")]

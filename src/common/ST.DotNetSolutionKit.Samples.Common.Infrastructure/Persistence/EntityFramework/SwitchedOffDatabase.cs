@@ -21,7 +21,8 @@ public static class SwitchedOffDatabase
     /// A connection string that names no reachable host (<c>.invalid</c> is reserved, RFC 2606), in case
     /// something opens a connection around the interceptor.
     /// </summary>
-    public const string ConnectionString = "Host=database-switched-off.invalid;Database=none";
+    // Server and Database are keywords of Npgsql and of SqlClient alike, so either provider reads it.
+    public const string ConnectionString = "Server=database-switched-off.invalid;Database=none";
 
     /// <summary>Makes every connection of this context fail with 503.</summary>
     public static DbContextOptionsBuilder UseSwitchedOffDatabase(this DbContextOptionsBuilder options) =>

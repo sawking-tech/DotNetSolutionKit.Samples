@@ -1,24 +1,19 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Hangfire;
-using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
-using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Persistence;
-using ST.DotNetSolutionKit.Samples.Common.Domain.Specifications;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.Postgres;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Storage;
 using ST.DotNetSolutionKit.Samples.Orders.Application;
 using ST.DotNetSolutionKit.Samples.Orders.Infrastructure.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Orders.Infrastructure.EntityFramework.DataSeeding;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Specifications;
 
 namespace ST.DotNetSolutionKit.Samples.Orders.Infrastructure;
 
@@ -26,7 +21,7 @@ namespace ST.DotNetSolutionKit.Samples.Orders.Infrastructure;
 /// Extensions for registering infrastructure services in DI container.
 /// </summary>
 [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
-public static class DependencyInjection
+public static partial class DependencyInjection
 {
     /// <summary>
     /// Register infrastructure services.
@@ -51,7 +46,7 @@ public static class DependencyInjection
             var serviceName = typeof(DomainMarker).Namespace!;
 
             // 1. Guard for Main Database Schema
-            PostgresSchemaGuard.EnsureExclusiveSchema(connectionString, OrdersDbContext.DefaultSchemaName, serviceName);
+            DatabaseProvider.EnsureExclusiveSchema(connectionString, OrdersDbContext.DefaultSchemaName, serviceName);
         }
         else
         {
@@ -68,8 +63,7 @@ public static class DependencyInjection
         // are not re-attached to a context handed back by the pool, and they would quietly do nothing.
         services.AddDbContext<OrdersDbContext>((sp, options) =>
         {
-            options.UseNpgsql(connectionString,
-                x => { x.MigrationsHistoryTable("__EFMigrationsHistory", OrdersDbContext.DefaultSchemaName); });
+            options.UseDatabase(connectionString, OrdersDbContext.DefaultSchemaName);
             if (!switches.Database)
                 options.UseSwitchedOffDatabase();
             options.ApplyDomainEventInterceptors(sp);
@@ -84,11 +78,9 @@ public static class DependencyInjection
 
         // Repositories
         
-        // Specifications
-        services.AddScoped<ICaseInsensitiveSearch, PostgresCaseInsensitiveSearch>();
-
-        // Readable numbers from a sequence, taken before the entity is created
-        services.AddScoped<IShortIdGenerator, PostgresShortIdGenerator<OrdersDbContext>>();
+        // Specifications: case-insensitive search; readable numbers from a sequence, taken before the
+        // entity is created
+        services.AddDatabaseQueries<OrdersDbContext>();
         
         // Object storage, the S3 section; S3:Enabled=false keeps nothing
         services.AddS3ObjectStorage(configuration);
@@ -106,44 +98,6 @@ public static class DependencyInjection
 
         // Data Seeding
         services.AddScoped<DataSeeder>();
-        
-        // Polly Policies
-
-        return services;
-    }
-
-    /// <summary>
-    /// Register Hangfire and background job services.
-    /// </summary>
-    private static IServiceCollection AddBackgroundJobs(this IServiceCollection services, string connectionString)
-    {
-        var serviceName = typeof(DomainMarker).Namespace!;
-        var hangfireSchemaName = $"{OrdersDbContext.DefaultSchemaName}_hangfire";
-
-        // Guard for Hangfire Schema
-        PostgresSchemaGuard.EnsureExclusiveSchema(connectionString, hangfireSchemaName, serviceName);
-
-        services.AddHangfire(config => config
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UsePostgreSqlStorage(c => 
-                c.UseNpgsqlConnection(connectionString), new PostgreSqlStorageOptions
-            {
-                SchemaName = hangfireSchemaName,
-                PrepareSchemaIfNecessary = true
-            }));
-    
-        services.AddHangfireServer((sp, options) =>
-        {
-            var settings = sp.GetRequiredService<IHangfireSettings>();
-            options.WorkerCount = settings.WorkerCount;
-        });
-
-        // Jobs run in a scope the domain event interceptors can see, so events a job raises are not
-        // dropped; the filter carries the person who enqueued a job into it, for attribution.
-        services.AddDomainEventJobActivator();
-        services.AddHostedService(sp => new HangfireFilterInstaller(sp));
 
         return services;
     }

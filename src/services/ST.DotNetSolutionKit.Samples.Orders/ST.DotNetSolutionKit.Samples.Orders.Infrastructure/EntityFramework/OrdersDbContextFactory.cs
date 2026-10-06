@@ -2,21 +2,18 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 
 namespace ST.DotNetSolutionKit.Samples.Orders.Infrastructure.EntityFramework;
 
 [UsedImplicitly]
 public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContext>
 {
-    private const string PlaceholderConnectionString = "Host=localhost;Database=design-time-placeholder";
-
-    private static DbContextOptions<OrdersDbContext> GetNpgsqlOptions(string connectionString)
+    private static DbContextOptions<OrdersDbContext> GetOptions(string connectionString)
     {
-        return new DbContextOptionsBuilder<OrdersDbContext>()
-            .UseNpgsql(connectionString,
-                x => { x.MigrationsHistoryTable("__EFMigrationsHistory", OrdersDbContext.DefaultSchemaName); })
-            .Options;
+        var options = new DbContextOptionsBuilder<OrdersDbContext>();
+        options.UseDatabase(connectionString, OrdersDbContext.DefaultSchemaName);
+        return options.Options;
     }
 
     private static string GetConnectionString()
@@ -61,7 +58,7 @@ public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContex
             Console.WriteLine(
                 "Connection string 'DefaultConnection' not found: using a placeholder. " +
                 "Enough to add a migration; set ConnectionStrings__DefaultConnection to touch a database.");
-            return PlaceholderConnectionString;
+            return DatabaseProvider.DesignTimeConnectionString;
         }
 
         Console.WriteLine("Successfully found connection string");
@@ -73,9 +70,8 @@ public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContex
         var connectionString = GetConnectionString();
 
         // Name the target database without the credentials: this output lands in terminals and CI logs.
-        var target = new NpgsqlConnectionStringBuilder(connectionString);
-        Console.WriteLine($"Database: {target.Host}:{target.Port}/{target.Database} as {target.Username ?? "(no user)"}");
+        Console.WriteLine($"Database: {DatabaseProvider.DescribeTarget(connectionString)}");
 
-        return new OrdersDbContext(GetNpgsqlOptions(connectionString));
+        return new OrdersDbContext(GetOptions(connectionString));
     }
 }

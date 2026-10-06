@@ -2,7 +2,7 @@
     using ST.DotNetSolutionKit.Samples.Common.Domain.Persistence;
     using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
-using Npgsql;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
     using Microsoft.EntityFrameworkCore.Storage;
 
     using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
@@ -27,6 +27,12 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
             {
                 return await base.SaveChangesAsync(cancellationToken);
             }
+            catch (DbUpdateConcurrencyException exception)
+            {
+                // A row changed by someone else since it was read: the caller reloads and tries again,
+                // which a 409 says. Left as it is, the EF exception reaches the client as a 500.
+                throw new ConcurrencyException(ConcurrencyMessage, exception);
+            }
             catch (DbUpdateException exception) when (IsUniqueViolation(exception))
             {
                 // A refused insert reaches the caller as the refusal it is, naming the field, instead
@@ -38,8 +44,10 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
 
         private const string UniqueViolationMessage = "A record with these values already exists.";
 
+        private const string ConcurrencyMessage = "The row was changed by another write since it was read.";
+
         private static bool IsUniqueViolation(DbUpdateException exception) =>
-            exception.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation };
+            DatabaseProvider.IsUniqueViolation(exception);
 
         public Dictionary<string, (Type Type, object? OriginalValue, object? CurrentValue)> GetChangesFor(
             object entity, bool isNewEntity = false)
@@ -122,6 +130,12 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
                 await RollbackTransactionAsync(cancellationToken);
                 throw;
             }
+
+            // A relational commit has run the post-commit phase through the transaction interceptor. A
+            // provider without relational transactions, as the in-memory one of the service tests, fires
+            // no transaction event, so the phase runs here.
+            if (!Database.IsRelational())
+                await DomainEventCompletion.CommittedAsync(this, cancellationToken);
         }
 
         /// <summary>
@@ -140,6 +154,9 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
             {
                 await DisposeTransactionAsync();
             }
+
+            if (!Database.IsRelational())
+                await DomainEventCompletion.RolledBackAsync(this, cancellationToken);
         }
 
         public bool HasActiveTransaction => _currentTransaction != null;

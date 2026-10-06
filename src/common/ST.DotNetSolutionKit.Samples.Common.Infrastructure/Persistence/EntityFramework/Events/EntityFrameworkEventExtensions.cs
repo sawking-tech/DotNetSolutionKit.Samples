@@ -31,6 +31,10 @@ public static class EntityFrameworkEventExtensions
     /// </summary>
     public static IServiceCollection AddDomainEventHandlers(this IServiceCollection services, params Assembly[] assemblies)
     {
+        DomainEventHandlerPhases.ThrowIfOneHandleServesTwoPhases(assemblies
+            .SelectMany(DomainEventHandlerPhases.LoadableTypes)
+            .Where(t => t is { IsClass: true, IsAbstract: false }));
+
         services.Scan(scan => scan
             .FromAssemblies(assemblies)
             .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)))

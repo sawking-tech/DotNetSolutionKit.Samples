@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Diagnostics;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Diagnostics;
@@ -13,11 +14,11 @@ namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Diagnostics;
 internal class OutboxStatsQueryTests
 {
     // Building the model needs no database: the connection string is never opened.
-    private const string NoDatabase = "Host=localhost;Database=never-opened";
+    private const string NoDatabase = "Server=localhost;Database=never-opened";
 
     // EF caches a model per context type, so each schema gets a type of its own.
     private abstract class WithOutbox<TSelf>(string schema) : DbContext(
-        new DbContextOptionsBuilder<TSelf>().UseNpgsql(NoDatabase).Options) where TSelf : DbContext
+        new DbContextOptionsBuilder<TSelf>().UseSolutionDatabase(NoDatabase).Options) where TSelf : DbContext
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder) =>
             modelBuilder.AddTransactionalOutbox(schema);
@@ -28,14 +29,16 @@ internal class OutboxStatsQueryTests
     private sealed class OddSchemaOutbox() : WithOutbox<OddSchemaOutbox>("odd\"schema");
 
     private sealed class WithoutOutbox() : DbContext(
-        new DbContextOptionsBuilder<WithoutOutbox>().UseNpgsql(NoDatabase).Options);
+        new DbContextOptionsBuilder<WithoutOutbox>().UseSolutionDatabase(NoDatabase).Options);
 
     [Test(Description = "The table is the one the model maps, in the service's schema")]
     public void Should_ResolveTheMappedTable()
     {
         using var db = new OrdersOutbox();
 
-        OutboxStatsQuery.ResolveOutboxTable(db).ShouldBe("orders.outbox_message");
+        // Each provider quotes as it does: SQL Server always, PostgreSQL only what needs it.
+        var expected = DatabaseProvider.IsSqlServer ? "[orders].[outbox_message]" : "orders.outbox_message";
+        OutboxStatsQuery.ResolveOutboxTable(db).ShouldBe(expected);
     }
 
     [Test(Description = "A schema name that is not a plain identifier is quoted, its quote doubled")]
@@ -43,7 +46,10 @@ internal class OutboxStatsQueryTests
     {
         using var db = new OddSchemaOutbox();
 
-        OutboxStatsQuery.ResolveOutboxTable(db).ShouldBe("\"odd\"\"schema\".outbox_message");
+        var expected = DatabaseProvider.IsSqlServer
+            ? "[odd\"schema].[outbox_message]"
+            : "\"odd\"\"schema\".outbox_message";
+        OutboxStatsQuery.ResolveOutboxTable(db).ShouldBe(expected);
     }
 
     [Test(Description = "A context without an outbox says what to add instead of querying a missing table")]

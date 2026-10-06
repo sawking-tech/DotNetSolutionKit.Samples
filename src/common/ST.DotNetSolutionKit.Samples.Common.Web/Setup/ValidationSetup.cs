@@ -60,7 +60,7 @@ public static class ValidationSetup
     /// </remarks>
     private sealed class UnprocessableEntityResultFactory : IFluentValidationAutoValidationResultFactory
     {
-        public Task<IActionResult> CreateActionResult(
+        public Task<IActionResult?> CreateActionResult(
             ActionExecutingContext context,
             ValidationProblemDetails validationProblemDetails,
             IDictionary<IValidationContext, ValidationResult> validationResults)
@@ -69,7 +69,7 @@ public static class ValidationSetup
                 .GetRequiredService<ProblemDetailsFactory>()
                 .CreateValidationProblemDetails(
                     context.HttpContext, context.ModelState, StatusCodes.Status422UnprocessableEntity);
-            return Task.FromResult<IActionResult>(new UnprocessableEntityObjectResult(problem));
+            return Task.FromResult<IActionResult?>(new UnprocessableEntityObjectResult(problem));
         }
     }
 }

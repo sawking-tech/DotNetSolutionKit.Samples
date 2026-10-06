@@ -1,9 +1,10 @@
 {
-  "version": "1.0.0",
+  "version": "0.1.0",
   "releaseNotes": {
-    "1.0.0": {
+    "0.1.0": {
       "headline": "First version of the solution.",
-      "highlights": []
+      "highlights": [],
+      "_comment_highlights": "What a release brings, a sentence each, added when the version is raised; empty for the first version"
     }
   }
 }

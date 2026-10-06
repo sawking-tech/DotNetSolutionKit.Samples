@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
 
@@ -230,8 +231,7 @@ public static class DependencyInjection
     {
         bus.AddEntityFrameworkOutbox<TDbContext>(outbox =>
         {
-            // NOTE: Change to UseSqlServer() if switching database provider
-            outbox.UsePostgres();
+            outbox.UseDatabaseLocks();
             outbox.UseBusOutbox();
             outbox.DuplicateDetectionWindow = TimeSpan.FromSeconds(30);
         });

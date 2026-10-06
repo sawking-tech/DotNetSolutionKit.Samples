@@ -8,17 +8,15 @@ using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Idempotency;
 using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
-using Npgsql;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Integration;
 
 /// <summary>
-/// A client that retries must not create a second thing. Checked on a real PostgreSQL, because the
-/// unique index on the log is what decides a race, and nothing in memory behaves like it.
+/// A client that retries must not create a second thing. Checked on a real database, because the unique
+/// index on the log is what decides a race, and nothing in memory behaves like it; each database the
+/// template supports runs the same checks below.
 /// </summary>
-[TestFixture]
-[Category(TestCategories.Integration)]
-internal class IdempotentExecutorTests
+internal abstract class IdempotentExecutorTests
 {
     private const string Operation = "widgets.create";
     private const string Key = "same-request-retried";
@@ -28,7 +26,7 @@ internal class IdempotentExecutorTests
 
     // --- the model: a widget whose name is unique, so its own violations can be told from the key's -----
 
-    private sealed class Widget : Entity<Guid>, IAggregateRoot
+    protected sealed class Widget : Entity<Guid>, IAggregateRoot
     {
         private Widget() { }
 
@@ -42,7 +40,7 @@ internal class IdempotentExecutorTests
         public string Name { get; private set; } = string.Empty;
     }
 
-    private sealed class Db(DbContextOptions<Db> options) : DbContextBase(options)
+    protected sealed class Db(DbContextOptions<Db> options) : DbContextBase(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,29 +62,23 @@ internal class IdempotentExecutorTests
     [SetUp]
     public async Task CreateDatabase()
     {
-        var admin = Postgres.ConnectionString();
         _database = $"idempotency_{Guid.NewGuid():N}";
-        await using (var connection = new NpgsqlConnection(admin))
-        {
-            await connection.OpenAsync();
-            await new NpgsqlCommand($"CREATE DATABASE \"{_database}\"", connection).ExecuteNonQueryAsync();
-        }
-
-        _connection = new NpgsqlConnectionStringBuilder(admin) { Database = _database }.ToString();
+        _connection = await CreateDatabaseAsync(_database);
         await using var db = NewDb();
         await db.Database.EnsureCreatedAsync();
     }
 
     [TearDown]
-    public async Task DropDatabase()
-    {
-        NpgsqlConnection.ClearAllPools();
-        await using var connection = new NpgsqlConnection(Postgres.ConnectionString());
-        await connection.OpenAsync();
-        await new NpgsqlCommand($"DROP DATABASE IF EXISTS \"{_database}\" WITH (FORCE)", connection).ExecuteNonQueryAsync();
-    }
+    public Task DropDatabase() => DropDatabaseAsync(_database);
 
-    private Db NewDb() => new(new DbContextOptionsBuilder<Db>().UseNpgsql(_connection).Options);
+    /// <summary>Creates an empty database and returns the connection string to it.</summary>
+    protected abstract Task<string> CreateDatabaseAsync(string name);
+
+    protected abstract Task DropDatabaseAsync(string name);
+
+    protected abstract DbContextOptions<Db> Options(string connection);
+
+    private Db NewDb() => new(Options(_connection));
 
     private static TestDomainExecutionContext Actor(Guid? tenant = null) =>
         new(new UserContextMock("11111111-1111-1111-1111-111111111111") { TenantId = tenant }, TimeProvider.System);
