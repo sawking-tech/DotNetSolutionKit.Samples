@@ -110,7 +110,7 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
         echo
         echo "Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches"
         echo "master is a release, and every release branch is generated again from a new one, pushed, and its CI runs."
-        echo "nightly follows dev instead, where the next release is built: it is generated again when dev has moved."
+        echo "full-dev follows dev instead, where the next release is built: it is generated again when dev has moved."
         echo "After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's"
         echo "reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release, and"
         echo "ci.svg, the picture of its days above."
