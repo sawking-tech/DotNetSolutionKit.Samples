@@ -55,7 +55,8 @@ while read -r args; do
     # shellcheck disable=SC2086
     dotnet new DotNetSolutionKit $args "${hive[@]}"
 done < "$work/commands"
-bash src/services/manual-add-projects.sh < /dev/null
+# Before 2.8 a service joined All.sln by this script; since, it adds itself, and there is no script.
+[ ! -f src/services/manual-add-projects.sh ] || bash src/services/manual-add-projects.sh < /dev/null
 
 about=$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .about' "$here/variants.json")
 home=$(jq -r '.[] | select(.default) | .branch' "$here/variants.json")
@@ -109,9 +110,9 @@ done
 
 if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false' "$here/variants.json")" = "true" ]; then
     mkdir -p .samples .github/workflows
-    cp "$here/generate.sh" "$here/report.sh" "$here/ci-svg.py" "$here/variants.json" .samples/
+    cp "$here/generate.sh" "$here/lifecycle.sh" "$here/report.sh" "$here/ci-svg.py" "$here/variants.json" .samples/
     python3 "$here/ci-svg.py" --legend .samples/legend.svg
-    cp "$here/../.github/workflows/regenerate.yml" "$here/../.github/workflows/report.yml" .github/workflows/
+    cp "$here/../.github/workflows/regenerate.yml" "$here/../.github/workflows/lifecycle.yml" "$here/../.github/workflows/report.yml" .github/workflows/
     {
         echo
         echo "## The samples"
@@ -129,6 +130,9 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
         echo "Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches"
         echo "master is a release, and every release branch is generated again from a new one, pushed, and its CI runs."
         echo "full-dev follows dev instead, where the next release is built: it is generated again when dev has moved."
+        echo "[lifecycle]($repo/tree/lifecycle) is the life of a solution rather than a generation: made with the release"
+        echo "two minors before the next one, changed by the team, then described, upgraded and grown by dotskit, a commit"
+        echo "a step; [its workflow](.github/workflows/lifecycle.yml) builds it again when dev has moved."
         echo "After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's"
         echo "reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release, and"
         echo "ci.svg, the picture of its days above."

@@ -1,0 +1,83 @@
+name: Lifecycle
+
+# The life of a solution on the branch lifecycle, built again when the template's dev has moved: a solution
+# made with the release two minors before the next one, changed by the team, then described, upgraded and
+# grown by dotskit, each step a commit (.samples/lifecycle.sh). dotskit builds the solution after each command;
+# the branch's own CI then runs on the result, as on every sample branch, and report.yml writes its report.
+#
+# Pushed with SAMPLES_DEPLOY_KEY, as regenerate.yml does: the branch carries workflow files, and a push by
+# GITHUB_TOKEN would start no CI. This file lives on the default branch; generate.sh puts it back on each
+# regeneration of it.
+
+on:
+  schedule:
+    - cron: '47 3 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Build the branch again even when dev has not moved
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# One run at a time: two would force-push over each other, and a report written between could be lost.
+concurrency: lifecycle
+
+env:
+  TEMPLATE_REPO: sawking-tech/DotNetSolutionKit
+  TEMPLATE_REF: dev
+  BRANCH: lifecycle
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    outputs:
+      build: ${{ steps.moved.outputs.build }}
+    steps:
+      - id: moved
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          want=$(gh api "repos/$TEMPLATE_REPO/commits/$TEMPLATE_REF" -q .sha)
+          have=$(gh api "repos/$GITHUB_REPOSITORY/contents/template-version?ref=$BRANCH" -q .content 2>/dev/null | base64 -d || echo none)
+          echo "$BRANCH: built from ${have:0:7}, $TEMPLATE_REF is ${want:0:7}"
+          if [ "$want" != "$have" ] || [ "$FORCE" = "true" ]; then echo "build=true" >> "$GITHUB_OUTPUT"; else echo "build=false" >> "$GITHUB_OUTPUT"; fi
+
+  build:
+    needs: check
+    if: needs.check.outputs.build == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: automation
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: The life of a solution, step by step
+        run: bash automation/.samples/lifecycle.sh "$TEMPLATE_REF" "$RUNNER_TEMP/lifecycle"
+
+      # The branch is replaced by the new history; the reports of earlier runs stay, as the site shows them. They
+      # join the last commit: a commit of their own would say [skip ci], and as the head it would start no CI.
+      - name: Replace the branch
+        env:
+          DEPLOY_KEY: ${{ secrets.SAMPLES_DEPLOY_KEY }}
+        run: |
+          key="$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "$DEPLOY_KEY" > "$key" && chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          cd "$RUNNER_TEMP/lifecycle"
+          if git ls-remote --exit-code "git@github.com:${GITHUB_REPOSITORY}.git" "refs/heads/$BRANCH" >/dev/null; then
+            git fetch -q "git@github.com:${GITHUB_REPOSITORY}.git" "$BRANCH"
+            if git cat-file -e FETCH_HEAD:reports 2>/dev/null; then
+              git checkout -q FETCH_HEAD -- reports
+              git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+                commit -q --amend --no-edit
+            fi
+          fi
+          git push -q --force "git@github.com:${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$BRANCH"
