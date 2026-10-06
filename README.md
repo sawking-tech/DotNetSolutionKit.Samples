@@ -13,11 +13,11 @@ ice blue or dark red from day 30 on. A day keeps its colour; a new run makes its
 again. A pale square is a day before the first run; the fading squares on the right are the weeks to
 come.
 
-Generated from DotNetSolutionKit dev at [4217f9c](https://github.com/sawking-tech/DotNetSolutionKit/commit/4217f9c813a967ad96133ea15d248f46225ad8f9), not a release, with:
+Generated from DotNetSolutionKit dev at [e834340](https://github.com/sawking-tech/DotNetSolutionKit/commit/e834340de5a31fdf4773bb3843741d587f02727f), not a release, with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --Notify email
-dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --MongoDB true --Notify email
+dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true
 ```
 
 Nothing here is edited by hand: the branch is replaced when the template moves on.

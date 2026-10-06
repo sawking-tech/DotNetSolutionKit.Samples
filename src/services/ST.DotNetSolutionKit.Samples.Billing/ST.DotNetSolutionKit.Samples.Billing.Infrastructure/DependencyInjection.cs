@@ -11,8 +11,6 @@ using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFrame
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.ClickHouse;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Mongo;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Notifications;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Storage;
 using ST.DotNetSolutionKit.Samples.Billing.Application;
 using ST.DotNetSolutionKit.Samples.Billing.Infrastructure.EntityFramework;
@@ -87,12 +85,6 @@ public static partial class DependencyInjection
         
         // ClickHouse, the ClickHouse section: connections, the schema check, readiness
         services.AddClickHouse(configuration);
-
-        // MongoDB, the MongoDB section: the client, the service's database, readiness
-        services.AddMongoDB(configuration);
-
-        // Email, the Email section: the transport of the provider it names, the sandbox outside Production
-        services.AddNotifications(configuration);
 
         // Object storage, the S3 section; S3:Enabled=false keeps nothing
         services.AddS3ObjectStorage(configuration);
