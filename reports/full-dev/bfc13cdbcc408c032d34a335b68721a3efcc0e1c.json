@@ -1,28 +1,28 @@
 {
   "runs": [
     {
-      "run": 37193118827,
-      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/37193118827",
-      "commit": "a8084bbb6c39ab3f6bcdccf5395e81bc04a287d1",
+      "run": 37211386874,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/37211386874",
+      "commit": "ae0abb860d05b749e8f59e5d766439efda14596d",
       "conclusion": "success",
       "event": "push",
-      "started": "2026-10-04T09:44:28Z",
-      "finished": "2026-10-04T09:45:54Z",
-      "seconds": 86,
+      "started": "2026-10-04T15:00:36Z",
+      "finished": "2026-10-04T15:02:00Z",
+      "seconds": 84,
       "tests": {
         "failed": 0,
-        "passed": 377,
+        "passed": 387,
         "skipped": 0,
-        "total": 377
+        "total": 387
       },
       "coverage": {
-        "line": 64.8,
-        "branch": 62.8
+        "line": 65.1,
+        "branch": 63.4
       }
     }
   ],
-  "branch": "nightly",
-  "version": "7017c78caf68d4b09312dadc88bcbf79e0ae8208",
+  "branch": "full-dev",
+  "version": "bfc13cdbcc408c032d34a335b68721a3efcc0e1c",
   "files": [
     ".dockerignore",
     ".gitattributes",
@@ -126,6 +126,7 @@
     "src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure/Persistence/EntityFramework/DbContextBase.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure/Persistence/EntityFramework/EntityFrameworkRepository.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure/Persistence/EntityFramework/Events/DomainEventErrorInterceptor.cs",
+    "src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure/Persistence/EntityFramework/Events/DomainEventHandlerPhases.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure/Persistence/EntityFramework/Events/DomainEventInfrastructureResolver.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure/Persistence/EntityFramework/Events/DomainEventJobActivator.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure/Persistence/EntityFramework/Events/DomainEventPreSaveInterceptor.cs",
@@ -217,6 +218,7 @@
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Errors/ErrorHandlingTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Errors/PlatformExceptionMapperTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Events/DomainEventDispatcherTests.cs",
+    "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Events/DomainEventHandlerPhasesTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Events/DomainEventInfrastructureResolverTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Events/DomainEventJobActivatorTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Events/DomainEventPreSaveInterceptorCascadeTests.cs",
@@ -248,6 +250,7 @@
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Web/PlatformWebHostTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Web/RemotePermissionServiceTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Web/SchemaValuesFromFilterTests.cs",
+    "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tests/Web/SwaggerSettingsTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Tests/Tracing/CorrelationIdMiddlewareTests.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Authentication/AuthCookieExtensions.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Authentication/AuthCookieSettings.cs",
@@ -284,7 +287,10 @@
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Swagger/Filters/AuthorizationOperationFilter.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Swagger/Filters/PermissionsOperationFilter.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Swagger/Filters/SchemaValuesFromFilter.cs",
+    "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Swagger/Filters/ScrubDescriptionsFilter.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Swagger/Filters/VersionedDocumentFilter.cs",
+    "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Swagger/SwaggerServers.cs",
+    "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Swagger/SwaggerSettings.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Swagger/SwaggerSetup.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Tracing/CorrelationIdMiddleware.cs",
     "src/common/ST.DotNetSolutionKit.Samples.Common.Web/Tracing/HttpCorrelationContext.cs",

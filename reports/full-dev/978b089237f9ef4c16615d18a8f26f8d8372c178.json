@@ -18,7 +18,7 @@
       "coverage": null
     }
   ],
-  "branch": "nightly",
+  "branch": "full-dev",
   "version": "978b089237f9ef4c16615d18a8f26f8d8372c178",
   "files": [
     ".claude/skills/add-controller/SKILL.md",
