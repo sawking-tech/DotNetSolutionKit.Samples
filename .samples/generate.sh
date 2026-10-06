@@ -23,8 +23,9 @@ commit=""
 hive=()
 [ -n "${TEMPLATE_HIVE:-}" ] && hive=(--debug:custom-hive "$TEMPLATE_HIVE")
 
+# A release carries the template's package and, from 2.8, its tool's; the template is installed from its own.
 if gh release download "$tag" -R "$template_repo" -p '*.nupkg' -D "$work/package" 2>/dev/null; then
-    dotnet new install "$work"/package/*.nupkg --force "${hive[@]}"
+    dotnet new install "$work"/package/SawKing.DotNetSolutionKit.*.nupkg --force "${hive[@]}"
     version="${tag#v}"
 else
     git clone -q --depth 1 --branch "$tag" "https://github.com/$template_repo.git" "$work/template"
@@ -50,10 +51,30 @@ cd "$out"
 jq -r --arg b "$branch" --arg s "$since" '.[] | select(.branch == $b) | .generate[] | select(.since == $s) | .commands[]' \
     "$here/variants.json" | tr -d '\r' > "$work/commands"
 [ -s "$work/commands" ] || { echo "variants.json has no commands for $branch since $since" >&2; exit 1; }
+# A command that starts with dotskit runs the template's tool of the same version: built from the sources of a
+# branch, installed from nuget.org for a release. The folder is a fresh generation, not a team's git tree, so
+# the tool writes without asking and without a clean tree.
+dotskit_tool=""
+dotskit() {
+    if [ -z "$dotskit_tool" ]; then
+        if [ -n "$commit" ]; then
+            dotnet build "$work/template/tool/DotsKit" -c Release -o "$work/tool" -nologo -v q > /dev/null
+            export DOTSKIT_TEMPLATE_SOURCE="$work/template/template"
+            dotskit_tool=(dotnet "$work/tool/dotskit.dll")
+        else
+            dotnet tool install SawKing.DotsKit.Tool --version "$version" --add-source "$work/package" --tool-path "$work/tool" > /dev/null
+            dotskit_tool=("$work/tool/dotskit")
+        fi
+    fi
+    "${dotskit_tool[@]}" "$@" --yes --allow-dirty
+}
 while read -r args; do
     # Word splitting of the arguments is intended.
     # shellcheck disable=SC2086
-    dotnet new DotNetSolutionKit $args "${hive[@]}"
+    case "$args" in
+        dotskit\ *) dotskit ${args#dotskit } < /dev/null ;;
+        *) dotnet new DotNetSolutionKit $args "${hive[@]}" ;;
+    esac
 done < "$work/commands"
 # Before 2.8 a service joined All.sln by this script; since, it adds itself, and there is no script.
 [ ! -f src/services/manual-add-projects.sh ] || bash src/services/manual-add-projects.sh < /dev/null
@@ -94,8 +115,13 @@ legend() {
     fi
     echo
     echo '```bash'
-    sed 's/^/dotnet new DotNetSolutionKit /' "$work/commands"
+    sed '/^dotskit /!s/^/dotnet new DotNetSolutionKit /' "$work/commands"
     echo '```'
+    if grep -q '^dotskit ' "$work/commands"; then
+        echo
+        echo "dotskit is the template's tool, SawKing.DotsKit.Tool of the same version; it ran here with --yes and"
+        echo "--allow-dirty, as the folder was a fresh generation, not a git tree."
+    fi
     echo
     echo "Nothing here is edited by hand: the branch is replaced when the template moves on."
 } > README.md
