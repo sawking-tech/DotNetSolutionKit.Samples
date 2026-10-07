@@ -6,9 +6,9 @@
 #
 #   docker build --build-arg SERVICE=<Service folder name> --build-arg GIT_SHA=<commit> -t <image> .
 #
-# The common stage depends only on src/common and the build props, and the service stage only adds
-# the service's own folder. A change in one service therefore leaves every other service's image
-# untouched - same layers, same digest - and Common is compiled once per change to Common, not once
+# The common stage depends only on src/common, src/capabilities and the build props, and the service stage
+# only adds the service's own folder. A change in one service therefore leaves every other service's image
+# untouched - same layers, same digest - and the shared code is compiled once per change to it, not once
 # per service. GIT_SHA should be the last commit that touched the service's inputs, not the current
 # one; otherwise every commit changes every image (see the deploy scripts).
 
@@ -21,10 +21,13 @@ WORKDIR /src
 
 COPY Directory.Build.props version.json ./
 COPY src/Directory.Packages.props src/
+COPY src/package-versions/ src/package-versions/
 COPY src/common/ src/common/
+COPY src/capabilities/ src/capabilities/
 
 RUN --mount=type=cache,target=/root/.nuget/packages,sharing=locked \
-    for project in src/common/*/*.csproj; do \
+    for project in src/common/*/*.csproj src/capabilities/*/*.csproj; do \
+        [ -f "$project" ] || continue; \
         case "$project" in *.Tests.csproj) continue ;; esac; \
         dotnet build "$project" -c "$BUILD_CONFIGURATION"; \
     done

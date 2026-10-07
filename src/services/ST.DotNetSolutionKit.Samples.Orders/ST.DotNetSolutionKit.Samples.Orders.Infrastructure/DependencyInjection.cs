@@ -11,8 +11,7 @@ using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFrame
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.ClickHouse;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Mongo;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Notifications;
+using ST.DotNetSolutionKit.Samples.Capabilities.Mongo;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Storage;
 using ST.DotNetSolutionKit.Samples.Orders.Application;
 using ST.DotNetSolutionKit.Samples.Orders.Infrastructure.EntityFramework;
@@ -90,9 +89,6 @@ public static partial class DependencyInjection
 
         // MongoDB, the MongoDB section: the client, the service's database, readiness
         services.AddMongoDB(configuration);
-
-        // Email, the Email section: the transport of the provider it names, the sandbox outside Production
-        services.AddNotifications(configuration);
 
         // Object storage, the S3 section; S3:Enabled=false keeps nothing
         services.AddS3ObjectStorage(configuration);

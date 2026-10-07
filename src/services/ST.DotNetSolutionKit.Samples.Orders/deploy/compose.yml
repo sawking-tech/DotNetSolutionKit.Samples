@@ -18,12 +18,6 @@ services:
       RabbitMq__UserName: ${RABBITMQ_USER:-guest}
       RabbitMq__Password: ${RABBITMQ_PASSWORD:-guest}
       ClickHouse__ConnectionString: Host=clickhouse;Port=8123;Username=${CLICKHOUSE_USER:-app};Password=${CLICKHOUSE_PASSWORD:-};Database=${CLICKHOUSE_DB:-app}
-      Email__Smtp__Host: ${SMTP_HOST:-mailhog}
-      Email__Smtp__Port: ${SMTP_PORT:-1025}
-      Email__Smtp__From: ${EMAIL_FROM:-noreply@localhost}
-      Email__Smtp__Secure: ${SMTP_SECURE:-false}
-      Email__Sandbox__Enabled: ${EMAIL_SANDBOX_ENABLED:-true}
-      Email__Sandbox__ReceiverAddress: ${EMAIL_SANDBOX:-sandbox@localhost}
       MongoDB__ConnectionString: mongodb://${MONGO_USER:-app}:${MONGO_PASSWORD:?Set MONGO_PASSWORD in deploy/compose/.env}@mongo:27017/?authSource=admin
       S3__ServiceUrl: http://s3:8333
       S3__BucketName: ${S3_BUCKET:-app}
@@ -40,7 +34,7 @@ services:
       - /tmp
     # Only on the host's loopback: a reverse proxy or a gateway in front publishes it.
     ports:
-      - "127.0.0.1:5152:8080"
+      - "127.0.0.1:5814:8080"
     # Ready, not merely alive: whatever depends on this service starts once its database is reachable.
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/ready"]

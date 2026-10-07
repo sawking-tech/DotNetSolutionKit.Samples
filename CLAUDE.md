@@ -9,15 +9,20 @@ This file is committed: no tokens, keys, credentials or personal data in it.
 ## Layout
 
 ```
+.dotskit/manifest.json              # what the solution was generated from, kept by dotskit and committed
+deploy/                             # the infrastructure and the services for docker compose or Kubernetes (with --Deploy compose or k8s)
+tests/servers/                      # a script per test server (start, ready, logs, down); up.sh starts them all
 src/
-├── Directory.Packages.props        # every package version, one place (central package management)
-├── common/                         # generated once, shared by every service
+├── Directory.Packages.props        # every package version, declared once here or in package-versions/ (central package management)
+├── package-versions/               # versions grouped by what needs them (the database, MongoDB, email...), imported by Directory.Packages.props
+├── common/                         # shared by every service
 │   ├── ST.DotNetSolutionKit.Samples.Common                 # domain kernel: Entity, AggregateRoot, events, specifications, exceptions
 │   ├── ST.DotNetSolutionKit.Samples.Common.Contracts       # what crosses a service boundary: routes, requests, responses, bus messages
 │   ├── ST.DotNetSolutionKit.Samples.Common.Application     # domain event pipeline, idempotency, permissions, messaging abstractions
 │   ├── ST.DotNetSolutionKit.Samples.Common.Infrastructure  # EF Core base classes, interceptors, repositories, schema guard, MassTransit
 │   ├── ST.DotNetSolutionKit.Samples.Common.Web             # web pipeline: errors, validation, Swagger, authentication, permissions
 │   └── ST.DotNetSolutionKit.Samples.Common.Testing         # test infrastructure for the services' tests
+├── capabilities/                   # a project per capability the solution uses (email, MongoDB), referenced by the services that use it
 └── services/
     ├── ST.DotNetSolutionKit.Samples.All.sln                # every project; the entry point
     └── ST.DotNetSolutionKit.Samples.<Service>/
@@ -42,7 +47,7 @@ before writing code, so the user can stop you if it is the wrong one.
 
 | Work | Skill |
 |------|-------|
-| A new service | `/scaffold-service` |
+| A new service, or a flag for an existing service | `/scaffold-service` |
 | An entity or aggregate | `/add-entity` |
 | A repository | `/add-repository` |
 | Filtering, search | `/add-specification` |
@@ -68,14 +73,23 @@ dotnet test src/services/ST.DotNetSolutionKit.Samples.All.sln
 # Without the tests that need real servers (PostgreSQL, RabbitMQ and the rest)
 dotnet test src/services/ST.DotNetSolutionKit.Samples.All.sln --filter "TestCategory!=Integration"
 
+# The test servers of the solution, a script per part in tests/servers/, and the integration tests on them
+eval "$(bash tests/servers/up.sh)"
+dotnet test src/services/ST.DotNetSolutionKit.Samples.All.sln --filter "TestCategory=Integration"
+bash tests/servers/up.sh down
+
 # One service
 dotnet test src/services/ST.DotNetSolutionKit.Samples.<Service>/ST.DotNetSolutionKit.Samples.<Service>.sln
-
-# After generating a service, add its projects to All.sln
-cd src/services && bash manual-add-projects.sh
 ```
 
-Migrations: `/ef-migration`. A new service: `/scaffold-service`.
+Migrations: `/ef-migration`. A new service or a flag: `/scaffold-service`.
+
+```bash
+# A newer version of the template, with the team's changes kept: dotskit (dotnet tool install -g SawKing.DotsKit.Tool).
+# Without --yes it lists the changes and writes nothing: show them to the user, then run it with --yes on their yes.
+# A clean working tree; a solution without .dotskit/manifest.json runs dotskit init first, the same way.
+dotskit upgrade
+```
 
 ## Conventions
 
@@ -86,6 +100,9 @@ Migrations: `/ef-migration`. A new service: `/scaffold-service`.
 - Time comes from `IDomainExecutionContext.TimeProvider`, never `DateTime.UtcNow`.
 - Side effects of a change (a bus message, a job) go into domain event handlers, never inline in a
   service: [domain events](https://dnsk.sawking.tech/docs.html#domain-events).
+- A key added to an `appsettings*.json` gets `"_comment_<Key>"` right after it: what goes there, and
+  `REQUIRED` first when the service does not start without it. A key starting with `_` is metadata, which
+  the options binder ignores: [JSON metadata keys](https://dnsk.sawking.tech/docs.html#adr-006).
 - Configuration is read through typed options validated at startup, never `IConfiguration["Key"]` in a
   service: [settings](https://dnsk.sawking.tech/docs.html#settings).
 - Before writing a file of a kind the solution already has (an entity configuration, a validator, a

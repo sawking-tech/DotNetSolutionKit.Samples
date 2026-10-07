@@ -1,16 +1,44 @@
 ---
 name: plan-and-iterate
-description: Discipline for long work that does not finish in one go - a migration, a port, a large refactoring, an investigation, a big document. The plan is a KDL file on disk with one item in work, checks written before the run, and a utility that keeps the invariants.
+description: The plan of long work - a list of actions, rebuilt at any time from the tracker's issues; decisions, agreements and their reasons do not live in it. Eight rules at the top of the file are never broken, and plan.mjs check checks the plan's form. Code, an investigation, a document, an analysis - the structure is the same.
 ---
 
 Discipline for long work of any kind: moving a code base, a migration, a refactoring, a
 long investigation, a large document, taking apart someone else's system, a report. The structure is the
 same.
 
+## The rules - never broken
+
+If even one is broken, the skill is not applied: fix the plan before the next step of the work.
+`node .claude/skills/plan-and-iterate/plan.mjs check` at the start and at every mark; on exit code 1, the plan is fixed first.
+
+1. **The plan is a list of actions.** The test: the plan is deleted - what is lost? The answer is "nothing":
+   the queue is rebuilt from the tracker's issues, and the working memory is one current item. If something
+   is lost, it lived in the wrong place.
+2. **Decisions, agreements and their reasons do not live in the plan.** A decision goes to the issue or an
+   ADR, a rule to the docs or CLAUDE.md, an agreement with a person ("said that ...") to memory. What stays
+   of them in the plan is `issue=` or an item that is an action. Otherwise the plan becomes a warehouse that
+   nobody reads to the end, and the decision is lost with the first cleanup.
+3. **`why`, `how`, `done_when` - one line each, up to 160 characters.** `how` says what we do, not why it was
+   decided so and who said it. An analysis a paragraph long goes to the issue: these three swell first.
+4. **A `check` is only what is run and gives a `got`.** It is written before the run, the fact is added
+   after. An agreement or a reminder written as a `check` has nothing to close it by, and it hangs forever.
+5. **One item with `now=true`, and it has `since`.** Everything above it in the file is closed: the order of
+   the file is the priority, and an open item at the top reads as done.
+6. **The plan is edited first, then the work.** An accepted remark becomes an item or moves the marker. An
+   agreement that did not touch the plan is the same as a disagreement: the item you were on is lost.
+7. **Closed items are deleted, far ones are not written out.** The plan is up to 100 lines. A far item is a
+   line with a link to the issue; it is expanded when reached, or half of it is stale by then.
+8. **One task in work until it is finished.** What is noticed on the way is an item in the queue, not an
+   edit in the current one: work dropped in the middle looks finished, and it cannot be resumed without its
+   context.
+
+Everything below is the details and the reasons for these rules.
+
 ## What the plan is
 
-**The queue of what we do, plus the working memory of the current item.** Not a log, not an archive of
-decisions, not a wish list.
+**A list of actions: the queue of what we do, plus the working memory of the current item.** Not a log, not
+an archive of decisions, not a wish list.
 
 The queue answers "what to work on": items by importance, a marker on the current one. The working memory
 answers "what I know about the current item": the approach, what turned up, what I tripped over. It holds
@@ -87,11 +115,13 @@ step order-number-from-sequence "An order's number comes from a sequence, before
 
 - **`why` / `how` / `done_when`** - one each on **every** item, **one line each**. An analysis a paragraph
   long goes to the tracker: these three are the first to swell. Without `done_when` an item is an
-  intention, not a plan: it can only be closed by eye.
+  intention, not a plan: it can only be closed by eye. `how` is what we do, not why it was decided so and
+  who said it.
 - **`note`** - a free note, **only on the item with `now=true`**. It needs no limit; the limit comes by
   itself, since there is one current item. A swollen item that is not current is a symptom: the far work
   was written out before it was reached.
-- **`check` / `got` / `ok`** - a check and its result. `check` is written **before** the run and stays bare,
+- **`check` / `got` / `ok`** - a check and its result; not a place for an agreement or a reminder - what
+  cannot be run to give a `got` is not a `check`. `check` is written **before** the run and stays bare,
   like the third one above; `got` and `ok` are added after. Writing both at once is making up the fact
   together with the expectation.
 
@@ -105,9 +135,16 @@ by the position, so the id must mean nothing.
 | --- | --- |
 | the plan | the queue, the states of the items, the working memory of the current one |
 | the issue tracker | the history: the symptom, the cause found, the analysis, the rejected option, the decision |
+| an ADR, the docs, memory | a decision taken, a rule, an agreement with the other person ("the user said ...") |
 | a run log | an audit of the rounds, where the work goes in repeated passes |
 
-**The plan holds the queue, the tracker the history.** Closed items leave the plan; what is worth keeping
+**A plan rewritten whole always has a backup:** first a copy in `raw/plan-<date>.kdl` next to the plan, then
+the new file and `plan.mjs check`. Before the old one is deleted, a comparison: every decision in it has
+found its place.
+
+**The plan holds the queue, the tracker the history.** The plan's header is not a log of decisions: it holds
+only the path to the tracker and, if there is one, the deadline; a comment "decided on the 6th that ..." is
+a sign that the decision did not reach its place. Closed items leave the plan; what is worth keeping
 moves to the issue. Appending to the end and keeping closed items is what turns a plan into a warehouse:
 one grew to 2730 lines.
 
@@ -123,17 +160,19 @@ If there is, it is either finished or moved down.
 **New items are inserted by importance, not at the end:** first what blocks the next step, then what is
 expensive to fix later. Improvements with no one asking go to the end; that is where they usually stay.
 
+**The order minimises the path.** Every place in the queue has a reason: what is done earlier saves actions
+later. What would have to be redone or repeated later goes before what causes the repetition: a feature
+before the migration that would otherwise pass over it a second time; a question whose answer will be needed
+later - now, before it becomes a blocker. An item whose place has no reason is moved.
+
 **Where I am** - `node .claude/skills/plan-and-iterate/plan.mjs where`: the current item in full, the next
 ones as numbers with slugs, a count of violations at the bottom. Without the tool: `grep -n "now=true" <plan>`.
 
 **In an answer the plan is shown as plain numbers, not slugs:** "1, 2, 3" in document order from the
-current item, five to seven items. The numbering lives only in the answer.
+current item, five to seven items. The numbering lives only in the answer. A slug in an answer reads harder
+than a number, and avoiding the number is why slugs were introduced.
 
 ## The line
-
-**One task in work.** Taken, finished. Not "I will fix the neighbour on the way", not "first a wider look
-around": what is noticed goes into the plan as an item, not as an edit into the current file. Unfinished
-work looks finished, and it cannot be resumed without its context.
 
 **Agreement without grounds moves the marker; it is not a line in an answer.** Agreeing is the way to drop
 what was started, only with permission: agree with a remark - move the marker - lose the item you were on.
@@ -146,10 +185,6 @@ lands in the plan too.
 
 Where `depends` is not set, the one doing the work chooses the order - and takes what the next step cannot
 do without, not what is more interesting.
-
-**The plan first, then the work.** Not "do it and write it down": between two marks there is time to drift
-into three tasks, the marker is in the wrong place, and an open item hangs above. The sign of the violation
-is an edit before an edit of the plan.
 
 **The plan is kept by the one doing the work, without asking** - neither for an item's wording, nor for a
 reordering, nor for moving the marker. Asking for permission for that is a way to stand still. The other
@@ -215,7 +250,7 @@ bypass the tool. The plan file comes from `PLAN_FILE`, by default `.claude/sessi
 | Command | What for |
 | --- | --- |
 | `where [N]` | where I am: the current item in full and N next ones as numbers with slugs |
-| `check` | five invariants, exit code 1 on violations |
+| `check` | the invariants of the items and of their order, and the form of the plan (the limits of the rules above); exit code 1 on violations |
 | `take <slug>` | remove the old marker, set the new one, set `since` - three changes at once |
 | `done <slug>` | `at` and the marker removed; refused without `done_when` or with checks not passed |
 | `add <slug> "<title>" --before/--after <slug>` | add an item **into a gap**: the position from a neighbour, the id a word |

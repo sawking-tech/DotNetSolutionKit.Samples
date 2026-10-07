@@ -31,6 +31,7 @@
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Orders.API\ST.DotNetSolutionKit.Samples.Orders.API.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Testing\ST.DotNetSolutionKit.Samples.Common.Testing.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Mongo\ST.DotNetSolutionKit.Samples.Capabilities.Mongo.csproj" />
     </ItemGroup>
 
 </Project>

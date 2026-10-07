@@ -146,7 +146,8 @@ public async Task Should_RejectADuplicateNumber()
 ```
 
 The connection string comes from `TEST_POSTGRES` (`TEST_SQLSERVER` with `--Database mssql`); without it the
-test is skipped with that reason, so a plain `dotnet test` needs no database. Each test gets a database of
+test is skipped with that reason, so a plain `dotnet test` needs no database. `eval "$(bash tests/servers/up.sh)"`
+starts every test server of the solution and sets the variables. Each test gets a database of
 its own, cloned from one migrated once per run.
 
 Anything the in-memory provider cannot run (`ExecuteSqlRawAsync`, `SqlQueryRaw`, a constraint, a

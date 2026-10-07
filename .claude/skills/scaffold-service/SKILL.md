@@ -1,9 +1,9 @@
 ---
 name: scaffold-service
-description: Scaffold a new microservice of this solution from the DotNetSolutionKit template, with the flags the solution was generated with.
+description: Scaffold a new microservice of this solution, or add a flag to an existing service - by dotskit when the solution has its manifest, by the DotNetSolutionKit template otherwise.
 ---
 
-Scaffold a new microservice with the DotNetSolutionKit template.
+Scaffold a new microservice, or add a flag to one, with dotskit or the DotNetSolutionKit template.
 
 ## Usage
 `/scaffold-service <ServiceName>` - e.g. `/scaffold-service Notifications`
@@ -15,12 +15,34 @@ Scaffold a new microservice with the DotNetSolutionKit template.
 1. Ask the user (in their language) for the service name and which optional parts it needs. Name the
    service after its area, not after its main aggregate: `-S Basket` with a class `Basket` makes `Basket`
    both a namespace and a type (CS0118); `Baskets` or `Shopping` avoid it.
-2. Find the flags the solution was generated with (Step 1).
-3. Generate the service from the repository root.
-4. Add the new projects to `All.sln`.
-5. Add the first migration, restore and build.
+2. With dotskit (`.dotskit/manifest.json` in the repository root): run `dotskit new` (Step 0); for a new
+   service go on to the first migration (Step 4), for a flag add a migration only if the flag changed the
+   model (`/ef-migration`).
+3. Without it: find the flags the solution was generated with (Step 1) and generate the service from the
+   repository root (Step 2); it adds itself to `All.sln`.
+4. Add the first migration, restore and build.
 
 ---
+
+## Step 0 - With dotskit
+
+`dotskit` is the template's tool (`dotnet tool install -g SawKing.DotsKit.Tool`). With the solution's
+manifest, `.dotskit/manifest.json`, it takes the names, the database and the deployment from it, adds to
+`Common` what a flag of the service needs there, keeps the team's changes in files the template touches,
+and builds the solution:
+
+```bash
+dotskit new -S <ServiceName> [flags]           # a new service
+dotskit new -S <ExistingService> --MongoDB true  # a flag for a service the solution has
+```
+
+It shows every file it will change and asks before writing. An agent's shell has no one to answer: run the
+command first without `--yes` - it lists the files it would change and writes nothing (exit code 1) - show
+that list to the user, and on their yes run the same command with `--yes`. The working tree must be clean:
+commit first, and do not pass `--allow-dirty`. A conflict stops it with exit code 2, marked
+`<<<<<<< solution` / `>>>>>>> template` for a person to resolve. A solution without a manifest gets one
+from `dotskit init`, run the same way. Steps 1 to 3 are the template alone, without the tool.
+[dotskit](https://dnsk.sawking.tech/docs.html#dotskit).
 
 ## Step 1 - The flags of the solution
 
@@ -31,10 +53,11 @@ Some flags hold one value for the whole solution and must be passed again, uncha
 | `--Database` | `postgres` or `mssql`: the value the solution was generated with |
 | `--Deploy` | `compose`, `k8s` or `none`: the same value |
 
-Others add files to `Common` and were chosen when `Common` was generated. A service that should use
+Others add files to `Common` or a project to `src/capabilities` (`--MongoDB`, `--Notify`), and were chosen
+when the shared code was generated. A service that should use
 them passes them again: `-I`, `--Vault`, `--DiffApi`, `--FeatureFlags`, `--Storage`, `--ClickHouse`,
-`--MongoDB`, `--Notify`, `--Audit`. A service generated without them leaves them out. Pass only the flags whose part `Common`
-already has. With `--Messaging`, `--Notify email` also gives the service the consumer of `SendEmailCommandV1`;
+`--MongoDB`, `--Notify`, `--Audit`. A service generated without them leaves them out. Pass only the flags whose part the solution
+already has, in `src/common` or `src/capabilities`. With `--Messaging`, `--Notify email` also gives the service the consumer of `SendEmailCommandV1`;
 keep it in the one service that owns notifications.
 
 Per service, freely: `-H` (Hangfire), `--Messaging` (`none`, `outbox`, `direct`), `--TestFramework`
@@ -43,7 +66,8 @@ Per service, freely: `-H` (Hangfire), `--Messaging` (`none`, `outbox`, `direct`)
 Read what the solution has before choosing:
 
 ```bash
-ls src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure        # Persistence/SqlServer -> mssql; ClickHouse, Mongo, Notifications, Storage; Configuration/Secrets -> -I or --Vault
+ls src/capabilities                                                   # Capabilities.Notifications -> --Notify email; Capabilities.Mongo -> --MongoDB
+ls src/common/ST.DotNetSolutionKit.Samples.Common.Infrastructure        # Persistence/SqlServer -> mssql; ClickHouse, Storage; Configuration/Secrets -> -I or --Vault
 ls src/common/ST.DotNetSolutionKit.Samples.Common.Web/FeatureManagement  # present -> --FeatureFlags
 ls deploy                                                             # compose or k8s
 ```
@@ -53,30 +77,24 @@ All parameters: [generating a solution](https://dnsk.sawking.tech/docs.html#gene
 ## Step 2 - Generate
 
 ```bash
-# From the repository root; -M true (the default) generates the service folder only and uses the Common already there
-dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S <ServiceName> --Database <db> --Deploy <deploy> [flags]
+# From the repository root; without --Solution the template generates the service folder only, uses the Common already there,
+# and adds the service's projects to All.sln (--allow-scripts yes runs that without asking)
+dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S <ServiceName> --Database <db> --Deploy <deploy> [flags] --allow-scripts yes
 ```
 
 `-N` and `-P` are this solution's namespace root and product name. An API gateway in place of a service
 is `--ApiGateway true`: [API gateway](https://dnsk.sawking.tech/docs.html#gateway).
 
-## Step 3 - Add to All.sln (required)
+## Step 3 - Package versions
 
-```bash
-cd src/services && bash manual-add-projects.sh
-```
+Versions are declared once, in `src/Directory.Packages.props` or a flag's file in `src/package-versions/`
+that it imports; a service's `.csproj` names packages without versions. In a solution generated by the
+current template they already hold every version a service needs. In an older one the build stops with
+`NU1010` and names the packages without a version: copy their `PackageVersion` lines from the template's
+`src/Directory.Packages.props`, and for a flag from its file in `src/package-versions/`. Never put a
+`Version` on a `PackageReference`.
 
-The script finds `*.All.sln` itself and adds the projects it does not have yet.
-
-## Step 4 - Package versions
-
-Versions live in one place, `src/Directory.Packages.props`; a service's `.csproj` names packages without
-versions. In a solution generated by the current template the file already holds every version a service
-needs. In an older one the build stops with `NU1010` and names the packages without a version: copy their
-`PackageVersion` lines from the template's `src/Directory.Packages.props`. Never put a `Version` on a
-`PackageReference`.
-
-## Step 5 - First migration, restore, build
+## Step 4 - First migration, restore, build
 
 A new service has a model and no migrations; its database starts without tables. Add the first migration
 with `/ef-migration <ServiceName> Initial`, then:
@@ -108,7 +126,7 @@ src/services/ST.DotNetSolutionKit.Samples.<ServiceName>/
 - [ ] The first migration exists and the service starts: a misconfigured service stops at startup, see
       [startup checks](https://dnsk.sawking.tech/docs.html#startup-checks).
 - [ ] With a gateway: a route and a cluster for the service in the gateway's `appsettings.json`.
-- [ ] `manual-add-projects.sh` was run; `All.sln` builds.
+- [ ] The service's projects are in `All.sln`; `All.sln` builds.
 
 Then the service's own code: `/add-entity`, `/add-repository`, `/add-service-class`, `/add-controller`,
 `/add-tests`.

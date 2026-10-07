@@ -41,7 +41,7 @@ for project in src/services/*/*.API/*.API.csproj; do
         name="dotnetsolutionkit_samples-$(echo "$service" | tr '[:upper:]' '[:lower:]' | tr '.' '_')"
     fi
     image="$REGISTRY/$name:$TAG"
-    sha=$(git log -1 --format=%h -- Directory.Build.props version.json src/Directory.Packages.props src/common "src/services/$folder" 2>/dev/null || true)
+    sha=$(git log -1 --format=%h -- Directory.Build.props version.json src/Directory.Packages.props src/package-versions src/common src/capabilities "src/services/$folder" 2>/dev/null || true)
 
     echo "==> $image (commit ${sha:-local})"
     docker build --provenance=false --build-arg SERVICE="$folder" --build-arg GIT_SHA="${sha:-local}" -t "$image" .
