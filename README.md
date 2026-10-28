@@ -1,8 +1,8 @@
 # Sample: full
 
-Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse; two services.
+Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse, MongoDB and email; three services, the third, Notifications, added by dotskit after the template made the first two.
 
-[![CI of full by day](reports/full/ci.svg)](https://dnsk.sawking.tech/samples.html#full)
+[![CI of full by day](reports/full/ci.svg)](https://dotskit.sawking.tech/samples.html#full)
 
 Generated from [DotNetSolutionKit v2.7.0](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.7.0) with:
 
@@ -19,21 +19,21 @@ Nothing here is edited by hand: the branch is replaced when the template moves o
 |---|---|---|
 | [`single`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/single) | One service with the defaults: PostgreSQL, Hangfire, docker compose files, and CI. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=single)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Asingle) |
 | [`gateway`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/gateway) | Two services behind a YARP gateway that validates the token and forwards the user. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=gateway)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Agateway) |
-| [`full`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full) | Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse; two services. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull) |
+| [`full`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full) | Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse, MongoDB and email; three services, the third, Notifications, added by dotskit after the template made the first two. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull) |
 | [`full-alt`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full-alt) | SQL Server, xUnit, secrets from Vault, Kubernetes manifests and the audit journal, which rides on the bus with an outbox; two services. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full-alt)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull-alt) |
-| [`full-dev`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full-dev) | The flags of full and the ones dev adds before a release, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full-dev)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull-dev) |
+| [`full-dev`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full-dev) | The flags of full and the ones dev adds before a release, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release. Its third service, Notifications, is added by dotskit after the template made the first two. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full-dev)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull-dev) |
 
-The CI of each branch by day, as [the samples page](https://dnsk.sawking.tech/samples.html) shows it:
+The CI of each branch by day, as [the samples page](https://dotskit.sawking.tech/samples.html) shows it:
 
-[![CI of single by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/single/reports/single/ci.svg)](https://dnsk.sawking.tech/samples.html#single)
+[![CI of single by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/single/reports/single/ci.svg)](https://dotskit.sawking.tech/samples.html#single)
 
-[![CI of gateway by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/gateway/reports/gateway/ci.svg)](https://dnsk.sawking.tech/samples.html#gateway)
+[![CI of gateway by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/gateway/reports/gateway/ci.svg)](https://dotskit.sawking.tech/samples.html#gateway)
 
-[![CI of full by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/reports/full/ci.svg)](https://dnsk.sawking.tech/samples.html#full)
+[![CI of full by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/reports/full/ci.svg)](https://dotskit.sawking.tech/samples.html#full)
 
-[![CI of full-alt by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full-alt/reports/full-alt/ci.svg)](https://dnsk.sawking.tech/samples.html#full-alt)
+[![CI of full-alt by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full-alt/reports/full-alt/ci.svg)](https://dotskit.sawking.tech/samples.html#full-alt)
 
-[![CI of full-dev by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full-dev/reports/full-dev/ci.svg)](https://dnsk.sawking.tech/samples.html#full-dev)
+[![CI of full-dev by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full-dev/reports/full-dev/ci.svg)](https://dotskit.sawking.tech/samples.html#full-dev)
 
 ![How to read the days](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/.samples/legend.svg)
 
@@ -47,6 +47,9 @@ come.
 Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches
 master is a release, and every release branch is generated again from a new one, pushed, and its CI runs.
 full-dev follows dev instead, where the next release is built: it is generated again when dev has moved.
+[lifecycle](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/lifecycle) is the life of a solution rather than a generation: made with the release
+two minors before the next one, changed by the team, then described, upgraded and grown by dotskit, a commit
+a step; [its workflow](.github/workflows/lifecycle.yml) builds it again when dev has moved.
 After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's
 reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release, and
 ci.svg, the picture of its days above.
