@@ -104,7 +104,7 @@ legend() {
     echo
     # The report of the branch's CI draws it after each run; a branch generated for the first time shows it
     # from its first run on.
-    echo "[![CI of $branch by day](reports/$branch/ci.svg)](https://dnsk.sawking.tech/samples.html#$branch)"
+    echo "[![CI of $branch by day](reports/$branch/ci.svg)](https://dotskit.sawking.tech/samples.html#$branch)"
     echo
     # The default branch shows the legend once, under the days of every branch further down.
     [ "$branch" = "$home" ] || { legend; echo; }
@@ -148,9 +148,9 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
         repo="https://github.com/${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
         jq -r --arg r "$repo" '.[] | "| [`\(.branch)`](\($r)/tree/\(.branch)) | \(.about) | [![CI](\($r)/actions/workflows/ci.yml/badge.svg?branch=\(.branch))](\($r)/actions/workflows/ci.yml?query=branch%3A\(.branch)) |"' "$here/variants.json"
         echo
-        echo "The CI of each branch by day, as [the samples page](https://dnsk.sawking.tech/samples.html) shows it:"
+        echo "The CI of each branch by day, as [the samples page](https://dotskit.sawking.tech/samples.html) shows it:"
         echo
-        jq -r --arg raw "$raw" '.[] | "[![CI of \(.branch) by day](\($raw)/\(.branch)/reports/\(.branch)/ci.svg)](https://dnsk.sawking.tech/samples.html#\(.branch))\n"' "$here/variants.json"
+        jq -r --arg raw "$raw" '.[] | "[![CI of \(.branch) by day](\($raw)/\(.branch)/reports/\(.branch)/ci.svg)](https://dotskit.sawking.tech/samples.html#\(.branch))\n"' "$here/variants.json"
         legend
         echo
         echo "Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches"
