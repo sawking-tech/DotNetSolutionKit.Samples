@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests;
 
@@ -12,8 +13,7 @@ public static class TestDatabase
         this DbContextOptionsBuilder<TContext> builder, string connectionString)
         where TContext : DbContext
     {
-        // One provider per generated solution; the template's own sources keep both, and PostgreSQL, the
-        // default, comes first.
-        return builder.UseNpgsql(connectionString);
+        builder.UseDatabase(connectionString);
+        return builder;
     }
 }
