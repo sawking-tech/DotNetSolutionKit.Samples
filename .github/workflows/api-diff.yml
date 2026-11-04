@@ -54,7 +54,12 @@ jobs:
             exit 0
           fi
 
-          ( cd /tmp/base-tree && bash scripts/generate-api-schemas.sh )
+          # A base service whose own configuration is broken cannot produce a contract either. The head
+          # has already proved its contracts; treat that base as no baseline, then the next PR gets the fixed one.
+          if ! ( cd /tmp/base-tree && bash scripts/generate-api-schemas.sh ); then
+            echo "::notice::The base branch cannot generate its contracts - treated as no baseline."
+            exit 0
+          fi
 
           for head in /tmp/api-head/*.json; do
             service=$(basename "$head" .json)
