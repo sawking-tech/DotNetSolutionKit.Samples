@@ -1,6 +1,6 @@
 {
   "_comment_template": "The version of DotNetSolutionKit the solution is generated with; dotskit upgrade moves it to the tool\u0027s",
-  "template": "2.8.0",
+  "template": "source",
   "_comment_solution": "The template\u0027s arguments of Common and the root: the names, the database, the deployment, the flags the services share",
   "solution": [
     "--NamespaceRoot",
@@ -36,7 +36,7 @@
       "--ServiceNameOrCustom",
       "Billing",
       "--HttpPort",
-      "5260",
+      "5044",
       "--Messaging",
       "outbox",
       "--Storage",
@@ -54,7 +54,7 @@
       "--ServiceNameOrCustom",
       "Orders",
       "--HttpPort",
-      "5052",
+      "5383",
       "--Messaging",
       "outbox",
       "--Storage",
@@ -77,8 +77,12 @@
       "email",
       "--Messaging",
       "outbox",
+      "--DiffApi",
+      "true",
       "--HttpPort",
-      "5000"
+      "5000",
+      "--Infisical",
+      "true"
     ]
   ],
   "_comment_packages": "How much of the template\u0027s package versions an upgrade brings",

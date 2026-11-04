@@ -11,7 +11,7 @@ public class NotificationsDbContext(DbContextOptions<NotificationsDbContext> opt
     : DbContextBase(options), IUnitOfWork
 {
     public static readonly string DefaultSchemaName = "notifications";
-    
+
     // Add DbSet here
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

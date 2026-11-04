@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -79,11 +79,11 @@ public static partial class DependencyInjection
             configuration, "orders", typeof(InfrastructureMarker).Assembly);
 
         // Repositories
-        
+
         // Specifications: case-insensitive search; readable numbers from a sequence, taken before the
         // entity is created
         services.AddDatabaseQueries<OrdersDbContext>();
-        
+
         // ClickHouse, the ClickHouse section: connections, the schema check, readiness
         services.AddClickHouse(configuration);
 
@@ -95,7 +95,7 @@ public static partial class DependencyInjection
 
         // Configurations
         services.AddInfrastructureConfiguration();
-        
+
         // Background jobs, with their settings validated only when the job server runs. Off together
         // with the database: the database is their storage.
         if (switches.Jobs)
@@ -118,12 +118,12 @@ public static partial class DependencyInjection
     {
         services.AddValidatedOptions<ICorsSettings, CorsSettings>(CorsSettings.SectionName);
     }
-    
+
     /// <summary>
     /// Helper method to register validated options with interface.
     /// </summary>
     private static IServiceCollection AddValidatedOptions<TInterface, TSettings>(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         string sectionName)
         where TInterface : class
         where TSettings : class, TInterface, new()
@@ -132,8 +132,8 @@ public static partial class DependencyInjection
             .BindConfiguration(sectionName)
             .ValidateDataAnnotations()
             .ValidateOnStart();
-    
-        services.AddSingleton<TInterface>(sp => 
+
+        services.AddSingleton<TInterface>(sp =>
             sp.GetRequiredService<IOptions<TSettings>>().Value);
 
         return services;

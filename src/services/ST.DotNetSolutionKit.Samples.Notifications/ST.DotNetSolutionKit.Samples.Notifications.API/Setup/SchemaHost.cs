@@ -30,13 +30,17 @@ public static class SchemaHost
         // --- Logging configuration ---
         builder.AddPlatformLogging();
 
+        var schemaOnly = SchemaOnlyMode.IsEnabled(args);
+
         // --- DI validation configuration ---
         // In every environment: a missing registration or a scoped service resolved from the root then
         // fails the start, instead of the first request or background job that happens to need it.
         builder.Host.UseDefaultServiceProvider((_, options) =>
         {
-            options.ValidateScopes = true;
-            options.ValidateOnBuild = true;
+            // A schema-only run registers no infrastructure, so validating the graph would fail on the
+            // dependencies deliberately left out.
+            options.ValidateScopes = !schemaOnly;
+            options.ValidateOnBuild = !schemaOnly;
         });
 
         // --- Application configuration ---
@@ -51,7 +55,14 @@ public static class SchemaHost
         builder.SetupAppServices()
             .SetupHealthChecks();
 
-        builder.SetupAppAuthentication();
+        // Left out of a schema-only run: the handlers resolve services this mode does not register,
+        // and WebApplication adds the authentication middleware itself once it sees the schemes.
+        if (!schemaOnly)
+        {
+            builder.SetupAppAuthentication();
+        }
+
+        builder.Services.RemoveStartupValidation(args);
 
         return builder.Build();
     }
