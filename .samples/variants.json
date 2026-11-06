@@ -42,7 +42,7 @@
           "-N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes",
           "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --allow-scripts yes",
           "dotskit init",
-          "dotskit new -S Notifications --Notify email --Messaging outbox"
+          "dotskit new -S Notifications --Notify email --Messaging outbox --DiffApi true"
         ]
       }
     ],
@@ -72,7 +72,7 @@
           "-N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes",
           "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --allow-scripts yes",
           "dotskit init",
-          "dotskit new -S Notifications --Notify email --Messaging outbox"
+          "dotskit new -S Notifications --Notify email --Messaging outbox --DiffApi true"
         ]
       }
     ]

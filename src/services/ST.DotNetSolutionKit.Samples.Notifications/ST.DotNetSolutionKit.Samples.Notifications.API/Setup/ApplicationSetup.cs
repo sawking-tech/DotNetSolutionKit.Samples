@@ -1,4 +1,5 @@
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
+using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
 using ST.DotNetSolutionKit.Samples.Notifications.Application;
 using ST.DotNetSolutionKit.Samples.Notifications.Infrastructure;
 
@@ -10,7 +11,7 @@ internal static class ApplicationSetup
     {
         var configuration = builder.Configuration;
         var services = builder.Services;
-        
+
         // services.AddJwtConfiguration(configuration);
         services.AddInternalApiConfiguration(configuration);
         services.AddAuthValidationConfiguration(configuration);
@@ -18,9 +19,14 @@ internal static class ApplicationSetup
         // Register Application Layer services. They register the domain services too:
         // the API reaches the domain only through the application layer.
         services.AddApplicationServices();
-        
+
         // Register Infrastructure Layer services
-        services.AddInfrastructureServices(builder.Configuration);
+        // A schema-only run must not touch infrastructure: it registers no database, no broker and no
+        // jobs, and only has to get far enough to describe the API.
+        if (!SchemaOnlyMode.IsEnabled())
+        {
+            services.AddInfrastructureServices(builder.Configuration);
+        }
 
         return builder;
     }

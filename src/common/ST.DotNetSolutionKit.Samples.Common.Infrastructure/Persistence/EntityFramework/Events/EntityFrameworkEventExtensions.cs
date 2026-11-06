@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using ST.DotNetSolutionKit.Samples.Common.Application.Events;
 using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
 using Hangfire;
@@ -55,7 +55,7 @@ public static class EntityFrameworkEventExtensions
         services.AddSingleton<DomainEventPreSaveInterceptor>();
         services.AddSingleton<DomainEventTransactionInterceptor>();
         services.AddSingleton<DomainEventErrorInterceptor>();
-    
+
         return services;
     }
 
