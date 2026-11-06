@@ -109,5 +109,9 @@ echo "$commit_of" > template-version
     echo
     echo "Built from the template's $ref at ${commit_of:0:7}. Nothing here is edited by hand: the branch is replaced"
     echo "when the template moves on."
+    echo
+    echo "[![CI of $branch by day](reports/$branch/ci.svg)](https://dotskit.sawking.tech/samples.html#$branch)"
+    echo
+    echo "![How to read the days](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/.samples/legend.svg)"
 } > README.md
 commit "The branch's CI, its README and what it was built from"
