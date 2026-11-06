@@ -87,7 +87,7 @@ while read -r args; do
     # shellcheck disable=SC2086
     case "$args" in
         dotskit\ *) dotskit ${args#dotskit } < /dev/null ;;
-        *) dotnet new DotNetSolutionKit $args "${hive[@]}" ;;
+        *) dotnet new DotNetSolutionKit $args "${hive[@]}" < /dev/null ;;
     esac
 done < "$work/commands"
 # Remove only the repository this script made: the generated sample itself is not a git repository.
