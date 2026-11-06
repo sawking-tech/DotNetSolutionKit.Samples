@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 #
-# Writes the report of one CI run into the sample branch checked out in the current folder:
+# Writes the report of one checking run into the sample branch checked out in the current folder:
 #
 #   ./report.sh <run id>
+#
+# A CI run reports its tests and coverage; a failed Regenerate or Secret scan reports its conclusion,
+# so its day is red too. A successful non-CI run writes nothing: the CI its push starts reports the day.
 #
 # The reports live in reports/<branch>/, so two branches merged together keep each other's reports.
 # reports/<branch>/<version>.json keeps every run of the branch generated from that version (a release tag,
@@ -20,19 +23,25 @@ version=$(tr -d '\r\n' < template-version)
 branch=$(git rev-parse --abbrev-ref HEAD)
 
 gh api "repos/$repo/actions/runs/$run" > "$work/run.json"
+workflow=$(jq -r '.name' "$work/run.json")
 
-# dotnet test prints one line per test assembly: "Passed!  - Failed: 0, Passed: 332, Skipped: 0, ..."
-gh run view "$run" -R "$repo" --log 2>/dev/null | grep -E '(Passed|Failed)! +- Failed:' > "$work/tests" || true
-tests=$(sed -E 's/.*Failed: *([0-9]+), Passed: *([0-9]+), Skipped: *([0-9]+), Total: *([0-9]+).*/\1 \2 \3 \4/' "$work/tests" \
-    | awk '{f+=$1; p+=$2; s+=$3; t+=$4} END {printf "{\"failed\":%d,\"passed\":%d,\"skipped\":%d,\"total\":%d}", f, p, s, t}')
+# A run of CI speaks of tests and coverage. A failed Regenerate or Secret scan speaks only of its
+# conclusion: the day is red because the tool, the scenario or the scan is broken, and there is nothing
+# else to say. A successful one writes no entry: the CI its push starts reports the day.
+tests=null; coverage=null
+if [ "$workflow" = CI ]; then
+    # dotnet test prints one line per test assembly: "Passed!  - Failed: 0, Passed: 332, Skipped: 0, ..."
+    gh run view "$run" -R "$repo" --log 2>/dev/null | grep -E '(Passed|Failed)! +- Failed:' > "$work/tests" || true
+    tests=$(sed -E 's/.*Failed: *([0-9]+), Passed: *([0-9]+), Skipped: *([0-9]+), Total: *([0-9]+).*/\1 \2 \3 \4/' "$work/tests" \
+        | awk '{f+=$1; p+=$2; s+=$3; t+=$4} END {printf "{\"failed\":%d,\"passed\":%d,\"skipped\":%d,\"total\":%d}", f, p, s, t}')
 
-coverage=null
-if gh run download "$run" -R "$repo" -n coverage -D "$work/coverage" 2>/dev/null && [ -f "$work/coverage/Summary.json" ]; then
-    coverage=$(jq -c '.summary | {line: .linecoverage, branch: .branchcoverage}' "$work/coverage/Summary.json")
+    if gh run download "$run" -R "$repo" -n coverage -D "$work/coverage" 2>/dev/null && [ -f "$work/coverage/Summary.json" ]; then
+        coverage=$(jq -c '.summary | {line: .linecoverage, branch: .branchcoverage}' "$work/coverage/Summary.json")
+    fi
 fi
 
 entry=$(jq -c --argjson tests "$tests" --argjson coverage "$coverage" '{
-    run: .id, url: .html_url, commit: .head_sha, conclusion: .conclusion, event: .event,
+    run: .id, url: .html_url, commit: .head_sha, conclusion: .conclusion, event: .event, workflow: .name,
     started: .run_started_at, finished: .updated_at,
     seconds: ((.updated_at | fromdateiso8601) - (.run_started_at | fromdateiso8601)),
     tests: $tests, coverage: $coverage }' "$work/run.json")
@@ -48,16 +57,16 @@ file="$dir/$version.json"
 git ls-files | grep -v '^reports/' > "$work/files"
 jq --arg branch "$branch" --arg version "$version" --argjson entry "$entry" --rawfile files "$work/files" '
     .branch = $branch | .version = $version
-    | .runs = ([.runs[] | select(.run != $entry.run)] + [$entry])
+    | .runs = (([.runs[] | select(.run != $entry.run)] + [$entry]) | sort_by(.started))
     | .files = ($files | split("\n") | map(select(length > 0)))' "$file" > "$work/report.json"
 mv "$work/report.json" "$file"
 
 {
     echo "# $branch from $version"
     echo
-    echo "| Run | Started | Result | Tests passed / total | Line coverage | Branch coverage |"
-    echo "|---|---|---|---|---|---|"
-    jq -r '.runs[] | "| [\(.run)](\(.url)) | \(.started) | \(.conclusion) | \(.tests.passed) / \(.tests.total) | \(.coverage.line // "-")% | \(.coverage.branch // "-")% |"' "$file"
+    echo "| Run | Workflow | Started | Result | Tests passed / total | Line coverage | Branch coverage |"
+    echo "|---|---|---|---|---|---|---|"
+    jq -r '.runs[] | "| [\(.run)](\(.url)) | \(.workflow // "CI") | \(.started) | \(.conclusion) | \(.tests.passed) / \(.tests.total) | \(.coverage.line // "-")% | \(.coverage.branch // "-")% |"' "$file"
     echo
     echo "$(jq '.files | length' "$file") files in the branch; the list is in [$version.json]($version.json)."
 } > "$dir/$version.md"
