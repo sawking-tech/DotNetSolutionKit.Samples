@@ -23,6 +23,9 @@ services:
       Email__Smtp__Secure: ${SMTP_SECURE:-false}
       Email__Sandbox__Enabled: ${EMAIL_SANDBOX_ENABLED:-true}
       Email__Sandbox__ReceiverAddress: ${EMAIL_SANDBOX:-sandbox@localhost}
+      Infisical__Enabled: ${INFISICAL_ENABLED:-true}
+      Infisical__ClientId: ${INFISICAL_CLIENT_ID:-}
+      Infisical__ClientSecret: ${INFISICAL_CLIENT_SECRET:-}
     # The root filesystem is read-only: the running container is changed only by a new image, which passes
     # review and CI, so features.json and the code cannot be edited in place. /tmp stays writable for what
     # .NET and ASP.NET Core keep there: the diagnostics socket, large request bodies.

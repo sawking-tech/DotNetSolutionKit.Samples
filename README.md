@@ -4,13 +4,13 @@ Every flag: the bus with an outbox, Infisical, feature flags, the API diff, acce
 
 [![CI of full by day](reports/full/ci.svg)](https://dotskit.sawking.tech/samples.html#full)
 
-Generated from [DotNetSolutionKit v2.8.0](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.8.0) with:
+Generated from [DotNetSolutionKit feat/dotskit-2-9](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/feat/dotskit-2-9) with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --allow-scripts yes
 dotskit init
-dotskit new -S Notifications --Notify email --Messaging outbox
+dotskit new -S Notifications --Notify email --Messaging outbox --DiffApi true
 ```
 
 dotskit is the template's tool, SawKing.DotsKit.Tool of the same version; it ran here with --yes and
