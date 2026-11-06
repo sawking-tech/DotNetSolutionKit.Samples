@@ -76,5 +76,11 @@
         ]
       }
     ]
+  },
+  {
+    "branch": "lifecycle",
+    "tag": false,
+    "about": "The life of a solution on the template: made with the release two minors before the next one, changed by the team, then described, upgraded and grown by dotskit, each step a commit. Owned by lifecycle.yml, not generated from a release tag.",
+    "generate": []
   }
 ]
