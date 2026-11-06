@@ -3,7 +3,8 @@ name: Regenerate
 # Once a day, checks the template's master: whatever reaches master is a release, tagged by its release.yml.
 # When master carries a release these samples are not generated from yet, every release branch is replaced
 # by a fresh generation from that tag. A branch with a "ref" in variants.json (full-dev, on dev) follows that
-# branch of the template instead and is replaced when it has moved.
+# branch of the template instead and is replaced when it has moved. A row with "tag": false (lifecycle) is
+# for the site's list of branches only; lifecycle.yml owns that branch and regenerates it.
 #
 # The branches carry workflow files, which GITHUB_TOKEN may not push, and a push by GITHUB_TOKEN starts no
 # workflows. The push uses SAMPLES_DEPLOY_KEY, a deploy key of this repository with write access: it does
@@ -50,7 +51,7 @@ jobs:
           echo "master ${master:0:7} is release ${tag:-(not tagged yet)}, release samples from $here"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           todo='[]'
-          for row in $(jq -c '.[] | {branch, ref}' .samples/variants.json); do
+          for row in $(jq -c '.[] | select(.tag != false) | {branch, ref}' .samples/variants.json); do
             branch=$(jq -r .branch <<< "$row"); ref=$(jq -r '.ref // empty' <<< "$row")
             if [ -n "$ref" ]; then
               # A branch of the template: regenerated when that branch has moved.
