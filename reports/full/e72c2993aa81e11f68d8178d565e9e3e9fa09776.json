@@ -78,6 +78,19 @@
       "seconds": 59,
       "tests": null,
       "coverage": null
+    },
+    {
+      "run": 42263508620,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/42263508620",
+      "commit": "dd2349b4972658294d275d3f1cf29dbe50ac8e8d",
+      "conclusion": "success",
+      "event": "push",
+      "workflow": "Secret scan",
+      "started": "2026-11-06T17:38:39Z",
+      "finished": "2026-11-06T17:38:50Z",
+      "seconds": 11,
+      "tests": null,
+      "coverage": null
     }
   ],
   "branch": "full",
