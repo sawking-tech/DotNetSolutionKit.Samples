@@ -10,10 +10,16 @@ using Serilog;
 
 try
 {
+    var schemaOnly = SchemaOnlyMode.IsEnabled(args);
+
     // Services and configuration live in SchemaHost, which the schema generator builds without
     // starting: one description of the application, whether it is about to serve traffic or only to
     // say what its API looks like.
     var app = SchemaHost.Build(args);
+
+    // Asked only for the contract: write it and stop, before anything touches the infrastructure.
+    if (SchemaDump.TryWrite(app, args))
+        return;
 
     // Each dependency can be switched off in configuration; what is off is not registered, not
     // validated and not checked for readiness, and the log says so once, here.
@@ -46,7 +52,8 @@ try
     }
 
     // --- Middleware and endpoints, in the order the platform relies on (Common.Web) ---
-    app.UsePlatformPipeline(typeof(Program).Assembly, beforeEndpoints: pipeline =>
+    // Nothing to authenticate against on a schema-only run: the schemes were never registered.
+    app.UsePlatformPipeline(typeof(Program).Assembly, authenticate: !schemaOnly, beforeEndpoints: pipeline =>
     {
         if (switches.Jobs)
             pipeline.UseAppHangfire();

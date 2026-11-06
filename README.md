@@ -13,13 +13,13 @@ ice blue or dark red from day 30 on. A day keeps its colour; a new run makes its
 again. A pale square is a day before the first run; the fading squares on the right are the weeks to
 come.
 
-Generated from DotNetSolutionKit dev at [7c17f86](https://github.com/sawking-tech/DotNetSolutionKit/commit/7c17f86a07b866008c8f1fcc9e9b94b7b742fcdb), not a release, with:
+Generated from DotNetSolutionKit dev at [0d7b01f](https://github.com/sawking-tech/DotNetSolutionKit/commit/0d7b01f7e29a6a8c1fef3078df3c97361875bade), not a release, with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --allow-scripts yes
 dotskit init
-dotskit new -S Notifications --Notify email --Messaging outbox
+dotskit new -S Notifications --Notify email --Messaging outbox --DiffApi true
 ```
 
 dotskit is the template's tool, SawKing.DotsKit.Tool of the same version; it ran here with --yes and
