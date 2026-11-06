@@ -82,14 +82,18 @@ dotskit() {
         *) "${dotskit_tool[@]}" "$@" --yes ;;
     esac
 }
-while read -r args; do
+# Read the commands before running any: adding a service this way runs dotnet new again, and its sln
+# post-action asks for approval - a prompt must not read the next command from the loop's stdin, and on
+# Windows even /dev/null makes it loop on the empty answer. The answers are given up front instead.
+mapfile -t commands < "$work/commands"
+for args in "${commands[@]}"; do
     # Word splitting of the arguments is intended.
     # shellcheck disable=SC2086
     case "$args" in
         dotskit\ *) dotskit ${args#dotskit } < /dev/null ;;
-        *) dotnet new DotNetSolutionKit $args "${hive[@]}" < /dev/null ;;
+        *) printf 'Y\n%.0s' {1..64} | dotnet new DotNetSolutionKit $args "${hive[@]}" ;;
     esac
-done < "$work/commands"
+done
 # Remove only the repository this script made: the generated sample itself is not a git repository.
 [ -z "$temporary_git" ] || rm -rf .git
 # Before 2.8 a service joined All.sln by this script; since, it adds itself, and there is no script.
