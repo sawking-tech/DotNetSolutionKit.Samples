@@ -2,18 +2,13 @@
   {
     "version": "e72c2993aa81e11f68d8178d565e9e3e9fa09776",
     "file": "e72c2993aa81e11f68d8178d565e9e3e9fa09776.json",
-    "runs": 1,
+    "runs": 2,
     "last": {
       "conclusion": "success",
-      "started": "2026-11-06T09:40:20Z",
-      "tests": {
-        "failed": 0,
-        "passed": 433,
-        "skipped": 0,
-        "total": 433
-      },
+      "started": "2026-11-06T17:10:56Z",
+      "tests": null,
       "coverage": null,
-      "seconds": 104
+      "seconds": 12
     }
   },
   {
