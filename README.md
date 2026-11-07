@@ -4,7 +4,7 @@ Every flag: the bus with an outbox, Infisical, feature flags, the API diff, acce
 
 [![CI of full by day](reports/full/ci.svg)](https://dotskit.sawking.tech/samples.html#full)
 
-Generated from [DotNetSolutionKit feat/dotskit-2-9](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/feat/dotskit-2-9) with:
+Generated from [DotNetSolutionKit v2.9.0](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.9.0) with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes
@@ -27,6 +27,7 @@ Nothing here is edited by hand: the branch is replaced when the template moves o
 | [`full`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full) | Every flag: the bus with an outbox, Infisical, feature flags, the API diff, access rules over a tenant tree, object storage, ClickHouse, MongoDB and email; three services, the third, Notifications, added by dotskit after the template made the first two. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull) |
 | [`full-alt`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full-alt) | SQL Server, xUnit, secrets from Vault, Kubernetes manifests and the audit journal, which rides on the bus with an outbox; two services. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full-alt)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull-alt) |
 | [`full-dev`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/full-dev) | The flags of full and the ones dev adds before a release, generated from the template's dev once a day when it has moved. A red CI here is a break in dev before a release. Its third service, Notifications, is added by dotskit after the template made the first two. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=full-dev)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Afull-dev) |
+| [`lifecycle`](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/lifecycle) | The life of a solution on the template: made with the release two minors before the next one, changed by the team, then described, upgraded and grown by dotskit, each step a commit. Owned by lifecycle.yml, not generated from a release tag. | [![CI](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml/badge.svg?branch=lifecycle)](https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/workflows/ci.yml?query=branch%3Alifecycle) |
 
 The CI of each branch by day, as [the samples page](https://dotskit.sawking.tech/samples.html) shows it:
 
@@ -39,6 +40,8 @@ The CI of each branch by day, as [the samples page](https://dotskit.sawking.tech
 [![CI of full-alt by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full-alt/reports/full-alt/ci.svg)](https://dotskit.sawking.tech/samples.html#full-alt)
 
 [![CI of full-dev by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full-dev/reports/full-dev/ci.svg)](https://dotskit.sawking.tech/samples.html#full-dev)
+
+[![CI of lifecycle by day](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/lifecycle/reports/lifecycle/ci.svg)](https://dotskit.sawking.tech/samples.html#lifecycle)
 
 ![How to read the days](https://raw.githubusercontent.com/sawking-tech/DotNetSolutionKit.Samples/full/.samples/legend.svg)
 
