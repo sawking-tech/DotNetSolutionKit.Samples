@@ -333,6 +333,27 @@
         "line": 69.3,
         "branch": 67.9
       }
+    },
+    {
+      "run": 42422933499,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/42422933499",
+      "commit": "938d3cecce0b2af06e70c29a40c327908f2a52fa",
+      "conclusion": "success",
+      "event": "push",
+      "workflow": "CI",
+      "started": "2026-11-07T22:56:34Z",
+      "finished": "2026-11-07T22:58:32Z",
+      "seconds": 118,
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 69.3,
+        "branch": 67.9
+      }
     }
   ],
   "branch": "full",
@@ -365,6 +386,7 @@
     ".github/workflows/report.yml",
     ".github/workflows/secret-scan.yml",
     ".gitignore",
+    ".samples/backfill.sh",
     ".samples/ci-svg.py",
     ".samples/generate.sh",
     ".samples/legend.svg",
