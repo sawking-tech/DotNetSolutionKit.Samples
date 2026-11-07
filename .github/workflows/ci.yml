@@ -6,10 +6,11 @@ name: CI
 # servers. A run on the main branch checks what merged on its own, rather than on the strength of the pull
 # request it came from.
 #
-# Coverage only when asked for (coverage: true): measuring every branch of thousands of tests on each pull
-# request costs more than it tells, and what a pull request needs is tests of the code it changes. It is
-# asked for by hand, on any branch, through coverage.yml; another workflow, a release, can call this one
-# with coverage on.
+# Coverage is measured by every push run: the samples page shows the coverage of each branch, and a push
+# straight to a sample branch - how sample branches move - would otherwise leave the page without it. A pull
+# request does not measure it: measuring every branch of thousands of tests on each pull request costs more
+# than it tells, and what a pull request needs is tests of the code it changes. A manual run can still turn
+# it off (coverage: false).
 
 on:
   pull_request:
@@ -35,8 +36,9 @@ jobs:
     name: Build and test
     runs-on: ubuntu-24.04
     env:
-      # empty on a pull request or a push, where there is no input
-      COVERAGE: ${{ inputs.coverage }}
+      # A push run has no input: coverage on. A pull request has no input either and stays off. A manual
+      # run decides itself, and so does a caller, which always passes the input explicitly.
+      COVERAGE: ${{ github.event_name == 'pull_request' && false || inputs.coverage != false }}
 
     steps:
       - uses: actions/checkout@v7
@@ -138,7 +140,7 @@ jobs:
       # this file. Not set, the reports are shown and nothing fails on them. Every report is held to it, but
       # one with no branches at all - a new service with nothing yet to decide - has nothing to hold.
       - name: Branch coverage threshold
-        if: inputs.coverage == true
+        if: env.COVERAGE == 'true'
         env:
           MIN: ${{ vars.COVERAGE_MIN_BRANCH }}
         run: |

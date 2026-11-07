@@ -32,4 +32,4 @@ jobs:
           echo "nuget.org is at $latest, the default branch is generated from $here"
           [ -n "$latest" ] && [ "$latest" != "$here" ] || exit 0
           gh api -X POST "/repos/$GITHUB_REPOSITORY/dispatches" -f event_type=released
-          echo "dispatched 'released' to regenerate, lifecycle and coverage"
+          echo "dispatched 'released' to regenerate and lifecycle; coverage comes with each CI run"
