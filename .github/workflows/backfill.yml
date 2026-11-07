@@ -1,0 +1,75 @@
+# Part of DotNetSolutionKit (https://dotskit.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
+name: Backfill
+
+# Writes the reports a sample branch never got: for each release the branch has no report of, oldest
+# first, the branch is generated from that release, replaced with the generation and its CI run is
+# waited out, so report.yml writes the report; then the next release. A release whose template does not
+# know the branch's flags fails the generation and is skipped. The branch ends up generated from the
+# newest release that worked, like a regeneration. Started by hand, after a repair of the reporting
+# (issue: coverage and version rows were missing after post-regeneration runs).
+#
+# This file lives on the default branch only.
+
+on:
+  workflow_dispatch:
+    inputs:
+      branches:
+        description: Space-separated sample branches (default - every release branch in variants.json)
+        type: string
+      versions:
+        description: Space-separated template versions (default - every stable release on nuget.org)
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  TEMPLATE_REPO: sawking-tech/DotNetSolutionKit
+
+jobs:
+  branches:
+    runs-on: ubuntu-24.04
+    outputs:
+      list: ${{ steps.pick.outputs.list }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - id: pick
+        env:
+          INPUT: ${{ inputs.branches }}
+        run: |
+          if [ -n "$INPUT" ]; then
+            list=$(jq -cn --arg b "$INPUT" '$b | split(" ")')
+          else
+            # Release branches only: full-dev follows dev through regenerate, lifecycle is lifecycle.yml's.
+            list=$(jq -c '[.[] | select(.tag != false and (has("ref") | not)) | .branch]' .samples/variants.json)
+          fi
+          echo "backfilling $list"
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+  backfill:
+    needs: branches
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: ${{ fromJSON(needs.branches.outputs.list) }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Backfill the branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEPLOY_KEY: ${{ secrets.SAMPLES_DEPLOY_KEY }}
+        run: |
+          versions="${{ inputs.versions }}"
+          if [ -n "$versions" ]; then
+            # The input is what it is; the script takes the list as one argument.
+            exec bash .samples/backfill.sh "${{ matrix.branch }}" "$versions"
+          fi
+          exec bash .samples/backfill.sh "${{ matrix.branch }}"

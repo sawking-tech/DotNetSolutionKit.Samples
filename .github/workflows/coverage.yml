@@ -5,14 +5,10 @@ name: Coverage
 # Coverage of the branch chosen when it is started: ci.yml with coverage on - the same build, the same test
 # servers and tests, a report per service and one for Common, held to COVERAGE_MIN_BRANCH when it is set.
 # Started by hand, to see the coverage of a branch before its pull request. Pull requests do not measure it
-# (ci.yml says why).
+# (ci.yml says why). Every push measures it on its own, so a release needs no separate coverage run.
 
 on:
   workflow_dispatch:
-  # The released.yml dispatcher fires after a release, so the coverage of the default branch is
-  # fresh on the site without a manual run.
-  repository_dispatch:
-    types: [released]
 
 permissions:
   contents: read

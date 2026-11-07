@@ -9,7 +9,7 @@
 #
 # The reports live in reports/<branch>/, so two branches merged together keep each other's reports.
 # reports/<branch>/<version>.json keeps every run of the branch generated from that version (a release tag,
-# or the template's commit for full-dev) and the branch's files; <version>.md is the same for a reader.
+# or the template's commit for full-dev, resolved to the tag naming it when one does) and the branch's files; <version>.md is the same for a reader.
 # reports/<branch>/ci.svg draws the branch's runs by day for its README (ci-svg.py).
 # reports/<branch>/index.json lists the reports with their last run: the site reads it from
 # raw.githubusercontent.com, which cannot list a folder. Reports an earlier run left directly in reports/
@@ -18,12 +18,30 @@ set -euo pipefail
 
 run="$1"
 repo="${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
+template_repo="${TEMPLATE_REPO:-sawking-tech/DotNetSolutionKit}"
 work="$(mktemp -d)"
 version=$(tr -d '\r\n' < template-version)
 branch=$(git rev-parse --abbrev-ref HEAD)
 
+# full-dev and lifecycle carry the template's commit, not a release tag; the site groups a branch's
+# reports by release version. The one request per run is cached by gh for its default cache TTL.
+if [[ "$version" =~ ^[0-9a-f]{40}$ ]]; then
+    tag=$(gh api "repos/$template_repo/tags" --paginate -q ".[] | select(.commit.sha == \"$version\") | .name" | head -1)
+    if [ -n "$tag" ]; then
+        echo "$version is $tag"
+        version="$tag"
+    fi
+fi
+
 gh api "repos/$repo/actions/runs/$run" > "$work/run.json"
 workflow=$(jq -r '.name' "$work/run.json")
+
+# A successful Regenerate or Secret scan writes nothing: the CI its push starts reports the day. Only
+# its failure speaks, of its conclusion (see the header).
+if [ "$workflow" != CI ] && [ "$(jq -r .conclusion "$work/run.json")" = success ]; then
+    echo "a successful $workflow writes no report"
+    exit 0
+fi
 
 # A run of CI speaks of tests and coverage. A failed Regenerate or Secret scan speaks only of its
 # conclusion: the day is red because the tool, the scenario or the scan is broken, and there is nothing
