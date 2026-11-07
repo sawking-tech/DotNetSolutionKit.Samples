@@ -163,6 +163,15 @@ for wf in .github/workflows/*.yml; do
     [ -f "$wf" ] && sed -i "s/branches: \[main, master\]/branches: [main, master, $branch]/" "$wf"
 done
 
+# The CI file comes from the generated solution, where coverage answers a manual request; a sample branch
+# is pushed straight, and the samples page shows the coverage of every run. The same expression the default
+# branch carries: on for a push, off for a pull request. Older templates without the line are left as they
+# are.
+ci=.github/workflows/ci.yml
+if [ -f "$ci" ] && grep -q 'COVERAGE: ${{ inputs.coverage }}' "$ci"; then
+    sed -i "s|COVERAGE: \${{ inputs.coverage }}|COVERAGE: \${{ github.event_name == 'pull_request' \&\& false \|\| inputs.coverage != false }}|" "$ci"
+fi
+
 if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false' "$here/variants.json")" = "true" ]; then
     mkdir -p .samples .github/workflows
     cp "$here/generate.sh" "$here/lifecycle.sh" "$here/report.sh" "$here/ci-svg.py" "$here/variants.json" .samples/
