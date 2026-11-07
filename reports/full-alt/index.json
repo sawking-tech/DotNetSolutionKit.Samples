@@ -2,18 +2,21 @@
   {
     "version": "v2.9.0",
     "file": "v2.9.0.json",
-    "runs": 4,
+    "runs": 5,
     "last": {
       "conclusion": "success",
-      "started": "2026-11-07T21:43:33Z",
+      "started": "2026-11-07T22:35:43Z",
       "tests": {
         "failed": 0,
         "passed": 366,
         "skipped": 0,
         "total": 366
       },
-      "coverage": null,
-      "seconds": 104
+      "coverage": {
+        "line": 74.2,
+        "branch": 69.3
+      },
+      "seconds": 109
     }
   },
   {
