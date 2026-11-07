@@ -1,5 +1,22 @@
 [
   {
+    "version": "v2.9.0",
+    "file": "v2.9.0.json",
+    "runs": 3,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-11-07T21:27:42Z",
+      "tests": {
+        "failed": 0,
+        "passed": 323,
+        "skipped": 0,
+        "total": 323
+      },
+      "coverage": null,
+      "seconds": 63
+    }
+  },
+  {
     "version": "v2.8.0",
     "file": "v2.8.0.json",
     "runs": 1,
@@ -14,23 +31,6 @@
       },
       "coverage": null,
       "seconds": 70
-    }
-  },
-  {
-    "version": "v2.9.0",
-    "file": "v2.9.0.json",
-    "runs": 2,
-    "last": {
-      "conclusion": "success",
-      "started": "2026-11-07T09:53:10Z",
-      "tests": {
-        "failed": 0,
-        "passed": 323,
-        "skipped": 0,
-        "total": 323
-      },
-      "coverage": null,
-      "seconds": 69
     }
   },
   {
