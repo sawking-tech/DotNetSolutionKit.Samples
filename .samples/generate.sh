@@ -169,7 +169,7 @@ done
 # are.
 ci=.github/workflows/ci.yml
 if [ -f "$ci" ] && grep -q 'COVERAGE: ${{ inputs.coverage }}' "$ci"; then
-    sed -i "s|COVERAGE: \${{ inputs.coverage }}|COVERAGE: \${{ github.event_name == 'pull_request' \&\& false \|\| inputs.coverage != false }}|" "$ci"
+    sed -i "s|COVERAGE: \${{ inputs.coverage }}|COVERAGE: \${{ github.event_name == 'push' \|\| inputs.coverage }}|" "$ci"
 fi
 
 if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false' "$here/variants.json")" = "true" ]; then
