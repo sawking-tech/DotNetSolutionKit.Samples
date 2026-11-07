@@ -111,7 +111,7 @@ done
 # pushed straight, and the samples page shows the coverage of every run (same rewrite as generate.sh).
 ci=.github/workflows/ci.yml
 if [ -f "$ci" ] && grep -q 'COVERAGE: ${{ inputs.coverage }}' "$ci"; then
-    sed -i "s|COVERAGE: \${{ inputs.coverage }}|COVERAGE: \${{ github.event_name == 'pull_request' \&\& false \|\| inputs.coverage != false }}|" "$ci"
+    sed -i "s|COVERAGE: \${{ inputs.coverage }}|COVERAGE: \${{ github.event_name == 'push' \|\| inputs.coverage }}|" "$ci"
 fi
 commit_of=$(git -C "$sources" rev-parse HEAD 2>/dev/null || echo "$ref")
 echo "$commit_of" > template-version
