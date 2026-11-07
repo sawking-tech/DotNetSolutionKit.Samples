@@ -41,7 +41,7 @@ jobs:
           INPUT: ${{ inputs.branches }}
         run: |
           if [ -n "$INPUT" ]; then
-            list=$(jq -cn --arg b "$INPUT" '$b | split(" ")')
+            list=$(jq -c -n --arg b "$INPUT" '$b | split(" ")')
           else
             # Release branches only: full-dev follows dev through regenerate, lifecycle is lifecycle.yml's.
             list=$(jq -c '[.[] | select(.tag != false and (has("ref") | not)) | .branch]' .samples/variants.json)
