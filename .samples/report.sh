@@ -42,17 +42,18 @@ gh api "repos/$repo/actions/runs/$run" > "$work/run.json"
 workflow=$(jq -r '.name' "$work/run.json")
 
 # A successful Regenerate or Secret scan writes nothing: the CI its push starts reports the day. Only
-# its failure speaks, of its conclusion (see the header).
-if [ "$workflow" != CI ] && [ "$(jq -r .conclusion "$work/run.json")" = success ]; then
+# its failure speaks, of its conclusion (see the header). Coverage speaks like CI: it exists to write
+# the coverage a push run could not.
+if [ "$workflow" != CI ] && [ "$workflow" != Coverage ] && [ "$(jq -r .conclusion "$work/run.json")" = success ]; then
     echo "a successful $workflow writes no report"
     exit 0
 fi
 
-# A run of CI speaks of tests and coverage. A failed Regenerate or Secret scan speaks only of its
-# conclusion: the day is red because the tool, the scenario or the scan is broken, and there is nothing
-# else to say. A successful one writes no entry: the CI its push starts reports the day.
+# A run of CI or Coverage speaks of tests and coverage. A failed Regenerate or Secret scan speaks only
+# of its conclusion: the day is red because the tool, the scenario or the scan is broken, and there is
+# nothing else to say. A successful one writes no entry: the CI its push starts reports the day.
 tests=null; coverage=null
-if [ "$workflow" = CI ]; then
+if [ "$workflow" = CI ] || [ "$workflow" = Coverage ]; then
     # dotnet test prints one line per test assembly: "Passed!  - Failed: 0, Passed: 332, Skipped: 0, ..."
     gh run view "$run" -R "$repo" --log 2>/dev/null | grep -E '(Passed|Failed)! +- Failed:' > "$work/tests" || true
     tests=$(sed -E 's/.*Failed: *([0-9]+), Passed: *([0-9]+), Skipped: *([0-9]+), Total: *([0-9]+).*/\1 \2 \3 \4/' "$work/tests" \

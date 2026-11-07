@@ -1,6 +1,6 @@
 name: Report
 
-# After a checking workflow of a sample branch - CI, Regenerate or Secret scan - writes the run's report
+# After a checking workflow of a sample branch - CI, Coverage, Regenerate or Secret scan - writes the run's report
 # into that branch: reports/<version>.json and .md (.samples/report.sh). A failed Regenerate or Secret
 # scan writes its day too, so a broken tool or scenario turns the branch's day red, not only a broken CI.
 # The commit says [skip ci], so it starts no CI of its own and no report of a report.
@@ -8,7 +8,7 @@ name: Report
 
 on:
   workflow_run:
-    workflows: [CI, Regenerate, "Secret scan"]
+    workflows: [CI, Coverage, Regenerate, "Secret scan"]
     types: [completed]
 
 permissions:
