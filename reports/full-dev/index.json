@@ -2,18 +2,13 @@
   {
     "version": "bd21a11666db159942e028512be7a94b273e0272",
     "file": "bd21a11666db159942e028512be7a94b273e0272.json",
-    "runs": 2,
+    "runs": 3,
     "last": {
       "conclusion": "success",
-      "started": "2026-11-07T09:05:29Z",
-      "tests": {
-        "failed": 0,
-        "passed": 433,
-        "skipped": 0,
-        "total": 433
-      },
+      "started": "2026-11-07T09:53:42Z",
+      "tests": null,
       "coverage": null,
-      "seconds": 121
+      "seconds": 9
     }
   },
   {
