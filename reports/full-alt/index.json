@@ -1,5 +1,17 @@
 [
   {
+    "version": "v2.9.0",
+    "file": "v2.9.0.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-11-07T09:53:10Z",
+      "tests": null,
+      "coverage": null,
+      "seconds": 10
+    }
+  },
+  {
     "version": "v2.7.0",
     "file": "v2.7.0.json",
     "runs": 6,
