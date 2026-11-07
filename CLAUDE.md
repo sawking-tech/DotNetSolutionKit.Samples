@@ -87,7 +87,7 @@ Migrations: `/ef-migration`. A new service or a flag: `/scaffold-service`.
 ```bash
 # A newer version of the template, with the team's changes kept: dotskit (dotnet tool install -g SawKing.DotsKit.Tool).
 # Without --yes it lists the changes and writes nothing: show them to the user, then run it with --yes on their yes.
-# A clean working tree; a solution generated since 2.9 has its manifest, one without .dotskit/manifest.json (made before 2.9 or by hand) runs dotskit init first, the same way.
+# A clean working tree; a solution without .dotskit/manifest.json runs dotskit init first, the same way.
 dotskit upgrade
 ```
 
@@ -101,8 +101,7 @@ dotskit upgrade
 - Side effects of a change (a bus message, a job) go into domain event handlers, never inline in a
   service: [domain events](https://dotskit.sawking.tech/docs.html#domain-events).
 - A key added to an `appsettings*.json` gets `"_comment_<Key>"` right after it: what goes there, and
-  `REQUIRED` first when the service does not start without it. A word about the section rather than one key
-  (defaults, where credentials come from) is `"_note_<Topic>"`. A key starting with `_` is metadata, which
+  `REQUIRED` first when the service does not start without it. A key starting with `_` is metadata, which
   the options binder ignores: [JSON metadata keys](https://dotskit.sawking.tech/docs.html#adr-006).
 - Configuration is read through typed options validated at startup, never `IConfiguration["Key"]` in a
   service: [settings](https://dotskit.sawking.tech/docs.html#settings).
