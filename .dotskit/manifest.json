@@ -35,7 +35,7 @@
       "--Audit", "true",
       "--Infisical", "false",
       "--Vault", "true",
-      "--HttpPort", "5987",
+      "--HttpPort", "5660",
       "--DiffApi", "false",
       "--FeatureFlags", "false",
       "--HierarchyRules", "false"
