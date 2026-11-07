@@ -1,4 +1,4 @@
-namespace ST.DotNetSolutionKit.Samples.Common.Exceptions;
+﻿namespace ST.DotNetSolutionKit.Samples.Common.Exceptions;
 
 /// <summary>
 /// Thrown when a unique constraint violation occurs, e.g., duplicate entity.

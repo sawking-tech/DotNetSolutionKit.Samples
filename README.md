@@ -4,7 +4,7 @@ Every flag: the bus with an outbox, Infisical, feature flags, the API diff, acce
 
 [![CI of full by day](reports/full/ci.svg)](https://dotskit.sawking.tech/samples.html#full)
 
-Generated from [DotNetSolutionKit v2.9.0](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.9.0) with:
+Generated from [DotNetSolutionKit v2.8.0](https://github.com/sawking-tech/DotNetSolutionKit/releases/tag/v2.8.0) with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes
