@@ -176,7 +176,7 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
     mkdir -p .samples .github/workflows
     cp "$here/generate.sh" "$here/lifecycle.sh" "$here/report.sh" "$here/ci-svg.py" "$here/variants.json" .samples/
     python3 "$here/ci-svg.py" --legend .samples/legend.svg
-    cp "$here/../.github/workflows/regenerate.yml" "$here/../.github/workflows/lifecycle.yml" "$here/../.github/workflows/report.yml" .github/workflows/
+    cp "$here"/../.github/workflows/{regenerate,lifecycle,report,released,backfill}.yml .github/workflows/
     {
         echo
         echo "## The samples"
