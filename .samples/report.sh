@@ -53,8 +53,19 @@ if [ "$workflow" = CI ]; then
     tests=$(sed -E 's/.*Failed: *([0-9]+), Passed: *([0-9]+), Skipped: *([0-9]+), Total: *([0-9]+).*/\1 \2 \3 \4/' "$work/tests" \
         | awk '{f+=$1; p+=$2; s+=$3; t+=$4} END {printf "{\"failed\":%d,\"passed\":%d,\"skipped\":%d,\"total\":%d}", f, p, s, t}')
 
-    if gh run download "$run" -R "$repo" -n coverage -D "$work/coverage" 2>/dev/null && [ -f "$work/coverage/Summary.json" ]; then
-        coverage=$(jq -c '.summary | {line: .linecoverage, branch: .branchcoverage}' "$work/coverage/Summary.json")
+    if gh run download "$run" -R "$repo" -n coverage -D "$work/coverage" 2>/dev/null; then
+        if [ -f "$work/coverage/Summary.json" ]; then
+            # one report over the whole run
+            coverage=$(jq -c '.summary | {line: .linecoverage, branch: .branchcoverage}' "$work/coverage/Summary.json")
+        elif ls "$work/coverage"/*/Summary.json >/dev/null 2>&1; then
+            # a report per service and one for Common: the overall share is the sum of the covered over
+            # the sum of the coverable, not the average of the percentages
+            coverage=$(jq -s -c '[.[].summary] | {
+                line: (((map(.coveredlines) | add) / (map(.coverablelines) | add) * 100 * 10 | round) / 10),
+                branch: (if (map(.totalbranches) | add) > 0
+                    then (((map(.coveredbranches) | add) / (map(.totalbranches) | add) * 100 * 10 | round) / 10)
+                    else null end) }' "$work"/coverage/*/Summary.json)
+        fi
     fi
 fi
 
