@@ -16,6 +16,10 @@ name: Regenerate
 on:
   schedule:
     - cron: '17 3 * * *'
+  # The released.yml dispatcher fires when nuget.org shows a version these samples are not generated
+  # from yet, so a release does not wait for the nightly schedule (issue #134).
+  repository_dispatch:
+    types: [released]
   workflow_dispatch:
     inputs:
       force:

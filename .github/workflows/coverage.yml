@@ -9,6 +9,10 @@ name: Coverage
 
 on:
   workflow_dispatch:
+  # The released.yml dispatcher fires after a release, so the coverage of the default branch is
+  # fresh on the site without a manual run.
+  repository_dispatch:
+    types: [released]
 
 permissions:
   contents: read
