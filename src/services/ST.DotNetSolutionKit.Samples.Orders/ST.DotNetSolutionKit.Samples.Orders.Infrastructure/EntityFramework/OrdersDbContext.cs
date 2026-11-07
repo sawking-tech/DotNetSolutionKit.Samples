@@ -10,7 +10,7 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> options)
     : DbContextBase(options), IUnitOfWork
 {
     public static readonly string DefaultSchemaName = "orders";
-
+    
     // Add DbSet here
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

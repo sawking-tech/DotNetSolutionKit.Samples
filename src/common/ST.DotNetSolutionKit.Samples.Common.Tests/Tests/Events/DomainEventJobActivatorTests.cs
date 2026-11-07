@@ -1,4 +1,4 @@
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
+﻿using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using Hangfire;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;

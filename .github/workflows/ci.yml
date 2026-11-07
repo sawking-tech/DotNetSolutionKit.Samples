@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       # empty on a pull request or a push, where there is no input
-      COVERAGE: ${{ github.event_name == 'pull_request' && false || inputs.coverage != false }}
+      COVERAGE: ${{ github.event_name == 'push' || inputs.coverage }}
 
     steps:
       - uses: actions/checkout@v7
