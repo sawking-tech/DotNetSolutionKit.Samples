@@ -27,6 +27,15 @@ hive=()
 if gh release download "$tag" -R "$template_repo" -p '*.nupkg' -D "$work/package" 2>/dev/null; then
     dotnet new install "$work"/package/SawKing.DotNetSolutionKit.*.nupkg --force "${hive[@]}"
     version="${tag#v}"
+    # nuget.org indexes a release for up to half an hour; the tool installs published versions from it.
+    # Wait for the version before anything asks for it, so a run right after a release does not fail (issue #134).
+    index="https://api.nuget.org/v3-flatcontainer/sawking.dotnetsolutionkit/index.json"
+    for _ in $(seq 1 "${WAIT_MINUTES:-40}"); do
+        curl -fsS "$index" | jq -qr ".versions[] | select(. == \"$version\")" | grep -q . && break
+        sleep 60
+    done
+    curl -fsS "$index" | jq -qr ".versions[] | select(. == \"$version\")" | grep -q . \
+        || { echo "nuget.org has not indexed $version in ${WAIT_MINUTES:-40} minutes: the run waits for the next one." >&2; exit 1; }
 else
     git clone -q --depth 1 --branch "$tag" "https://github.com/$template_repo.git" "$work/template"
     commit=$(git -C "$work/template" rev-parse HEAD)

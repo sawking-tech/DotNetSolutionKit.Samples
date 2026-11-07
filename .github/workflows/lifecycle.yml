@@ -1,6 +1,6 @@
 name: Lifecycle
 
-# The life of a solution on the branch lifecycle, built again when the template's dev has moved: a solution
+# The life of a solution on the branch lifecycle, built again when the template's master has moved: a solution
 # made with the release two minors before the next one, changed by the team, then described, upgraded and
 # grown by dotskit, each step a commit (.samples/lifecycle.sh). dotskit builds the solution after each command;
 # the branch's own CI then runs on the result, as on every sample branch, and report.yml writes its report.
@@ -12,10 +12,14 @@ name: Lifecycle
 on:
   schedule:
     - cron: '47 3 * * *'
+  # The released.yml dispatcher fires when nuget.org shows a version these samples are not generated
+  # from yet, so a release does not wait for the nightly schedule (issue #134).
+  repository_dispatch:
+    types: [released]
   workflow_dispatch:
     inputs:
       force:
-        description: Build the branch again even when dev has not moved
+        description: Build the branch again even when master has not moved
         type: boolean
         default: false
 
@@ -27,7 +31,7 @@ concurrency: lifecycle
 
 env:
   TEMPLATE_REPO: sawking-tech/DotNetSolutionKit
-  TEMPLATE_REF: dev
+  TEMPLATE_REF: master
   BRANCH: lifecycle
 
 jobs:

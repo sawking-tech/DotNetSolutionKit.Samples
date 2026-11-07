@@ -1,0 +1,35 @@
+# Part of DotNetSolutionKit (https://dotskit.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
+name: Released
+
+# The template's release publishes its packages to nuget.org; when the index shows a version this
+# repository has not generated from yet, wake the workflows that react to a release. They still
+# decide themselves whether there is work: a dispatch is only an earlier alarm clock, so a release
+# does not wait for the nightly schedule (issue #134). Polling needs no secret: the nuget index is
+# public, and this repository is public, so the minutes are free.
+#
+# This file lives on the default branch only.
+
+on:
+  schedule:
+    - cron: '9,39 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          here=$(cat template-version 2>/dev/null || echo none)
+          latest=$(curl -fsS https://api.nuget.org/v3-flatcontainer/sawking.dotnetsolutionkit/index.json \
+            | jq -r '[.versions[] | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | last')
+          echo "nuget.org is at $latest, the default branch is generated from $here"
+          [ -n "$latest" ] && [ "$latest" != "$here" ] || exit 0
+          gh api -X POST "/repos/$GITHUB_REPOSITORY/dispatches" -f event_type=released
+          echo "dispatched 'released' to regenerate, lifecycle and coverage"

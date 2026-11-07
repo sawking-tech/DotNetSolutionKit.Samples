@@ -9,9 +9,10 @@
 # flag to a service it has, and adds one more with --force. dotskit builds the solution after each command and
 # stops the run when the build fails; at the end the team's change must still be there.
 #
-# The current version is the template branch's version.json; the start is the last patch of the second minor
-# below it among the releases on nuget.org, across a major too (3.0 starts from the 2.x before the last one).
-# dotskit and the template the solution is upgraded to are the sources of that branch: the run checks the next
+# The current version is the template branch's version.json; the start is the second minor below it,
+# at its first release, in one jump; a major current starts from the last patch of the previous major's last
+# minor. dotskit and
+# the template the solution is upgraded to are the sources of that branch: the run checks the next
 # release before it is out. TEMPLATE_DIR names a checkout of the template to use instead of cloning one, for a
 # run by hand.
 set -euo pipefail
@@ -31,7 +32,8 @@ else
     sources="$work/template"
 fi
 
-# The start: among the releases below the current version, the second minor down, and its last patch.
+# The start: a minor current takes the first release of the second minor below it, in one jump; a major
+# current takes the last patch of the previous major's last minor (3.0 starts from the last 2.x).
 current=$(jq -r .version "$sources/version.json")
 current="${current%%-*}"
 released=$(curl -fsS https://api.nuget.org/v3-flatcontainer/sawking.dotnetsolutionkit/index.json | jq -r '.versions[]')
@@ -40,9 +42,17 @@ minors=$(grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' <<< "$released" | cut -d. -f1,2 | so
         # An if, so a minor at or above the current one ends the loop with status 0, not a silent exit.
         if [ "$(printf '%s\n%s\n' "$m" "$current" | sort -V | head -1)" = "$m" ] && [ "${current#"$m".}" = "$current" ]; then echo "$m"; fi
     done)
-start_minor=$(tail -2 <<< "$minors" | head -1)
-[ "$(wc -l <<< "$minors")" -ge 2 ] || { echo "nuget.org has fewer than two minors below $current to start from" >&2; exit 1; }
-start=$(grep -E "^${start_minor//./\\.}\.[0-9]+$" <<< "$released" | sort -V | tail -1)
+if [ "${current%.0.0}" != "$current" ]; then
+    # A major: the top minor below it, at its last patch.
+    start_minor=$(tail -1 <<< "$minors")
+    [ -n "$start_minor" ] || { echo "nuget.org has no minor below $current to start from" >&2; exit 1; }
+    start=$(grep -E "^${start_minor//./\\.}\.[0-9]+$" <<< "$released" | sort -V | tail -1)
+else
+    # A minor: the second minor down, at its .0, or at its first release when the .0 is not on nuget.org.
+    [ "$(wc -l <<< "$minors")" -ge 2 ] || { echo "nuget.org has fewer than two minors below $current to start from" >&2; exit 1; }
+    start_minor=$(tail -2 <<< "$minors" | head -1)
+    start=$(grep -E "^${start_minor//./\\.}\.[0-9]+$" <<< "$released" | sort -V | head -1)
+fi
 echo "the life of a solution: from $start, made with the template alone, to $current by dotskit"
 
 dotnet build "$sources/tool/DotsKit" -c Release -o "$work/tool" -nologo -v q
@@ -85,7 +95,7 @@ step() {
 }
 # A solution before 2.7 does not say its version, and the run knows it: it made the solution.
 step "dotskit init: the manifest of a solution made without dotskit" init --template-version "$start"
-step "dotskit upgrade: from $start to $current" upgrade
+step "dotskit upgrade: from $start to $current" upgrade --all-at-once
 step "dotskit new: a service, Catalog" new -S Catalog --MongoDB true --Notify email
 step "dotskit new: a flag of a service it has, ClickHouse for Orders" new -S Orders --ClickHouse true
 step "dotskit new --force: feature flags for Billing" new -S Billing --FeatureFlags true --force
