@@ -1,4 +1,4 @@
-﻿using ST.DotNetSolutionKit.Samples.Common.Domain;
+using ST.DotNetSolutionKit.Samples.Common.Domain;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 using ST.DotNetSolutionKit.Samples.Common.Domain.Events;

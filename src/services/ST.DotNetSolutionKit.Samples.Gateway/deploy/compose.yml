@@ -15,12 +15,18 @@ services:
       Jwt__Audience: ${JWT_AUDIENCE:?Set JWT_AUDIENCE in deploy/compose/.env}
       Jwt__PublicKeyPath: /app/keys/jwt-public.pem
       InternalApi__ApiKey: ${INTERNAL_API_KEY:-}
+    # The root filesystem is read-only: the running container is changed only by a new image, which passes
+    # review and CI, so features.json and the code cannot be edited in place. /tmp stays writable for what
+    # .NET and ASP.NET Core keep there: the diagnostics socket, large request bodies.
+    read_only: true
+    tmpfs:
+      - /tmp
     volumes:
       # The public key the tokens are signed for, from deploy/compose/keys/ next to the .env file.
       - ./deploy/compose/keys/jwt-public.pem:/app/keys/jwt-public.pem:ro
     # The entry point; a TLS terminating proxy in front publishes it further.
     ports:
-      - "127.0.0.1:5096:8080"
+      - "127.0.0.1:5896:8080"
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/ready"]
       interval: 10s

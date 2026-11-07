@@ -15,7 +15,6 @@ namespace ST.DotNetSolutionKit.Samples.Gateway.Tests.Tests;
 /// What the gateway sends to a service: the request as YARP forwards it with the gateway's transforms,
 /// caught before it leaves the gateway.
 /// </summary>
-[TestFixture]
 public class GatewayTransformsTests
 {
     private const string Site = "https://app.example.com";

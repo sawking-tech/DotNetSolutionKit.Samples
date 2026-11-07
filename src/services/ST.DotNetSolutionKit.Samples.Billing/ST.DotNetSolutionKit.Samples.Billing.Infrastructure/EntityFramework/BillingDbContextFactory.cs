@@ -2,21 +2,18 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 
 namespace ST.DotNetSolutionKit.Samples.Billing.Infrastructure.EntityFramework;
 
 [UsedImplicitly]
 public class BillingDbContextFactory : IDesignTimeDbContextFactory<BillingDbContext>
 {
-    private const string PlaceholderConnectionString = "Host=localhost;Database=design-time-placeholder";
-
     private static DbContextOptions<BillingDbContext> GetOptions(string connectionString)
     {
-        return new DbContextOptionsBuilder<BillingDbContext>()
-            .UseNpgsql(connectionString,
-                x => { x.MigrationsHistoryTable("__EFMigrationsHistory", BillingDbContext.DefaultSchemaName); })
-            .Options;
+        var options = new DbContextOptionsBuilder<BillingDbContext>();
+        options.UseDatabase(connectionString, BillingDbContext.DefaultSchemaName);
+        return options.Options;
     }
 
     private static string GetConnectionString()
@@ -31,13 +28,13 @@ public class BillingDbContextFactory : IDesignTimeDbContextFactory<BillingDbCont
 
         var currentDir = Directory.GetCurrentDirectory();
         Console.WriteLine($"Current directory: {currentDir}");
-    
+
         // If we're in Infrastructure, go up one level to API project
         var apiProjectPath = Path.Combine(currentDir, "..", "ST.DotNetSolutionKit.Samples.Billing.API");
         var apiProjectFullPath = Path.GetFullPath(apiProjectPath);
-    
+
         Console.WriteLine($"Looking for configs in: {apiProjectFullPath}");
-    
+
         if (!Directory.Exists(apiProjectFullPath))
         {
             throw new Exception($"API project directory not found: {apiProjectFullPath}");
@@ -51,7 +48,7 @@ public class BillingDbContextFactory : IDesignTimeDbContextFactory<BillingDbCont
             .Build();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-    
+
         if (string.IsNullOrEmpty(connectionString))
         {
             // Adding a migration compares the model with the snapshot and never opens a connection,
@@ -61,7 +58,7 @@ public class BillingDbContextFactory : IDesignTimeDbContextFactory<BillingDbCont
             Console.WriteLine(
                 "Connection string 'DefaultConnection' not found: using a placeholder. " +
                 "Enough to add a migration; set ConnectionStrings__DefaultConnection to touch a database.");
-            return PlaceholderConnectionString;
+            return DatabaseProvider.DesignTimeConnectionString;
         }
 
         Console.WriteLine("Successfully found connection string");
@@ -73,8 +70,7 @@ public class BillingDbContextFactory : IDesignTimeDbContextFactory<BillingDbCont
         var connectionString = GetConnectionString();
 
         // Name the target database without the credentials: this output lands in terminals and CI logs.
-        var target = new NpgsqlConnectionStringBuilder(connectionString);
-        Console.WriteLine($"Database: {target.Host}:{target.Port}/{target.Database} as {target.Username ?? "(no user)"}");
+        Console.WriteLine($"Database: {DatabaseProvider.DescribeTarget(connectionString)}");
 
         return new BillingDbContext(GetOptions(connectionString));
     }
