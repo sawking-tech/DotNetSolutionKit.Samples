@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
 using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
 

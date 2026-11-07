@@ -1,4 +1,4 @@
-﻿    using ST.DotNetSolutionKit.Samples.Common.Domain;
+    using ST.DotNetSolutionKit.Samples.Common.Domain;
     using ST.DotNetSolutionKit.Samples.Common.Domain.Persistence;
     using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
@@ -12,7 +12,7 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
     public abstract class DbContextBase : DbContext, IUnitOfWork
     {
         private IDbContextTransaction? _currentTransaction;
-        
+
         protected DbContextBase(DbContextOptions options)
             : base(options)
         {
@@ -53,7 +53,7 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
             object entity, bool isNewEntity = false)
         {
             var trackedEntry = ChangeTracker.Entries().FirstOrDefault(x => x.Entity == entity);
-            
+
             if (trackedEntry == null)
             {
                 throw new ArgumentException("Entity is not being tracked by this context", nameof(entity));
@@ -207,7 +207,7 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
             DisposeTransaction();
             base.Dispose();
         }
-        
+
         public new async ValueTask DisposeAsync()
         {
             await DisposeTransactionAsync();
