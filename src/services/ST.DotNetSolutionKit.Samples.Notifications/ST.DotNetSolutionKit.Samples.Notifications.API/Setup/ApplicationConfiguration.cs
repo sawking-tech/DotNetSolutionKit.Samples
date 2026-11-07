@@ -1,4 +1,5 @@
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration.Secrets;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
 namespace ST.DotNetSolutionKit.Samples.Notifications.API.Setup;
 
@@ -25,6 +26,17 @@ internal static class ApplicationConfiguration
 
         // Always connect environment variables (secrets, dynamic parameters)
         builder.AddEnvironmentVariables();
+
+        // The secret store goes last, so a value it holds wins over anything shipped in the image. Its
+        // connection (project, environment, folders, whether it is required) is read from the Infisical
+        // section of configuration; the machine identity comes from environment variables, added above.
+        // The arguments are fallbacks for when configuration says nothing: the service's own folder, and
+        // a store that may be missing only on a developer machine.
+        // Skipped for --schema-only: a build agent producing the API document holds no store identity.
+        if (!SchemaOnlyMode.IsEnabled(args))
+        {
+            builder.AddPlatformSecrets("/notifications", optional: env.IsEnvironment("Local"));
+        }
 
         // With the database switched off, what is stored in it goes off too: the job server, and the bus
         // when it delivers through the outbox.
