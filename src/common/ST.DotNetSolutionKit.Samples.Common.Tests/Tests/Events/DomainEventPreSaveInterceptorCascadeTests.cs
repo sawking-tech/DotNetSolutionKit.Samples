@@ -1,4 +1,4 @@
-using ST.DotNetSolutionKit.Samples.Common.Application.Events;
+﻿using ST.DotNetSolutionKit.Samples.Common.Application.Events;
 using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Domain;
