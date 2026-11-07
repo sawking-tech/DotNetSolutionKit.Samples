@@ -7,8 +7,9 @@
 # For each version the branch has no report of, oldest first: generate the branch from that release
 # (generate.sh), replace the branch with the generation, wait for the push's CI run and its report,
 # then take the next version. A version whose template does not know the branch's flags fails the
-# generation: it is logged and skipped. The branch ends up generated from the newest version that
-# worked. Without versions, every stable release on nuget.org is a candidate.
+# generation: it is logged and skipped. Then the branch is regenerated from the newest release, so it
+# ends there rather than on the newest backfilled version, and the newest report gets the coverage an
+# older run left out. Without versions, every stable release on nuget.org is a candidate.
 #
 # The reports of earlier runs stay on the branch; the push uses the deploy key through GIT_SSH_COMMAND,
 # as the regeneration does, so the workflows the push starts run.
@@ -26,6 +27,16 @@ if [ "$#" -gt 0 ]; then
 else
     versions=$(curl -fsS https://api.nuget.org/v3-flatcontainer/sawking.dotnetsolutionkit/index.json \
         | jq -r '[.versions[] | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | join(" ")')
+fi
+# Releases older than the branch's oldest "since" have no commands for it (variants.json): skip them
+# before each one's template is fetched and installed.
+since=$(jq -r --arg b "$branch" '[.[] | select(.branch == $b) | .generate[].since] | min // empty' "$here/variants.json" | tr -d '\r')
+if [ -n "$since" ]; then
+    kept=""
+    for version in $versions; do
+        [ "$(printf '%s\n%s\n' "$since" "$version" | sort -V | head -1)" = "$since" ] && kept="$kept $version"
+    done
+    versions=$kept
 fi
 echo "$branch: candidates $versions"
 
@@ -95,4 +106,21 @@ for version in $versions; do
     wait_ci "$sha" "v$version" || exit 1
     cd "$here"
 done
+
+# The branch ends on the newest release, not on the newest backfilled one; a fresh run of its CI also
+# gives the newest report the coverage an older run left out.
+latest=$(printf '%s\n' $versions | sort -V | tail -1)
+tip=$(gh api -q .content "repos/$repo/contents/template-version?ref=$branch" 2>/dev/null | base64 -d | tr -d '\r\n')
+covered=$(gh api -q .content "repos/$repo/contents/reports/$branch/v$latest.json?ref=$branch" 2>/dev/null \
+    | base64 -d | jq '[.runs[-1].coverage.line, .runs[-1].coverage.branch] | all(. != null)')
+if [ "$tip" = "v$latest" ] && [ "$covered" = true ]; then
+    echo "$branch: v$latest is on the branch and covered"
+else
+    echo "$branch: regenerating from v$latest"
+    rm -rf "$sample" "$RUNNER_TEMP/branch"
+    bash "$here/generate.sh" "v$latest" "$branch" "$sample" || exit 1
+    sha=$(replace "$latest") || exit 1
+    wait_ci "$sha" "v$latest" || exit 1
+    cd "$here"
+fi
 echo "$branch: backfilled"
