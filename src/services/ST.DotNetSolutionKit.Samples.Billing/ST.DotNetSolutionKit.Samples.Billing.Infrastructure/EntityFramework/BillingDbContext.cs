@@ -10,7 +10,7 @@ public class BillingDbContext(DbContextOptions<BillingDbContext> options)
     : DbContextBase(options), IUnitOfWork
 {
     public static readonly string DefaultSchemaName = "billing";
-    
+
     // Add DbSet here
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
