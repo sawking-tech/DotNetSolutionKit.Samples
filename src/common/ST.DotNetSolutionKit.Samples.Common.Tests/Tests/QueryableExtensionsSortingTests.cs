@@ -1,4 +1,4 @@
-﻿using ST.DotNetSolutionKit.Samples.Common.Application.Extensions;
+using ST.DotNetSolutionKit.Samples.Common.Application.Extensions;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Querying;
 using Shouldly;
 
