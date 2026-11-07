@@ -1,0 +1,44 @@
+{
+  "_comment_template": "The version of DotNetSolutionKit the solution is generated with; dotskit upgrade moves it to the tool's",
+  "template": "2.9.0",
+  "_comment_solution": "The template's arguments of Common and the root: the names, the database, the deployment, the flags the services share",
+  "solution": [
+    "--NamespaceRoot", "ST",
+    "--ProductName", "DotNetSolutionKit.Samples",
+    "--Hangfire", "true",
+    "--Messaging", "outbox",
+    "--Storage", "false",
+    "--ClickHouse", "false",
+    "--MongoDB", "false",
+    "--Audit", "true",
+    "--TestFramework", "xunit",
+    "--Agent", "claude",
+    "--Deploy", "k8s",
+    "--Infisical", "false",
+    "--Database", "mssql",
+    "--Vault", "true",
+    "--DiffApi", "false",
+    "--GitHubCiCd", "true",
+    "--FeatureFlags", "false",
+    "--HierarchyRules", "false"
+  ],
+  "_comment_services": "Each service by its own arguments; dotskit new adds one or joins flags to one",
+  "services": [
+    [
+      "--ServiceNameOrCustom", "Orders",
+      "--Hangfire", "true",
+      "--Messaging", "outbox",
+      "--ApiGateway", "false",
+      "--Storage", "false",
+      "--ClickHouse", "false",
+      "--MongoDB", "false",
+      "--Audit", "true",
+      "--Infisical", "false",
+      "--Vault", "true",
+      "--HttpPort", "5987",
+      "--DiffApi", "false",
+      "--FeatureFlags", "false",
+      "--HierarchyRules", "false"
+    ]
+  ]
+}
