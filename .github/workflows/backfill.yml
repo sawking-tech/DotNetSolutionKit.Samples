@@ -5,9 +5,10 @@ name: Backfill
 # Writes the reports a sample branch never got: for each release the branch has no report of, oldest
 # first, the branch is generated from that release, replaced with the generation and its CI run is
 # waited out, so report.yml writes the report; then the next release. A release whose template does not
-# know the branch's flags fails the generation and is skipped. The branch ends up generated from the
-# newest release that worked, like a regeneration. Started by hand, after a repair of the reporting
-# (issue: coverage and version rows were missing after post-regeneration runs).
+# know the branch's flags fails the generation and is skipped. The run ends with the branch regenerated
+# from the newest release, so it stands there rather than on the newest backfilled version, and the
+# newest report gets the coverage an older run left out. Started by hand, after a repair of the
+# reporting (issue: coverage and version rows were missing after post-regeneration runs).
 #
 # This file lives on the default branch only.
 
@@ -61,6 +62,12 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 8.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/package-versions/*.props', '**/Directory.Build.props') }}
+          restore-keys: ${{ runner.os }}-nuget-
 
       - name: Backfill the branch
         env:
