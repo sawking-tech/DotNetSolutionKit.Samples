@@ -8,7 +8,7 @@ namespace ST.DotNetSolutionKit.Samples.Orders.Tests.Tests;
 /// </summary>
 public class ResponseContractTests
 {
-    [Fact]
+    [Test]
     public void No_response_carries_a_token()
     {
         TokensInResponses.Find(typeof(SchemaHost).Assembly).ShouldBeEmpty(

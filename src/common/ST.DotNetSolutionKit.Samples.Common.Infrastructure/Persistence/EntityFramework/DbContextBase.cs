@@ -1,9 +1,8 @@
-﻿    using ST.DotNetSolutionKit.Samples.Common.Domain;
+    using ST.DotNetSolutionKit.Samples.Common.Domain;
     using ST.DotNetSolutionKit.Samples.Common.Domain.Persistence;
     using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.SqlServer;
     using Microsoft.EntityFrameworkCore.Storage;
 
     using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
@@ -13,7 +12,7 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
     public abstract class DbContextBase : DbContext, IUnitOfWork
     {
         private IDbContextTransaction? _currentTransaction;
-        
+
         protected DbContextBase(DbContextOptions options)
             : base(options)
         {
@@ -47,19 +46,14 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
 
         private const string ConcurrencyMessage = "The row was changed by another write since it was read.";
 
-        // One provider per generated solution; the template's own sources keep every one.
-        private static bool IsUniqueViolation(DbUpdateException exception)
-        {
-            if (SqlServerErrors.IsUniqueViolation(exception))
-                return true;
-            return false;
-        }
+        private static bool IsUniqueViolation(DbUpdateException exception) =>
+            DatabaseProvider.IsUniqueViolation(exception);
 
         public Dictionary<string, (Type Type, object? OriginalValue, object? CurrentValue)> GetChangesFor(
             object entity, bool isNewEntity = false)
         {
             var trackedEntry = ChangeTracker.Entries().FirstOrDefault(x => x.Entity == entity);
-            
+
             if (trackedEntry == null)
             {
                 throw new ArgumentException("Entity is not being tracked by this context", nameof(entity));
@@ -213,7 +207,7 @@ namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityF
             DisposeTransaction();
             base.Dispose();
         }
-        
+
         public new async ValueTask DisposeAsync()
         {
             await DisposeTransactionAsync();

@@ -2,21 +2,18 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Data.SqlClient;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 
 namespace ST.DotNetSolutionKit.Samples.Orders.Infrastructure.EntityFramework;
 
 [UsedImplicitly]
 public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContext>
 {
-    private const string PlaceholderConnectionString = "Server=localhost;Database=design-time-placeholder;TrustServerCertificate=true";
-
     private static DbContextOptions<OrdersDbContext> GetOptions(string connectionString)
     {
-        return new DbContextOptionsBuilder<OrdersDbContext>()
-            .UseSqlServer(connectionString,
-                x => { x.MigrationsHistoryTable("__EFMigrationsHistory", OrdersDbContext.DefaultSchemaName); })
-            .Options;
+        var options = new DbContextOptionsBuilder<OrdersDbContext>();
+        options.UseDatabase(connectionString, OrdersDbContext.DefaultSchemaName);
+        return options.Options;
     }
 
     private static string GetConnectionString()
@@ -31,13 +28,13 @@ public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContex
 
         var currentDir = Directory.GetCurrentDirectory();
         Console.WriteLine($"Current directory: {currentDir}");
-    
+
         // If we're in Infrastructure, go up one level to API project
         var apiProjectPath = Path.Combine(currentDir, "..", "ST.DotNetSolutionKit.Samples.Orders.API");
         var apiProjectFullPath = Path.GetFullPath(apiProjectPath);
-    
+
         Console.WriteLine($"Looking for configs in: {apiProjectFullPath}");
-    
+
         if (!Directory.Exists(apiProjectFullPath))
         {
             throw new Exception($"API project directory not found: {apiProjectFullPath}");
@@ -51,7 +48,7 @@ public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContex
             .Build();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-    
+
         if (string.IsNullOrEmpty(connectionString))
         {
             // Adding a migration compares the model with the snapshot and never opens a connection,
@@ -61,7 +58,7 @@ public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContex
             Console.WriteLine(
                 "Connection string 'DefaultConnection' not found: using a placeholder. " +
                 "Enough to add a migration; set ConnectionStrings__DefaultConnection to touch a database.");
-            return PlaceholderConnectionString;
+            return DatabaseProvider.DesignTimeConnectionString;
         }
 
         Console.WriteLine("Successfully found connection string");
@@ -73,8 +70,7 @@ public class OrdersDbContextFactory : IDesignTimeDbContextFactory<OrdersDbContex
         var connectionString = GetConnectionString();
 
         // Name the target database without the credentials: this output lands in terminals and CI logs.
-        var target = new SqlConnectionStringBuilder(connectionString);
-        Console.WriteLine($"Database: {target.DataSource}/{target.InitialCatalog} as {(string.IsNullOrEmpty(target.UserID) ? "(integrated)" : target.UserID)}");
+        Console.WriteLine($"Database: {DatabaseProvider.DescribeTarget(connectionString)}");
 
         return new OrdersDbContext(GetOptions(connectionString));
     }

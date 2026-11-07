@@ -14,7 +14,7 @@ namespace ST.DotNetSolutionKit.Samples.Orders.Tests.Tests;
 /// The switches are environment variables because the service reads them after its files; they are set
 /// for the duration of the test, so the fixture does not run in parallel with others.
 /// </remarks>
-[Collection(nameof(ServiceContainerTests))]
+[RunsAlone]
 public sealed class ServiceContainerTests : IDisposable
 {
     private static readonly Dictionary<string, string> SwitchedOff = new()
@@ -25,6 +25,7 @@ public sealed class ServiceContainerTests : IDisposable
         ["Vault__Enabled"] = "false",
         ["S3__Enabled"] = "false",
         ["ClickHouse__Enabled"] = "false",
+        ["MongoDB__Enabled"] = "false",
     };
 
     private readonly Dictionary<string, string?> _previous = new();
@@ -44,7 +45,7 @@ public sealed class ServiceContainerTests : IDisposable
             Environment.SetEnvironmentVariable(name, value);
     }
 
-    [Fact(DisplayName = "Every registered service resolves, as the service checks at startup")]
+    [Test(Description = "Every registered service resolves, as the service checks at startup")]
     public async Task Should_BuildTheContainer()
     {
         await using var app = SchemaHost.Build([], AppContext.BaseDirectory);
@@ -52,7 +53,3 @@ public sealed class ServiceContainerTests : IDisposable
         app.Services.ShouldNotBeNull();
     }
 }
-
-/// <summary>The environment variables are process-wide: the fixture runs alone.</summary>
-[CollectionDefinition(nameof(ServiceContainerTests), DisableParallelization = true)]
-public sealed class ServiceContainerTestsCollection;
