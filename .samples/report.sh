@@ -24,12 +24,17 @@ version=$(tr -d '\r\n' < template-version)
 branch=$(git rev-parse --abbrev-ref HEAD)
 
 # full-dev and lifecycle carry the template's commit, not a release tag; the site groups a branch's
-# reports by release version. The one request per run is cached by gh for its default cache TTL.
+# reports by the version the commit works toward, so the commit is resolved through the template's
+# version.json at it: a release commit reads as its release (vX.Y.Z), a commit between releases as the
+# version it builds toward (X.Y.Z-rc). The one request per run is cached by gh for its default cache TTL.
 if [[ "$version" =~ ^[0-9a-f]{40}$ ]]; then
-    tag=$(gh api "repos/$template_repo/tags" --paginate -q ".[] | select(.commit.sha == \"$version\") | .name" | head -1)
-    if [ -n "$tag" ]; then
-        echo "$version is $tag"
-        version="$tag"
+    resolved=$(gh api "repos/$template_repo/contents/version.json?ref=$version" -q .content 2>/dev/null | base64 -d | jq -r .version 2>/dev/null || true)
+    if [[ "$resolved" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "$version is v$resolved"
+        version="v$resolved"
+    elif [ -n "$resolved" ]; then
+        echo "$version works toward $resolved"
+        version="$resolved"
     fi
 fi
 
