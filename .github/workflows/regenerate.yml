@@ -50,7 +50,9 @@ jobs:
           # The release is the tag on master's last commit. None there yet: release.yml is still publishing it,
           # and the release branches wait for the next check.
           master=$(gh api "repos/$TEMPLATE_REPO/commits/master" -q .sha)
-          tag=$(gh api "repos/$TEMPLATE_REPO/tags" --paginate -q ".[] | select(.commit.sha == \"$master\") | .name" | head -1)
+          # an annotated tag names its own object in the API's list; ls-remote peels it (the ^{} line
+          # names the commit), so the peeled line is what a release is matched by
+          tag=$(git ls-remote --tags "https://github.com/$TEMPLATE_REPO" 'v*'             | awk -v m="$master" '$1 == m { n = $2; sub(/^refs\/tags\//, "", n); sub(/\^\{\}$/, "", n); print n; exit }')
           here=$(cat template-version 2>/dev/null || echo none)
           echo "master ${master:0:7} is release ${tag:-(not tagged yet)}, release samples from $here"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
