@@ -2,13 +2,21 @@
   {
     "version": "2.10.0-rc",
     "file": "2.10.0-rc.json",
-    "runs": 1,
+    "runs": 2,
     "last": {
-      "conclusion": "failure",
+      "conclusion": "success",
       "started": "2026-11-08T10:03:57Z",
-      "tests": null,
-      "coverage": null,
-      "seconds": 9
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 69.3,
+        "branch": 67.9
+      },
+      "seconds": 120
     }
   },
   {
