@@ -38,6 +38,13 @@ if [[ "$version" =~ ^[0-9a-f]{40}$ ]]; then
     fi
 fi
 
+# A release row knows the commit its tag was cut from: the site shows it in the commit field beside
+# the version. Only a tag names a commit of the template; a commit between releases is already a commit.
+template_commit=""
+if [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    template_commit=$(gh api "repos/$template_repo/commits/$version" -q .sha 2>/dev/null || true)
+fi
+
 gh api "repos/$repo/actions/runs/$run" > "$work/run.json"
 workflow=$(jq -r '.name' "$work/run.json")
 
@@ -75,11 +82,11 @@ if [ "$workflow" = CI ] || [ "$workflow" = Coverage ]; then
     fi
 fi
 
-entry=$(jq -c --argjson tests "$tests" --argjson coverage "$coverage" '{
+entry=$(jq -c --argjson tests "$tests" --argjson coverage "$coverage" --arg template_commit "$template_commit" '{
     run: .id, url: .html_url, commit: .head_sha, conclusion: .conclusion, event: .event, workflow: .name,
     started: .run_started_at, finished: .updated_at,
     seconds: ((.updated_at | fromdateiso8601) - (.run_started_at | fromdateiso8601)),
-    tests: $tests, coverage: $coverage }' "$work/run.json")
+    tests: $tests, coverage: $coverage, templateCommit: $template_commit }' "$work/run.json")
 
 dir="reports/$branch"
 mkdir -p "$dir"
