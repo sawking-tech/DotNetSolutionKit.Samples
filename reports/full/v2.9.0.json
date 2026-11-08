@@ -469,6 +469,20 @@
         "branch": 67.9
       },
       "templateCommit": "bd21a11666db159942e028512be7a94b273e0272"
+    },
+    {
+      "run": 42470322235,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/42470322235",
+      "commit": "3af45c30ad6067bf154b50e2bd41fe7b5c03c102",
+      "conclusion": "failure",
+      "event": "push",
+      "workflow": "Secret scan",
+      "started": "2026-11-08T10:10:58Z",
+      "finished": "2026-11-08T10:11:06Z",
+      "seconds": 8,
+      "tests": null,
+      "coverage": null,
+      "templateCommit": "bd21a11666db159942e028512be7a94b273e0272"
     }
   ],
   "branch": "full",
