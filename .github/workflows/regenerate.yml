@@ -47,14 +47,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           FORCE: ${{ inputs.force }}
         run: |
-          # The release is the tag on master's last commit. None there yet: release.yml is still publishing it,
-          # and the release branches wait for the next check.
-          master=$(gh api "repos/$TEMPLATE_REPO/commits/master" -q .sha)
-          # an annotated tag names its own object in the API's list; ls-remote peels it (the ^{} line
-          # names the commit), so the peeled line is what a release is matched by
-          tag=$(git ls-remote --tags "https://github.com/$TEMPLATE_REPO" 'v*'             | awk -v m="$master" '$1 == m { n = $2; sub(/^refs\/tags\//, "", n); sub(/\^\{\}$/, "", n); print n; exit }')
+          # The release is the newest tag: release.yml tags a commit of master, so every tag lies in
+          # master's history and the newest one is the current release - even after master has moved
+          # on. An annotated tag names its own object in the API's list; ls-remote peels it (the ^{}
+          # line names the commit), so the peeled names are what versions are read from.
+          tag=$(git ls-remote --tags "https://github.com/$TEMPLATE_REPO" 'v*'             | awk '{ n = $2; sub(/^refs\/tags\//, "", n); sub(/\^\{\}$/, "", n); if (n != "") print n }'             | sort -Vu | tail -1)
           here=$(cat template-version 2>/dev/null || echo none)
-          echo "master ${master:0:7} is release ${tag:-(not tagged yet)}, release samples from $here"
+          echo "the newest release is ${tag:-(none yet)}, release samples from $here"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           todo='[]'
           for row in $(jq -c '.[] | select(.tag != false) | {branch, ref}' .samples/variants.json); do
