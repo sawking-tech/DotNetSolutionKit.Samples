@@ -13,6 +13,28 @@
       "tests": null,
       "coverage": null,
       "templateCommit": "d4a6e03eb8cbde0564e7e49445f57f5321011a9d"
+    },
+    {
+      "run": 42470355321,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/42470355321",
+      "commit": "df48dfa32e83886f864af48375c374a0d0db90a6",
+      "conclusion": "success",
+      "event": "push",
+      "workflow": "CI",
+      "started": "2026-11-08T10:11:24Z",
+      "finished": "2026-11-08T10:12:56Z",
+      "seconds": 92,
+      "tests": {
+        "failed": 0,
+        "passed": 318,
+        "skipped": 0,
+        "total": 318
+      },
+      "coverage": {
+        "line": 68.8,
+        "branch": 67.5
+      },
+      "templateCommit": "d4a6e03eb8cbde0564e7e49445f57f5321011a9d"
     }
   ],
   "branch": "single",
