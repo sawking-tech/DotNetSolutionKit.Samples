@@ -35,6 +35,28 @@
       "tests": null,
       "coverage": null,
       "templateCommit": "d4a6e03eb8cbde0564e7e49445f57f5321011a9d"
+    },
+    {
+      "run": 42470421492,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/42470421492",
+      "commit": "7959c9323610ff3db47341aa67d78e247a5c867e",
+      "conclusion": "success",
+      "event": "push",
+      "workflow": "CI",
+      "started": "2026-11-08T10:12:17Z",
+      "finished": "2026-11-08T10:14:31Z",
+      "seconds": 134,
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 69.3,
+        "branch": 67.9
+      },
+      "templateCommit": "d4a6e03eb8cbde0564e7e49445f57f5321011a9d"
     }
   ],
   "branch": "full",
@@ -58,6 +80,7 @@
     ".dotskit/manifest.json",
     ".gitattributes",
     ".github/workflows/api-diff.yml",
+    ".github/workflows/automation-watch.yml",
     ".github/workflows/backfill.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coverage.yml",
