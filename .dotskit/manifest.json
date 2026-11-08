@@ -1,6 +1,6 @@
 {
   "_comment_template": "The version of DotNetSolutionKit the solution is generated with; dotskit upgrade moves it to the tool's",
-  "template": "2.9.0",
+  "template": "2.9.1",
   "_comment_solution": "The template's arguments of Common and the root: the names, the database, the deployment, the flags the services share",
   "solution": [
     "--NamespaceRoot", "ST",
@@ -35,7 +35,7 @@
       "--Audit", "true",
       "--Infisical", "false",
       "--Vault", "true",
-      "--HttpPort", "5072",
+      "--HttpPort", "5990",
       "--DiffApi", "false",
       "--FeatureFlags", "false",
       "--HierarchyRules", "false"
