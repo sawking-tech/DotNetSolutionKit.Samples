@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.10.0-rc",
+    "file": "2.10.0-rc.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "failure",
+      "started": "2026-11-08T10:03:57Z",
+      "tests": null,
+      "coverage": null,
+      "seconds": 9
+    }
+  },
+  {
     "version": "v2.9.0",
     "file": "v2.9.0.json",
     "runs": 1,
