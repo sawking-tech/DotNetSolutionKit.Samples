@@ -16,7 +16,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  # repository_dispatch asks for Contents write: with read the API answers 403 and the
+  # release a published package waits for never arrives
+  contents: write
 
 jobs:
   dispatch:
