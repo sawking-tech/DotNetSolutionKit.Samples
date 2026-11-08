@@ -1,0 +1,56 @@
+# Part of DotNetSolutionKit (https://dotskit.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
+name: Automation watch
+
+# The Samples automation is a chain: a released.yml poll dispatches, regenerate and lifecycle rebuild
+# the branches, and the branches' CI runs write the reports the site reads. A broken link used to
+# surface as a missing row days later. This run checks the chain every hour and opens (or updates) one
+# issue when a link is red or a scheduled run has gone silent, so a break signals instead of waiting
+# to be noticed. Green: it writes nothing. Polling needs no secret: the runs of a public repository
+# are public.
+#
+# This file lives on the default branch only.
+
+on:
+  schedule:
+    - cron: '3 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-24.04
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: sawking-tech/DotNetSolutionKit.Samples
+        run: |
+          problems=0
+          for wf in released.yml regenerate.yml lifecycle.yml; do
+            run=$(gh api "repos/$REPO/actions/workflows/$wf/runs?per_page=5" \
+              | jq -r '[.workflow_runs[] | select(.event != "pull_request")] | .[0] | "\(.conclusion // .status) \(.created_at) \(.html_url)"')
+            conclusion=${run%% *}
+            created=${run#* }; created=${created%% *}
+            age=$(( $(date +%s) - $(date -d "$created" +%s) ))
+            if [ "$conclusion" != "success" ]; then
+              echo "$wf: $conclusion (last run $run)"; problems=1
+            elif [ "$age" -gt 5400 ]; then
+              echo "$wf: silent for $((age / 3600))h (last run $run)"; problems=1
+            else
+              echo "$wf: ok ($conclusion, $((age / 60)) min ago)"
+            fi
+          done
+          [ "$problems" -eq 1 ] || exit 0
+          title="Samples automation needs a hand"
+          open=$(gh api "repos/$REPO/issues?state=open&labels=automation" --paginate -q '.[].number' | head -1)
+          if [ -n "$open" ]; then
+            gh api -X PATCH "repos/$REPO/issues/$open" -f body="Checked $(date -u +%H:%M) UTC - see the run log of this workflow for what is red or silent." >/dev/null
+            echo "updated issue #$open"
+          else
+            gh api -X POST "repos/$REPO/issues" -f title="$title" -f labels=automation \
+              -f body="A Samples automation workflow failed or went silent. The latest watch run lists what; the links are in its log." >/dev/null
+            echo "opened an issue"
+          fi
