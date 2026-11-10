@@ -10,7 +10,7 @@ using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
-using ST.DotNetSolutionKit.Samples.Capabilities.Notifications;
+using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications;
 using ST.DotNetSolutionKit.Samples.Notifications.Application;
 using ST.DotNetSolutionKit.Samples.Notifications.Infrastructure.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Notifications.Infrastructure.EntityFramework.DataSeeding;

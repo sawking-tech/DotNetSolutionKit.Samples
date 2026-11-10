@@ -19,6 +19,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Swashbuckle.AspNetCore" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Security\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,7 +27,7 @@
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
-      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Secrets\ST.DotNetSolutionKit.Samples.Capabilities.Secrets.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Security\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Web\ST.DotNetSolutionKit.Samples.Common.Web.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Notifications.Application\ST.DotNetSolutionKit.Samples.Notifications.Application.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Notifications.Infrastructure\ST.DotNetSolutionKit.Samples.Notifications.Infrastructure.csproj" />

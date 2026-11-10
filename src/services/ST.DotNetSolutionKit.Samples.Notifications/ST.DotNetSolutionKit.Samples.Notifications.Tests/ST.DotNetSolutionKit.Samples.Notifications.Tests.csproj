@@ -32,7 +32,8 @@
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Testing\ST.DotNetSolutionKit.Samples.Common.Testing.csproj" />
       <ProjectReference Include="../../../framework/ST.DotNetSolutionKit.Samples.Framework.Testing/ST.DotNetSolutionKit.Samples.Framework.Testing.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
-      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Notifications\ST.DotNetSolutionKit.Samples.Capabilities.Notifications.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Messaging\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Abstractions.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Messaging\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.csproj" />
     </ItemGroup>
 
 </Project>

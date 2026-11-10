@@ -1,6 +1,11 @@
-﻿﻿
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Common", "ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj", "{A9C0F473-2F7D-4D5C-A77F-F5B4B982FE1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse.Abstractions", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Analytics\ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse.Abstractions.csproj", "{140B53D6-FF2E-43DE-BCBD-4A93732B25D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Abstractions", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Messaging\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Abstractions.csproj", "{05B476CD-8E67-4F3D-96E1-510FC86F27C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Abstractions", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Security\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Abstractions.csproj", "{91E6E2A4-49EA-4DE1-8287-AA7A2ABE739D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Common.Contracts", "ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj", "{28AFCEBD-14CE-4AE9-94AF-31CA3C0AF11D}"
 EndProject
@@ -18,25 +23,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Framework.Testing", "..\framework\ST.DotNetSolutionKit.Samples.Framework.Testing\ST.DotNetSolutionKit.Samples.Framework.Testing.csproj", "{C4E8B3D2-5F6A-4B7C-8D2E-3A9F4B8C5E72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Notifications", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Notifications\ST.DotNetSolutionKit.Samples.Capabilities.Notifications.csproj", "{6F1C2B8E-3D4A-4E57-9B21-0C7A5E3D9F10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Messaging\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.csproj", "{6F1C2B8E-3D4A-4E57-9B21-0C7A5E3D9F10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Notifications.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Notifications.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Notifications.Tests.csproj", "{8A2D4C61-5B7E-4F93-A1C8-2E6B9D0F3A47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Messaging\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Tests.csproj", "{8A2D4C61-5B7E-4F93-A1C8-2E6B9D0F3A47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Mongo", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Mongo\ST.DotNetSolutionKit.Samples.Capabilities.Mongo.csproj", "{3C9E7A14-2B6F-4D85-9E10-7F4A2C6B8D31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo.csproj", "{3C9E7A14-2B6F-4D85-9E10-7F4A2C6B8D31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Mongo.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Mongo.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Mongo.Tests.csproj", "{5D1B8F27-4C3A-4E96-B7A2-1E9C0D5F6A48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo.Tests.csproj", "{5D1B8F27-4C3A-4E96-B7A2-1E9C0D5F6A48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Storage", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Storage\ST.DotNetSolutionKit.Samples.Capabilities.Storage.csproj", "{7B3D5E18-9F2A-4C6B-8D47-2E5A1F9C3B68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.csproj", "{7B3D5E18-9F2A-4C6B-8D47-2E5A1F9C3B68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Storage.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Storage.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Storage.Tests.csproj", "{4E8C1A72-6B3D-4F59-9A25-3C7E2D8B4F91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Tests.csproj", "{4E8C1A72-6B3D-4F59-9A25-3C7E2D8B4F91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Secrets", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Secrets\ST.DotNetSolutionKit.Samples.Capabilities.Secrets.csproj", "{61CF3F26-821E-49AC-8819-229D7249BEA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Abstractions", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Abstractions.csproj", "{C6519F42-D592-4222-9E5A-1E9B74AFE9A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Secrets.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Secrets.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Secrets.Tests.csproj", "{5D30102B-EE73-4ED4-B87D-F091FAC68989}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Security\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.csproj", "{61CF3F26-821E-49AC-8819-229D7249BEA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.ClickHouse", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.ClickHouse\ST.DotNetSolutionKit.Samples.Capabilities.ClickHouse.csproj", "{3CA2EB4C-A041-485C-837A-985EB0323B4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Security\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Tests.csproj", "{5D30102B-EE73-4ED4-B87D-F091FAC68989}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.ClickHouse.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.ClickHouse.Tests\ST.DotNetSolutionKit.Samples.Capabilities.ClickHouse.Tests.csproj", "{62959F8A-9FAF-4C0D-B50B-995DDC7E1CE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Analytics\ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse\ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse.csproj", "{3CA2EB4C-A041-485C-837A-985EB0323B4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Analytics\ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse.Tests.csproj", "{62959F8A-9FAF-4C0D-B50B-995DDC7E1CE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +55,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91E6E2A4-49EA-4DE1-8287-AA7A2ABE739D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU.ActiveCfg
+		{91E6E2A4-49EA-4DE1-8287-AA7A2ABE739D}.Debug|Any CPU.Build.0 = Debug|Any CPU.Build.0
+		{91E6E2A4-49EA-4DE1-8287-AA7A2ABE739D}.Release|Any CPU.ActiveCfg = Release|Any CPU.ActiveCfg
+		{91E6E2A4-49EA-4DE1-8287-AA7A2ABE739D}.Release|Any CPU.Build.0 = Release|Any CPU.Build.0
+		{05B476CD-8E67-4F3D-96E1-510FC86F27C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU.ActiveCfg
+		{05B476CD-8E67-4F3D-96E1-510FC86F27C6}.Debug|Any CPU.Build.0 = Debug|Any CPU.Build.0
+		{05B476CD-8E67-4F3D-96E1-510FC86F27C6}.Release|Any CPU.ActiveCfg = Release|Any CPU.ActiveCfg
+		{05B476CD-8E67-4F3D-96E1-510FC86F27C6}.Release|Any CPU.Build.0 = Release|Any CPU.Build.0
+		{140B53D6-FF2E-43DE-BCBD-4A93732B25D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU.ActiveCfg
+		{140B53D6-FF2E-43DE-BCBD-4A93732B25D3}.Debug|Any CPU.Build.0 = Debug|Any CPU.Build.0
+		{140B53D6-FF2E-43DE-BCBD-4A93732B25D3}.Release|Any CPU.ActiveCfg = Release|Any CPU.ActiveCfg
+		{140B53D6-FF2E-43DE-BCBD-4A93732B25D3}.Release|Any CPU.Build.0 = Release|Any CPU.Build.0
 		{A9C0F473-2F7D-4D5C-A77F-F5B4B982FE1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A9C0F473-2F7D-4D5C-A77F-F5B4B982FE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9C0F473-2F7D-4D5C-A77F-F5B4B982FE1C}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -252,6 +271,10 @@ Global
 		{4E8C1A72-6B3D-4F59-9A25-3C7E2D8B4F91}.Release|x64.Build.0 = Release|Any CPU
 		{4E8C1A72-6B3D-4F59-9A25-3C7E2D8B4F91}.Release|x86.ActiveCfg = Release|Any CPU
 		{4E8C1A72-6B3D-4F59-9A25-3C7E2D8B4F91}.Release|x86.Build.0 = Release|Any CPU
+		{C6519F42-D592-4222-9E5A-1E9B74AFE9A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU.ActiveCfg
+		{C6519F42-D592-4222-9E5A-1E9B74AFE9A1}.Debug|Any CPU.Build.0 = Debug|Any CPU.Build.0
+		{C6519F42-D592-4222-9E5A-1E9B74AFE9A1}.Release|Any CPU.ActiveCfg = Release|Any CPU.ActiveCfg
+		{C6519F42-D592-4222-9E5A-1E9B74AFE9A1}.Release|Any CPU.Build.0 = Release|Any CPU.Build.0
 		{61CF3F26-821E-49AC-8819-229D7249BEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61CF3F26-821E-49AC-8819-229D7249BEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61CF3F26-821E-49AC-8819-229D7249BEA1}.Debug|x64.ActiveCfg = Debug|Any CPU

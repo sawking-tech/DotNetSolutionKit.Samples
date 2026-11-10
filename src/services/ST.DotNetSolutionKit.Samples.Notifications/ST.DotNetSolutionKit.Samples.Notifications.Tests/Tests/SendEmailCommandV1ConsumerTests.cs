@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using ST.DotNetSolutionKit.Samples.Capabilities.Notifications;
+using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Abstractions;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.Messaging.Notifications;
 using ST.DotNetSolutionKit.Samples.Notifications.Infrastructure.Messaging.Consumers;
 

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ST.DotNetSolutionKit.Samples.Common.Application.Messaging.Consumers;
-using ST.DotNetSolutionKit.Samples.Capabilities.Notifications;
+using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications;
+using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Abstractions;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.Messaging.Notifications;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging.Consumers;
 
