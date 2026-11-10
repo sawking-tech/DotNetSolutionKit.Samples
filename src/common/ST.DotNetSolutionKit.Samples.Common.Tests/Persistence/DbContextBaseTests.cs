@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Persistence;
 

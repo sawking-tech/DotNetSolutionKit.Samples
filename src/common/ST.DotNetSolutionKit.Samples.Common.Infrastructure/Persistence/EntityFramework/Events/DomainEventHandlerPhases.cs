@@ -1,4 +1,4 @@
-using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
+using ST.DotNetSolutionKit.Samples.Framework.DomainEvents.Handlers;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 

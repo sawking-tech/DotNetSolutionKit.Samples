@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests;
 

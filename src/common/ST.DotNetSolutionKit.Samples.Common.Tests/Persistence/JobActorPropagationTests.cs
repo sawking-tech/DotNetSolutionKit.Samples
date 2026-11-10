@@ -10,7 +10,7 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Tracing;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Persistence;
 

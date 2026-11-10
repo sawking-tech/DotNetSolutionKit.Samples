@@ -19,6 +19,7 @@
     <ItemGroup>
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Capabilities.Notifications\ST.DotNetSolutionKit.Samples.Capabilities.Notifications.csproj" />
         <ProjectReference Include="..\..\common\ST.DotNetSolutionKit.Samples.Common.Testing\ST.DotNetSolutionKit.Samples.Common.Testing.csproj" />
+        <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Testing\ST.DotNetSolutionKit.Samples.Framework.Testing.csproj" />
     </ItemGroup>
 
 </Project>

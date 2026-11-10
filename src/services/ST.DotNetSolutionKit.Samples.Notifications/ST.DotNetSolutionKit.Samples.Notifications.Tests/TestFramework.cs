@@ -2,6 +2,7 @@ global using NUnit.Framework;
 global using Shouldly;
 using System.Runtime.CompilerServices;
 using ST.DotNetSolutionKit.Samples.Common.Tests;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 // A fixture is built for each test, as xUnit does: a test sets itself up in the constructor and cleans up
 // in Dispose, whatever runs it.

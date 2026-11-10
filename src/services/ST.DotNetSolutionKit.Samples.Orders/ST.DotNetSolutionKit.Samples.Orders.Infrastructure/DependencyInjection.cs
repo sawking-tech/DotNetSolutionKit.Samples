@@ -10,7 +10,7 @@ using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.ClickHouse;
+using ST.DotNetSolutionKit.Samples.Capabilities.ClickHouse;
 using ST.DotNetSolutionKit.Samples.Capabilities.Mongo;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Storage;
 using ST.DotNetSolutionKit.Samples.Orders.Application;

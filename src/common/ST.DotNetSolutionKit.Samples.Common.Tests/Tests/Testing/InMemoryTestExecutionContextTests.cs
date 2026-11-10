@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Tests.Fixtures;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Testing;
 

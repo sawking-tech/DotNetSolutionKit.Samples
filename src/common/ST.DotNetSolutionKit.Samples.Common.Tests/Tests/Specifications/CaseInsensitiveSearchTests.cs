@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Specifications;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Specifications;
 

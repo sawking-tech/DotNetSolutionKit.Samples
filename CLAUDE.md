@@ -18,11 +18,12 @@ src/
 ├── common/                         # shared by every service
 │   ├── ST.DotNetSolutionKit.Samples.Common                 # domain kernel: Entity, AggregateRoot, events, specifications, exceptions
 │   ├── ST.DotNetSolutionKit.Samples.Common.Contracts       # what crosses a service boundary: routes, requests, responses, bus messages
-│   ├── ST.DotNetSolutionKit.Samples.Common.Application     # domain event pipeline, idempotency, permissions, messaging abstractions
+│   ├── ST.DotNetSolutionKit.Samples.Common.Application     # idempotency, permissions, messaging abstractions
 │   ├── ST.DotNetSolutionKit.Samples.Common.Infrastructure  # EF Core base classes, interceptors, repositories, schema guard, MassTransit
 │   ├── ST.DotNetSolutionKit.Samples.Common.Web             # web pipeline: errors, validation, Swagger, authentication, permissions
 │   └── ST.DotNetSolutionKit.Samples.Common.Testing         # test infrastructure for the services' tests
 ├── capabilities/                   # a project per capability the solution uses (email, MongoDB), referenced by the services that use it
+├── framework/                      # the systems of work, always on, package candidates: three-phase domain events, the portable testing harness
 └── services/
     ├── ST.DotNetSolutionKit.Samples.All.sln                # every project; the entry point
     └── ST.DotNetSolutionKit.Samples.<Service>/

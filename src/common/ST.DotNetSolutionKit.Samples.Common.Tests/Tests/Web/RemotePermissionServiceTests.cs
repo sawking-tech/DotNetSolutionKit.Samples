@@ -3,8 +3,9 @@ using System.Text;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
 using ST.DotNetSolutionKit.Samples.Common.Web.Authorization;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Web;
 

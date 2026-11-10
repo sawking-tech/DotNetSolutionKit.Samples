@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using ST.DotNetSolutionKit.Samples.Common.Application.Events;
+using ST.DotNetSolutionKit.Samples.Framework.DomainEvents;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

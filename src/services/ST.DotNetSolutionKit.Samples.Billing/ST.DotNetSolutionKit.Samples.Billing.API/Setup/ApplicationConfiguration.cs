@@ -1,6 +1,6 @@
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration.Secrets;
+using ST.DotNetSolutionKit.Samples.Capabilities.Secrets;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
 namespace ST.DotNetSolutionKit.Samples.Billing.API.Setup;
 

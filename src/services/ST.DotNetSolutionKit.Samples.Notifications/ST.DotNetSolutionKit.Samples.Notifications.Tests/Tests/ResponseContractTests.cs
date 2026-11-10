@@ -1,4 +1,4 @@
-using ST.DotNetSolutionKit.Samples.Common.Tests.Rules;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Rules;
 using ST.DotNetSolutionKit.Samples.Notifications.API.Setup;
 
 namespace ST.DotNetSolutionKit.Samples.Notifications.Tests.Tests;

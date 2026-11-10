@@ -1,5 +1,6 @@
 using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
 using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.FeatureManagement;
 

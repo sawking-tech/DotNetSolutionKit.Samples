@@ -1,14 +1,15 @@
-using ST.DotNetSolutionKit.Samples.Common.Application.Events;
-using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
+using ST.DotNetSolutionKit.Samples.Framework.DomainEvents;
+using ST.DotNetSolutionKit.Samples.Framework.DomainEvents.Handlers;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Domain;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Events;
 

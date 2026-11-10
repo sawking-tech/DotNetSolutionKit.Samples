@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Rules;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Rules;
 

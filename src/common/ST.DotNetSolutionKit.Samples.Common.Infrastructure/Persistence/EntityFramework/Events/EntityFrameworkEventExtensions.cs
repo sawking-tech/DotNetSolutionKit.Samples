@@ -1,6 +1,6 @@
 using System.Reflection;
-using ST.DotNetSolutionKit.Samples.Common.Application.Events;
-using ST.DotNetSolutionKit.Samples.Common.Application.Events.Handlers;
+using ST.DotNetSolutionKit.Samples.Framework.DomainEvents;
+using ST.DotNetSolutionKit.Samples.Framework.DomainEvents.Handlers;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

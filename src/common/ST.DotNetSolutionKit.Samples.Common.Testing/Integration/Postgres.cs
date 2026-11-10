@@ -1,3 +1,5 @@
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
+
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Integration;
 
 /// <summary>

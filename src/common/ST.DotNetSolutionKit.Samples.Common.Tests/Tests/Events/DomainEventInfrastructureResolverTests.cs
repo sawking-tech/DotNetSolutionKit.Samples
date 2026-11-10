@@ -2,6 +2,7 @@ using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFrame
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Events;
 

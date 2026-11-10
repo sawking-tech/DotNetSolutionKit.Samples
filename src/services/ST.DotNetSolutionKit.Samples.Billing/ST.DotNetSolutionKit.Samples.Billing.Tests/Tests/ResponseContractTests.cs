@@ -1,4 +1,4 @@
-using ST.DotNetSolutionKit.Samples.Common.Tests.Rules;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Rules;
 using ST.DotNetSolutionKit.Samples.Billing.API.Setup;
 
 namespace ST.DotNetSolutionKit.Samples.Billing.Tests.Tests;

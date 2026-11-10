@@ -7,7 +7,7 @@ using MimeKit;
 using Moq;
 using ST.DotNetSolutionKit.Samples.Capabilities.Notifications.Adapters;
 using ST.DotNetSolutionKit.Samples.Capabilities.Notifications.Factories;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
 
 namespace ST.DotNetSolutionKit.Samples.Capabilities.Notifications.Tests;
 

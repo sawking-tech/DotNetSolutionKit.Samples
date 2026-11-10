@@ -8,7 +8,7 @@ using Moq;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Messaging;
 
