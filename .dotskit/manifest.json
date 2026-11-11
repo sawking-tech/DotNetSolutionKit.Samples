@@ -7,12 +7,18 @@
     "ST",
     "--ProductName",
     "DotNetSolutionKit.Samples",
-    "--Storage",
-    "true",
-    "--GitHubCiCd",
+    "--Hangfire",
     "true",
     "--Messaging",
-    "direct"
+    "direct",
+    "--Storage",
+    "true",
+    "--MongoDB",
+    "true",
+    "--Notify",
+    "email",
+    "--GitHubCiCd",
+    "true"
   ],
   "_comment_services": "Each service by its own arguments; dotskit new adds one or joins flags to one",
   "services": [
@@ -35,6 +41,16 @@
       "outbox",
       "--Storage",
       "true"
+    ],
+    [
+      "--ServiceNameOrCustom",
+      "Catalog",
+      "--MongoDB",
+      "true",
+      "--Notify",
+      "email",
+      "--HttpPort",
+      "5000"
     ]
   ],
   "_comment_packages": "How much of the template\u0027s package versions an upgrade brings",
