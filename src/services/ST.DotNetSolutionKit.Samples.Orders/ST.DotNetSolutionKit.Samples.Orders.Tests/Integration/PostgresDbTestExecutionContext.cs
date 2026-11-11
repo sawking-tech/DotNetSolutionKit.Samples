@@ -13,7 +13,7 @@ namespace ST.DotNetSolutionKit.Samples.Orders.Tests.Integration;
 /// </summary>
 /// <example>
 /// <code>
-/// [Test, Category(TestCategories.Integration)]
+/// [Test, Integration]
 /// public async Task Should_RejectADuplicateNumber()
 /// {
 ///     await using var ctx = await PostgresDbTestExecutionContext&lt;OrderService&gt;.CreateAsync();

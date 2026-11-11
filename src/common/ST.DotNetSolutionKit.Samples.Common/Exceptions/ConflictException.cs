@@ -1,4 +1,4 @@
-﻿namespace ST.DotNetSolutionKit.Samples.Common.Exceptions;
+namespace ST.DotNetSolutionKit.Samples.Common.Exceptions;
 
 /// <summary>
 /// Occurs when a conflict situation arises

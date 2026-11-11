@@ -1,4 +1,4 @@
-// Part of DotNetSolutionKit (https://dnsk.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+// Part of DotNetSolutionKit (https://dotskit.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
 
 using System.Net.Sockets;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
@@ -62,7 +62,7 @@ public static class PostgresSchemaGuard
             // 3. Verify ownership identity with a row-level lock (FOR UPDATE)
             string? currentOwner;
             using (var cmd = new NpgsqlCommand(
-                       $@"SELECT value FROM ""{schemaName}"".""_service_metadata"" WHERE key = 'owner' FOR UPDATE", 
+                       $@"SELECT value FROM ""{schemaName}"".""_service_metadata"" WHERE key = 'owner' FOR UPDATE",
                        conn, transaction))
             {
                 currentOwner = cmd.ExecuteScalar() as string;
@@ -72,7 +72,7 @@ public static class PostgresSchemaGuard
             {
                 // Schema is unowned - claim it for this service
                 using var insertCmd = new NpgsqlCommand(
-                    $@"INSERT INTO ""{schemaName}"".""_service_metadata"" (key, value) VALUES ('owner', @name)", 
+                    $@"INSERT INTO ""{schemaName}"".""_service_metadata"" (key, value) VALUES ('owner', @name)",
                     conn, transaction);
                 insertCmd.Parameters.AddWithValue("name", serviceName);
                 insertCmd.ExecuteNonQuery();
