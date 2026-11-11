@@ -1,7 +1,8 @@
 using System.Data.Common;
 using Npgsql;
+using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.Postgres;
+namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
 
 /// <summary>
 /// The migration lock on PostgreSQL: a session advisory lock, released explicitly and by the server when

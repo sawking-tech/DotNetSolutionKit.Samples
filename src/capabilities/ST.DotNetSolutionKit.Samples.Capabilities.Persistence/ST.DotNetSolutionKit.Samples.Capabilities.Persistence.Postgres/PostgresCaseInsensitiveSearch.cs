@@ -4,7 +4,7 @@ using ST.DotNetSolutionKit.Samples.Common.Domain.Specifications;
 using LinqSpecs;
 using Microsoft.EntityFrameworkCore;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Specifications;
+namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
 
 /// <summary>
 /// PostgreSQL implementation for case-insensitive search using Npgsql ILIKE.

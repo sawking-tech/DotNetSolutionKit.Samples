@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
 using Npgsql;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.Postgres;
+namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
 
 /// <summary>
 /// <see cref="IShortIdGenerator"/> on a PostgreSQL sequence, read through the connection of

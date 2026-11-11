@@ -1,3 +1,4 @@
+using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

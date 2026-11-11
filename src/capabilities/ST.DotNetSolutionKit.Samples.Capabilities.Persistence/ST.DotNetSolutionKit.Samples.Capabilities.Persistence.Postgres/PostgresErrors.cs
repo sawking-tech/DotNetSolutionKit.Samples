@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.Postgres;
+namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
 
 /// <summary>What a PostgreSQL error means to the platform.</summary>
 public static class PostgresErrors

@@ -1,3 +1,4 @@
+using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

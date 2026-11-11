@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Mongo.Tests.csproj", "{5D1B8F27-4C3A-4E96-B7A2-1E9C0D5F6A48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.csproj", "{C73A7E2E-E947-4C42-8721-B78890E886AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.Tests.csproj", "{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.csproj", "{7B3D5E18-9F2A-4C6B-8D47-2E5A1F9C3B68}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Tests", "..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Tests\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Tests.csproj", "{4E8C1A72-6B3D-4F59-9A25-3C7E2D8B4F91}"
@@ -223,6 +227,30 @@ Global
 		{5D1B8F27-4C3A-4E96-B7A2-1E9C0D5F6A48}.Release|x64.Build.0 = Release|Any CPU
 		{5D1B8F27-4C3A-4E96-B7A2-1E9C0D5F6A48}.Release|x86.ActiveCfg = Release|Any CPU
 		{5D1B8F27-4C3A-4E96-B7A2-1E9C0D5F6A48}.Release|x86.Build.0 = Release|Any CPU
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Debug|x64.ActiveCfg = Debug|x64
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Debug|x64.Build.0 = Debug|x64
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Debug|x86.ActiveCfg = Debug|x86
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Debug|x86.Build.0 = Debug|x86
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Release|x64.ActiveCfg = Release|x64
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Release|x64.Build.0 = Release|x64
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Release|x86.ActiveCfg = Release|x86
+		{C73A7E2E-E947-4C42-8721-B78890E886AF}.Release|x86.Build.0 = Release|x86
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Debug|x64.ActiveCfg = Debug|x64
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Debug|x64.Build.0 = Debug|x64
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Debug|x86.ActiveCfg = Debug|x86
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Debug|x86.Build.0 = Debug|x86
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Release|x64.ActiveCfg = Release|x64
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Release|x64.Build.0 = Release|x64
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Release|x86.ActiveCfg = Release|x86
+		{C0DE72BE-ED34-4A2B-917E-5851B7CF0F32}.Release|x86.Build.0 = Release|x86
 		{3CA2EB4C-A041-485C-837A-985EB0323B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3CA2EB4C-A041-485C-837A-985EB0323B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CA2EB4C-A041-485C-837A-985EB0323B4D}.Debug|x64.ActiveCfg = Debug|Any CPU

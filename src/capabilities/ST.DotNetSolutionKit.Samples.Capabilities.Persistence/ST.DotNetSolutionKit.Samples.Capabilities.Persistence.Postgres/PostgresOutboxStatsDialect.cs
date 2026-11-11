@@ -1,9 +1,10 @@
 using System.Data.Common;
+using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
 using Npgsql;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Diagnostics;
+namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
 
-internal sealed class PostgresOutboxStatsDialect : IOutboxStatsDialect
+public sealed class PostgresOutboxStatsDialect : IOutboxStatsDialect
 {
     public string TotalsSql(string outboxTable) => $@"
                 SELECT

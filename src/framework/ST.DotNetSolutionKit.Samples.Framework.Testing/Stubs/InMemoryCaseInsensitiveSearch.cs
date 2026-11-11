@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using LinqSpecs;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Specifications;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Specifications;
+using ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
 
 namespace ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
 

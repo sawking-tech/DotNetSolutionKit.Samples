@@ -1,6 +1,6 @@
 using System.Data.Common;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
+namespace ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
 
 /// <summary>
 /// A lock that lets one replica of a service migrate its schema while the others wait: taken on its own

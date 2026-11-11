@@ -15,7 +15,6 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
         <PackageReference Include="Scrutor" />
     </ItemGroup>
 
@@ -23,12 +22,16 @@
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
+        <ProjectReference Include="..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.csproj" />
         <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.DomainEvents\ST.DotNetSolutionKit.Samples.Framework.DomainEvents.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>ST.DotNetSolutionKit.Samples.Common.Tests</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
 </Project>
