@@ -20,6 +20,8 @@
     "--Notify",
     "email",
     "--GitHubCiCd",
+    "true",
+    "--FeatureFlags",
     "true"
   ],
   "_comment_services": "Each service by its own arguments; dotskit new adds one or joins flags to one",
@@ -44,6 +46,8 @@
       "--Messaging",
       "outbox",
       "--Storage",
+      "true",
+      "--FeatureFlags",
       "true"
     ],
     [
