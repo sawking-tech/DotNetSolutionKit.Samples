@@ -1,6 +1,7 @@
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.Health;
 using ST.DotNetSolutionKit.Samples.Common.Web.Health;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 using ST.DotNetSolutionKit.Samples.Orders.Infrastructure.EntityFramework;
 
 namespace ST.DotNetSolutionKit.Samples.Orders.API.Setup;
@@ -21,7 +22,7 @@ internal static class HealthChecks
             checks.AddHangfire(options => options.MinimumAvailableServers = 1, name: "hangfire", tags: [HealthConstants.ReadyTag]);
 
         if (switches.Database)
-            checks.AddDbContextCheck<OrdersDbContext>(name: "postgres", tags: [HealthConstants.ReadyTag]);
+            checks.AddDbContextCheck<OrdersDbContext>(name: DatabaseProvider.Name, tags: [HealthConstants.ReadyTag]);
 
         return builder;
     }

@@ -11,8 +11,8 @@ Generate tests for a service method using the solution's test infrastructure (`C
 
 **Full service:** `/add-tests <ServiceName>` - a test base and one fixture per public method.
 
-The approach is [ADR-005](https://dnsk.sawking.tech/docs.html#adr-005); how to start:
-[testing](https://dnsk.sawking.tech/docs.html#testing).
+The approach is [ADR-005](https://dotskit.sawking.tech/docs.html#adr-005); how to start:
+[testing](https://dotskit.sawking.tech/docs.html#testing).
 
 ## What to do
 
@@ -52,7 +52,7 @@ for the same thing.
 ## Test base
 
 ```csharp
-internal abstract class OrderServiceTestBase
+public abstract class OrderServiceTestBase
 {
     protected InMemoryTestExecutionContext<OrderService, OrdersDbContext> CreateTestContext()
     {
@@ -78,10 +78,9 @@ verified after it.
 ## Fixture
 
 ```csharp
-[TestFixture]
 [TestOf(typeof(OrderService))]
-[Parallelizable(ParallelScope.All)]
-internal class OrderServicePlaceTests : OrderServiceTestBase
+[RunsInParallel]
+public class OrderServicePlaceTests : OrderServiceTestBase
 {
     [Test(Description = "A placed order is saved with its lines")]
     public async Task Should_SaveTheOrder_When_TheCartHasLines()
@@ -101,8 +100,10 @@ internal class OrderServicePlaceTests : OrderServiceTestBase
 not an entity still tracked by the context that changed it. Every test has its own in-memory database,
 so fixtures run in parallel.
 
-With `--TestFramework xunit` the same test is a `[Fact]` in a class, without `[TestFixture]`; the contexts
-are the same.
+The test is the same under NUnit and xUnit: the attributes come from `TestFramework.cs` in the test
+project, the one file that knows the framework. Never put a framework's own attribute (`[Fact]`,
+`[TestFixture]`, `[Parallelizable]`, `[Trait]`, `[Category]`) or a `#if` on the framework into a test. Test
+classes are `public`, since xUnit runs only public ones.
 
 ## Domain event handlers in a service test - selective, never an assembly scan
 
@@ -136,7 +137,7 @@ indexes and other constraints; case-insensitive search and raw SQL; migrations a
 concurrency tokens.
 
 ```csharp
-[Test, Category(TestCategories.Integration)]
+[Test, Integration]
 public async Task Should_RejectADuplicateNumber()
 {
     await using var ctx = await PostgresDbTestExecutionContext<OrderService>.CreateAsync();
@@ -145,7 +146,8 @@ public async Task Should_RejectADuplicateNumber()
 ```
 
 The connection string comes from `TEST_POSTGRES` (`TEST_SQLSERVER` with `--Database mssql`); without it the
-test is skipped with that reason, so a plain `dotnet test` needs no database. Each test gets a database of
+test is skipped with that reason, so a plain `dotnet test` needs no database. `eval "$(bash tests/servers/up.sh)"`
+starts every test server of the solution and sets the variables. Each test gets a database of
 its own, cloned from one migrated once per run.
 
 Anything the in-memory provider cannot run (`ExecuteSqlRawAsync`, `SqlQueryRaw`, a constraint, a
@@ -202,4 +204,4 @@ paths.
 
 ---
 
-Part of [DotNetSolutionKit](https://dnsk.sawking.tech/), MIT License, Copyright (c) 2025 Vladimir Savkin.
+Part of [DotNetSolutionKit](https://dotskit.sawking.tech/), MIT License, Copyright (c) 2025 Vladimir Savkin.
