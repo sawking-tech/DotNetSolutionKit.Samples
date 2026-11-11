@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.Tests;
 
 /// <summary>
 /// Runs a test with a feature in a stated state.

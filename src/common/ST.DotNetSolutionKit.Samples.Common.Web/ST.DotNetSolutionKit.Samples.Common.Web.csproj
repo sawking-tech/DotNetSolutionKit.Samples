@@ -27,8 +27,12 @@
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
         <PackageReference Include="SharpGrip.FluentValidation.AutoValidation.Mvc" />
         <PackageReference Include="Swashbuckle.AspNetCore" />
-        <!-- [FeatureGate] for endpoints behind a flag. -->
-        <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" />
+    </ItemGroup>
+
+    <!-- The Swagger document leaves the endpoints behind a closed [FeatureGate] out; the filters
+         live in the FeatureFlags module and arrive with the flag. -->
+    <ItemGroup>
+        <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.FeatureFlags\ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.csproj" />
     </ItemGroup>
 
     <ItemGroup>

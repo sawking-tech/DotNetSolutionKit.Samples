@@ -1,4 +1,4 @@
-using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
 using ST.DotNetSolutionKit.Samples.Orders.Application;

@@ -5,11 +5,10 @@ using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.Mvc;
 using Microsoft.OpenApi.Models;
 using Moq;
-using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
-using ST.DotNetSolutionKit.Samples.Common.Web.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.Tests;
 
 /// <summary>
 /// An action behind a closed <c>[FeatureGate]</c> is left out of the Swagger document, as it is left out of

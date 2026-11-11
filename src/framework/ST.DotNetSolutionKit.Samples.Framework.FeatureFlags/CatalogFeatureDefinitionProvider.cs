@@ -1,6 +1,6 @@
 using Microsoft.FeatureManagement;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// Feeds <c>Microsoft.FeatureManagement</c> from the platform catalogue.

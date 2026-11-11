@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// Keys of the flags this platform's code reads.

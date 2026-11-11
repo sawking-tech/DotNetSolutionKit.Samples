@@ -1,8 +1,6 @@
-using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
-using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
-using ST.DotNetSolutionKit.Samples.Framework.Testing;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.Tests;
 
 /// <summary>
 /// A catalogue a test controls directly.

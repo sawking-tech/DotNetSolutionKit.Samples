@@ -1,11 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
-using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using NUnit.Framework;
 using Shouldly;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.Tests;
 
 /// <summary>
 /// The catalogue decides what every service believes about a feature. What is pinned here is the part

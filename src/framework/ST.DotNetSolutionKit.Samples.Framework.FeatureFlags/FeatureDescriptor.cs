@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// Everything declared about one feature flag: what it is, who owns it, where it applies and when it

@@ -4,10 +4,10 @@ using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.Mvc;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Web.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// Keeps an action behind a closed <c>[FeatureGate]</c> out of the Swagger document, as it is out of the API.

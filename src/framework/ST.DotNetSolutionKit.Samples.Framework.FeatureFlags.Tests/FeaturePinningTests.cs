@@ -2,10 +2,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
-using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.Tests;
 
 /// <summary>
 /// A flag pinned in the shared file takes its value from the file, over the store and environment

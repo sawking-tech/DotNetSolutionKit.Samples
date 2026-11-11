@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// Reads the platform's features out of configuration on every call.

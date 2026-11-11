@@ -10,7 +10,7 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
 using ST.DotNetSolutionKit.Samples.Common.Web.Gateway;
 using ST.DotNetSolutionKit.Samples.Common.Web.Pagination;
-using ST.DotNetSolutionKit.Samples.Common.Web.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using ST.DotNetSolutionKit.Samples.Common.Web.Swagger.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

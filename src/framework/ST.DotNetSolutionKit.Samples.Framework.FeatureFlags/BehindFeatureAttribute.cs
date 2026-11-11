@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// Marks code that exists only because a feature flag does.

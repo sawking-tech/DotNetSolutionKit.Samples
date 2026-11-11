@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// Names the pinned flags once, at startup.

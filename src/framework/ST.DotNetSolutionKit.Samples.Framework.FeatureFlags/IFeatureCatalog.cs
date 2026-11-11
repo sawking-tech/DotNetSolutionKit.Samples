@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
-using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// The platform's feature flags: what is declared, and what each one currently evaluates to.

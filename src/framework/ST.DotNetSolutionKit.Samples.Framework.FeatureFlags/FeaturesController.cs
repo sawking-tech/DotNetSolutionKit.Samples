@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
-using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Web.FeatureManagement;
+namespace ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 
 /// <summary>
 /// The platform's feature flags: what exists, what is on, and where each value came from.

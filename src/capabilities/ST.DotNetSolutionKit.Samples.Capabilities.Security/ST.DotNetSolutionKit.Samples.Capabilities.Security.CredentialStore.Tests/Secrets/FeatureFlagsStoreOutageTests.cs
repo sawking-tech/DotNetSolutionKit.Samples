@@ -1,9 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using ST.DotNetSolutionKit.Samples.Common.Application.FeatureManagement;
+using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
-using ST.DotNetSolutionKit.Samples.Common.FeatureManagement;
 using ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore;
 
 namespace ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Tests.Secrets;
