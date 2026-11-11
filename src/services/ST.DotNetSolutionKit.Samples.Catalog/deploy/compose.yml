@@ -1,0 +1,44 @@
+# This service under docker compose; started by deploy/compose/compose.sh with the infrastructure.
+# Paths are relative to the solution root.
+services:
+  catalog:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: ST.DotNetSolutionKit.Samples.Catalog
+        GIT_SHA: ${GIT_SHA:-local}
+    image: ${REGISTRY:-local}/dotnetsolutionkit_samples-catalog:${TAG:-latest}
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DefaultConnection: Host=postgres;Database=${POSTGRES_DB:-app};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in deploy/compose/.env}
+      InternalApi__ApiKey: ${INTERNAL_API_KEY:-}
+      HangfireSettings__DashboardPassword: ${HANGFIRE_DASHBOARD_PASSWORD:?Set HANGFIRE_DASHBOARD_PASSWORD in deploy/compose/.env}
+      Email__Smtp__Host: ${SMTP_HOST:-mailhog}
+      Email__Smtp__Port: ${SMTP_PORT:-1025}
+      Email__Smtp__From: ${EMAIL_FROM:-noreply@localhost}
+      Email__Smtp__Secure: ${SMTP_SECURE:-false}
+      Email__Sandbox__Enabled: ${EMAIL_SANDBOX_ENABLED:-true}
+      Email__Sandbox__ReceiverAddress: ${EMAIL_SANDBOX:-sandbox@localhost}
+      MongoDB__ConnectionString: mongodb://${MONGO_USER:-app}:${MONGO_PASSWORD:?Set MONGO_PASSWORD in deploy/compose/.env}@mongo:27017/?authSource=admin
+    # The root filesystem is read-only: the running container is changed only by a new image, which passes
+    # review and CI, so features.json and the code cannot be edited in place. /tmp stays writable for what
+    # .NET and ASP.NET Core keep there: the diagnostics socket, large request bodies.
+    read_only: true
+    tmpfs:
+      - /tmp
+    # Only on the host's loopback: a reverse proxy or a gateway in front publishes it.
+    ports:
+      - "127.0.0.1:5000:8080"
+    # Ready, not merely alive: whatever depends on this service starts once its database is reachable.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/ready"]
+      interval: 10s
+      timeout: 3s
+      start_period: 30s
+      retries: 12
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
