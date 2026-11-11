@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
+using ST.DotNetSolutionKit.Samples.Capabilities.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Diagnostics;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
+
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Diagnostics;
 

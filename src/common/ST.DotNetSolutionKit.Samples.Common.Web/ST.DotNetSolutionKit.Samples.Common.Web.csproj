@@ -14,6 +14,7 @@
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
+        <ProjectReference Include="..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Abstractions.csproj" />
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
     </ItemGroup>
 

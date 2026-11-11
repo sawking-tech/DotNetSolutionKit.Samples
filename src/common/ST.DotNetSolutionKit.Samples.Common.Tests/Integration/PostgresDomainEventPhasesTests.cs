@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using static ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Events.DomainEventPhasesOnSaveTests;
 using ST.DotNetSolutionKit.Samples.Framework.DomainEvents;
 using ST.DotNetSolutionKit.Samples.Framework.Testing;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Integration;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Integration;
 

@@ -1,6 +1,6 @@
 using ST.DotNetSolutionKit.Samples.Framework.Testing;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests.Integration;
+namespace ST.DotNetSolutionKit.Samples.Framework.Testing.Integration;
 
 /// <summary>
 /// The PostgreSQL an integration test runs against, from the <c>TEST_POSTGRES</c> environment variable.

@@ -22,6 +22,9 @@
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
+        <!-- TODO(#228): the kernel takes the persistence contracts from the capability until the
+             provider switch is inverted - the services must reference the module themselves. -->
+        <ProjectReference Include="..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Abstractions.csproj" />
         <ProjectReference Include="..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.csproj" />
         <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.DomainEvents\ST.DotNetSolutionKit.Samples.Framework.DomainEvents.csproj" />
     </ItemGroup>

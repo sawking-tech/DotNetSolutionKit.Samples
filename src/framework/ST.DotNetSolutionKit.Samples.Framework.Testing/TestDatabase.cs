@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests;
+namespace ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 /// <summary>
 /// The provider of the solution's database, for a context a unit test builds without connecting to it:

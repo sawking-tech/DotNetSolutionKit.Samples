@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Integration;
+
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Integration;
 
 [TestFixture]

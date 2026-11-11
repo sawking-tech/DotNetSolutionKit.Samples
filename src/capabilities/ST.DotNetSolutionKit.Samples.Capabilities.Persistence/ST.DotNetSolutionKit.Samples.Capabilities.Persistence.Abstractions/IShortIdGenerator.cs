@@ -1,4 +1,4 @@
-namespace ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
+namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence;
 
 /// <summary>
 /// The next number of a database sequence, taken before the entity that carries it is created.
@@ -17,3 +17,4 @@ public interface IShortIdGenerator
     /// </summary>
     Task<long> GetNextAsync(string sequenceName, CancellationToken cancellationToken = default);
 }
+

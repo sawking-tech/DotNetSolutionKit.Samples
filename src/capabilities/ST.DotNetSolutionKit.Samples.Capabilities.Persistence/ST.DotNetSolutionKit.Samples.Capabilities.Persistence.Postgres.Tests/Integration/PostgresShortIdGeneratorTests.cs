@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
-using PostgresServer = ST.DotNetSolutionKit.Samples.Common.Tests.Integration.Postgres;
+using PostgresServer = ST.DotNetSolutionKit.Samples.Framework.Testing.Integration.Postgres;
 
 namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.Tests.Integration;
 

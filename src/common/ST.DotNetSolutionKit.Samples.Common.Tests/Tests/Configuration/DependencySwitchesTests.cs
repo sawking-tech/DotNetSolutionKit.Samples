@@ -4,6 +4,8 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
+
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Configuration;
 
 /// <summary>

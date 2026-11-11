@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
+using ST.DotNetSolutionKit.Samples.Capabilities.Persistence;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 

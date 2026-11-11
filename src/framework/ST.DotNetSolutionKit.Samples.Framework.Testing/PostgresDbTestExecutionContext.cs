@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using Npgsql;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests;
+namespace ST.DotNetSolutionKit.Samples.Framework.Testing;
 
 /// <summary>
 /// Low-level Postgres admin operations used by template management and per-test DB lifecycle.

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using ST.DotNetSolutionKit.Samples.Common.Tests;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Integration;
+using ST.DotNetSolutionKit.Samples.Framework.Testing;
+using ST.DotNetSolutionKit.Samples.Framework.Testing.Integration;
 using ST.DotNetSolutionKit.Samples.Notifications.Infrastructure.EntityFramework;
 
 namespace ST.DotNetSolutionKit.Samples.Notifications.Tests.Integration;

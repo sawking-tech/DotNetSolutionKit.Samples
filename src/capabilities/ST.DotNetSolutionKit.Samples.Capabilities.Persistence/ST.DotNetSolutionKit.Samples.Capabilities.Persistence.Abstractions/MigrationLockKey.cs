@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
+namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence;
 
 /// <summary>
 /// The advisory-lock key of a migration scope: a stable 64-bit number hashed from the scope's name, so
@@ -17,3 +17,4 @@ public static class MigrationLockKey
         return BitConverter.ToInt64(hash, 0);
     }
 }
+

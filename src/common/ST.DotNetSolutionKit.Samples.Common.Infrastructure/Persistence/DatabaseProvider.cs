@@ -1,7 +1,7 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
+using ST.DotNetSolutionKit.Samples.Capabilities.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Specifications;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Diagnostics;
 using Npgsql;

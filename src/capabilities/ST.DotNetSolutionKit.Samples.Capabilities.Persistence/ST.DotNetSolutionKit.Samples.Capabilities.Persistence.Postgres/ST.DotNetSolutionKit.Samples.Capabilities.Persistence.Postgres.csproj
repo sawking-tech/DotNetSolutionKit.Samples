@@ -16,7 +16,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
-        <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
+        <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>

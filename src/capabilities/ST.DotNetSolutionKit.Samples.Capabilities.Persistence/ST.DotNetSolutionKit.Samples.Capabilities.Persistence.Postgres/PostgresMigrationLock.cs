@@ -1,6 +1,6 @@
 using System.Data.Common;
 using Npgsql;
-using ST.DotNetSolutionKit.Samples.Common.Application.Persistence;
+using ST.DotNetSolutionKit.Samples.Capabilities.Persistence;
 
 namespace ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
 
