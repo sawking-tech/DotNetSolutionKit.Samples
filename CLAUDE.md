@@ -1,0 +1,101 @@
+# ST.DotNetSolutionKit.Samples
+
+Rules for an AI agent working in this solution. The solution was generated from
+[DotNetSolutionKit](https://dnsk.sawking.tech/); the mechanisms it ships are described in
+[its documentation](https://dnsk.sawking.tech/docs.html), and every link below points there.
+
+This file is committed: no tokens, keys, credentials or personal data in it.
+
+## Layout
+
+```
+src/
+├── Directory.Packages.props        # every package version, one place (central package management)
+├── common/                         # generated once, shared by every service
+│   ├── ST.DotNetSolutionKit.Samples.Common                 # domain kernel: Entity, AggregateRoot, events, specifications, exceptions
+│   ├── ST.DotNetSolutionKit.Samples.Common.Contracts       # what crosses a service boundary: routes, requests, responses, bus messages
+│   ├── ST.DotNetSolutionKit.Samples.Common.Application     # domain event pipeline, idempotency, permissions, messaging abstractions
+│   ├── ST.DotNetSolutionKit.Samples.Common.Infrastructure  # EF Core base classes, interceptors, repositories, schema guard, MassTransit
+│   ├── ST.DotNetSolutionKit.Samples.Common.Web             # web pipeline: errors, validation, Swagger, authentication, permissions
+│   └── ST.DotNetSolutionKit.Samples.Common.Testing         # test infrastructure for the services' tests
+└── services/
+    ├── ST.DotNetSolutionKit.Samples.All.sln                # every project; the entry point
+    └── ST.DotNetSolutionKit.Samples.<Service>/
+        ├── ST.DotNetSolutionKit.Samples.<Service>                 # domain: entities, aggregates, events, policies
+        ├── ST.DotNetSolutionKit.Samples.<Service>.Application     # use cases, event handlers, ports
+        ├── ST.DotNetSolutionKit.Samples.<Service>.Infrastructure  # DbContext, configurations, repositories, jobs, consumers
+        ├── ST.DotNetSolutionKit.Samples.<Service>.API             # controllers, Program, host setup
+        └── ST.DotNetSolutionKit.Samples.<Service>.Tests
+```
+
+Each project references only what it lists in its `.csproj` (`DisableTransitiveProjectReferences`), so
+crossing a layer is a compile error: [projects and layers](https://dnsk.sawking.tech/docs.html#layers).
+The API project does not see the domain; it goes through the application layer.
+
+Each service owns a database schema named after it and refuses to start on a schema another service owns:
+[persistence](https://dnsk.sawking.tech/docs.html#persistence).
+
+## Skills
+
+Skills live in `.claude/skills/`. Apply them without waiting for `/skill-name`, and say which one you apply
+before writing code, so the user can stop you if it is the wrong one.
+
+| Work | Skill |
+|------|-------|
+| A new service | `/scaffold-service` |
+| An entity or aggregate | `/add-entity` |
+| A repository | `/add-repository` |
+| Filtering, search | `/add-specification` |
+| A domain event and its handlers | `/add-domain-event` |
+| A service class (use case) | `/add-service-class` |
+| A controller or endpoint | `/add-controller` |
+| Tests | `/add-tests` |
+| An EF migration | `/ef-migration` |
+| A design choice before non-trivial code | `/pick-pattern` |
+| Your own commits before a push | `/self-review` |
+| Someone else's pull request | `/code-review` |
+| Work that spans sessions | `/plan-and-iterate` |
+
+A review of a service class, a repository or a specification uses the review flags of the matching skill.
+
+## Commands
+
+```bash
+# Build and test everything
+dotnet build src/services/ST.DotNetSolutionKit.Samples.All.sln
+dotnet test src/services/ST.DotNetSolutionKit.Samples.All.sln
+
+# Without the tests that need real servers (PostgreSQL, RabbitMQ and the rest)
+dotnet test src/services/ST.DotNetSolutionKit.Samples.All.sln --filter "TestCategory!=Integration"
+
+# One service
+dotnet test src/services/ST.DotNetSolutionKit.Samples.<Service>/ST.DotNetSolutionKit.Samples.<Service>.sln
+
+# After generating a service, add its projects to All.sln
+cd src/services && bash manual-add-projects.sh
+```
+
+Migrations: `/ef-migration`. A new service: `/scaffold-service`.
+
+## Conventions
+
+- Code, comments, XML docs, commit messages: English.
+- A change in behaviour comes with its test in the same commit; `git checkout <sha>` builds and passes.
+- Errors are exceptions from `Common/Exceptions`; the shared handler turns them into RFC 9457 problems:
+  [errors](https://dnsk.sawking.tech/docs.html#errors).
+- Time comes from `IDomainExecutionContext.TimeProvider`, never `DateTime.UtcNow`.
+- Side effects of a change (a bus message, a job) go into domain event handlers, never inline in a
+  service: [domain events](https://dnsk.sawking.tech/docs.html#domain-events).
+- Configuration is read through typed options validated at startup, never `IConfiguration["Key"]` in a
+  service: [settings](https://dnsk.sawking.tech/docs.html#settings).
+- Before writing a file of a kind the solution already has (an entity configuration, a validator, a
+  consumer), open two or three neighbours of that kind and follow their conventions.
+
+## Plans
+
+Work that does not finish in one go keeps its plan in `.claude/session-context/`, which `.gitignore` keeps
+out of the repository: `/plan-and-iterate`.
+
+---
+
+Part of [DotNetSolutionKit](https://dnsk.sawking.tech/), MIT License, Copyright (c) 2025 Vladimir Savkin.
