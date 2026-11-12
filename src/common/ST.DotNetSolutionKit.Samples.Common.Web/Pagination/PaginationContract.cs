@@ -1,5 +1,6 @@
 using System.Reflection;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Querying;
+using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Web.Pagination;
 

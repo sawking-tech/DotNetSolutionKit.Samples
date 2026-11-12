@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using ST.DotNetSolutionKit.Samples.Common.Application.Tracing;
+using ST.DotNetSolutionKit.Samples.Framework.Observability;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
 using Hangfire.Client;

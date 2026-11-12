@@ -2,6 +2,7 @@
 
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -9,11 +10,14 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Application.Serialization;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
-using ST.DotNetSolutionKit.Samples.Common.Web.Authentication;
-using ST.DotNetSolutionKit.Samples.Common.Web.Authorization;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Authentication;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Web.Errors;
 using ST.DotNetSolutionKit.Samples.Common.Web.Health;
-using ST.DotNetSolutionKit.Samples.Common.Web.Swagger;
+using ST.DotNetSolutionKit.Samples.Common.Web.Pagination;
+using ST.DotNetSolutionKit.Samples.Framework.OpenApi.Swagger;
+using ST.DotNetSolutionKit.Samples.Framework.Validation.Setup;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Web.Setup;
 
@@ -54,8 +58,11 @@ public static class PlatformWebHost
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddPlatformPermissions(builder.Configuration);
 
+        // The validators and the 422 answer come from Framework.Validation; the page-bounds filter
+        // stays here beside PaginationContract, whose shape it guards.
         builder.Services.AddValidation(serviceAssembly);
-        builder.SetupSwaggerPage(serviceAssembly);
+        builder.Services.Configure<MvcOptions>(options => options.Filters.Add<PaginationValidationFilter>());
+        builder.SetupSwaggerPage(serviceAssembly, options => options.OperationFilter<PaginationOperationFilter>());
         builder.AddPlatformCors();
 
         // How the token cookies are sent is the deployment's to state; a combination the browser or the

@@ -1,4 +1,5 @@
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
 
 namespace ST.DotNetSolutionKit.Samples.Orders.API.Setup;
 

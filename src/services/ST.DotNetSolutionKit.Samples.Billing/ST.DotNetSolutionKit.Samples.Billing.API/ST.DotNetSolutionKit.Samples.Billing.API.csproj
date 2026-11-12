@@ -29,6 +29,8 @@
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Security\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore\ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.csproj" />
       <ProjectReference Include="..\..\..\common\ST.DotNetSolutionKit.Samples.Common.Web\ST.DotNetSolutionKit.Samples.Common.Web.csproj" />
+      <ProjectReference Include="..\..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Auth\ST.DotNetSolutionKit.Samples.Framework.Auth.csproj" />
+      <ProjectReference Include="..\..\..\framework\ST.DotNetSolutionKit.Samples.Framework.OpenApi\ST.DotNetSolutionKit.Samples.Framework.OpenApi.csproj" />
       <ProjectReference Include="..\..\..\framework\ST.DotNetSolutionKit.Samples.Framework.FeatureFlags\ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.Application\ST.DotNetSolutionKit.Samples.Billing.Application.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.Infrastructure\ST.DotNetSolutionKit.Samples.Billing.Infrastructure.csproj" />

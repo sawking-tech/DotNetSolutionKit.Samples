@@ -3,6 +3,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+using ST.DotNetSolutionKit.Samples.Framework.Observability.Http;
+
 namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Http.Internal;
 
 public static class InternalServiceHttpExtensions

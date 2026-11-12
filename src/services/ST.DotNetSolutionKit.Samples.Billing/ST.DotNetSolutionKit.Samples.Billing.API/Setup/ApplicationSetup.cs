@@ -1,6 +1,7 @@
 using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
 using ST.DotNetSolutionKit.Samples.Billing.Application;
 using ST.DotNetSolutionKit.Samples.Billing.Infrastructure;
 

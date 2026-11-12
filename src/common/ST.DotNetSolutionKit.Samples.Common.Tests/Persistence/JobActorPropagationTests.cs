@@ -6,7 +6,7 @@ using Hangfire.Server;
 using Hangfire.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using ST.DotNetSolutionKit.Samples.Common.Application.Tracing;
+using ST.DotNetSolutionKit.Samples.Framework.Observability;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.BillingService.Samples;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.BillingService.Samples.Models;
-using ST.DotNetSolutionKit.Samples.Common.Web.Authorization;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;
 using ST.DotNetSolutionKit.Samples.Billing.Application.Services.Samples;
 
 namespace ST.DotNetSolutionKit.Samples.Billing.API.Controllers;

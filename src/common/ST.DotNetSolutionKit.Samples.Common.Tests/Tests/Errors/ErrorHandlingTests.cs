@@ -1,16 +1,17 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using ST.DotNetSolutionKit.Samples.Common.Application.Tracing;
+using ST.DotNetSolutionKit.Samples.Framework.Observability;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
-using ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Validation;
 using ST.DotNetSolutionKit.Samples.Common.Web.Errors;
-using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+using ST.DotNetSolutionKit.Samples.Framework.Validation.Setup;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Errors;
 
@@ -120,4 +121,28 @@ internal class ErrorHandlingTests
 
     private static async Task<JsonElement> ReadAsync(HttpResponseMessage response) =>
         JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+}
+
+/// <summary>The probe the validation problem is exercised with: one body, one validator, one route.</summary>
+public sealed class ProbeRequest
+{
+    public string? Name { get; init; }
+    public List<string>? Tags { get; init; }
+}
+
+public sealed class ProbeRequestValidator : AbstractValidator<ProbeRequest>
+{
+    public ProbeRequestValidator()
+    {
+        RuleFor(x => x.Name).NotEmpty();
+        RuleFor(x => x.Tags).NotNull().Must(tags => tags!.Count > 0);
+    }
+}
+
+[ApiController]
+[Route("validation-probe")]
+public sealed class ValidationProbeController : ControllerBase
+{
+    [HttpPost]
+    public IActionResult Post(ProbeRequest request) => Ok();
 }

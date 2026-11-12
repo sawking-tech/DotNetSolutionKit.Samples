@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.OrdersService.Samples;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.OrdersService.Samples.Models;
-using ST.DotNetSolutionKit.Samples.Common.Web.Authorization;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;
 using ST.DotNetSolutionKit.Samples.Orders.Application.Services.Samples;
 
 namespace ST.DotNetSolutionKit.Samples.Orders.API.Controllers;

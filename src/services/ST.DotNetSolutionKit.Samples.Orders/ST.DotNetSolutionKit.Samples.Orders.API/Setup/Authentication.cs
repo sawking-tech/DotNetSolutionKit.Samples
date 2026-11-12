@@ -1,4 +1,4 @@
-using ST.DotNetSolutionKit.Samples.Common.Web.Authentication;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Authentication;
 using ST.DotNetSolutionKit.Samples.Orders.Infrastructure.Security.Handlers;
 
 namespace ST.DotNetSolutionKit.Samples.Orders.API.Setup;

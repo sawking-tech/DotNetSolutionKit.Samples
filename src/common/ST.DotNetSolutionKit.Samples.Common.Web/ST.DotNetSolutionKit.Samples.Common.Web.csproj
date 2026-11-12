@@ -19,14 +19,22 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="Serilog.AspNetCore" />
         <PackageReference Include="Serilog.Enrichers.Environment" />
         <PackageReference Include="Serilog.Enrichers.Span" />
         <PackageReference Include="Serilog.Settings.Configuration" />
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-        <PackageReference Include="SharpGrip.FluentValidation.AutoValidation.Mvc" />
+        <PackageReference Include="FluentValidation" />
         <PackageReference Include="Swashbuckle.AspNetCore" />
+    </ItemGroup>
+
+    <!-- The web pipeline is assembled here (PlatformWebHost), and its auth and validation wiring
+         live in the mandatory Framework modules (ADR-009): the kernel references the modules the
+         way DbContextBase references Framework.DomainEvents. -->
+    <ItemGroup>
+        <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Auth\ST.DotNetSolutionKit.Samples.Framework.Auth.csproj" />
+        <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.OpenApi\ST.DotNetSolutionKit.Samples.Framework.OpenApi.csproj" />
+        <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Validation\ST.DotNetSolutionKit.Samples.Framework.Validation.csproj" />
+        <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Observability\ST.DotNetSolutionKit.Samples.Framework.Observability.csproj" />
     </ItemGroup>
 
     <!-- The Swagger document leaves the endpoints behind a closed [FeatureGate] out; the filters

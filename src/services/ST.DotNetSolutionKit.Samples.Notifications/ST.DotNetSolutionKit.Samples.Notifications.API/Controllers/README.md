@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.NotificationsService.Samples;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.NotificationsService.Samples.Models;
-using ST.DotNetSolutionKit.Samples.Common.Web.Authorization;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;
 using ST.DotNetSolutionKit.Samples.Notifications.Application.Services.Samples;
 
 namespace ST.DotNetSolutionKit.Samples.Notifications.API.Controllers;

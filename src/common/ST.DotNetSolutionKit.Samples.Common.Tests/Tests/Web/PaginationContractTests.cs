@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Moq;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Querying;
+using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
+using ST.DotNetSolutionKit.Samples.Framework.Validation.Setup;
 using ST.DotNetSolutionKit.Samples.Common.Web.Errors;
 using ST.DotNetSolutionKit.Samples.Common.Web.Pagination;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
@@ -33,6 +35,9 @@ internal sealed class PaginationContractTests
         builder.WebHost.UseTestServer();
         builder.Services.AddControllers().AddApplicationPart(typeof(PaginationContractTests).Assembly);
         builder.Services.AddValidation(typeof(PaginationContractTests).Assembly);
+        // The filter is the platform's to register beside AddValidation (PlatformWebHost does it);
+        // this host builds the pieces by hand, so it registers the pagination filter itself.
+        builder.Services.Configure<MvcOptions>(options => options.Filters.Add<PaginationValidationFilter>());
         builder.Services.AddPlatformErrorHandling(builder.Environment);
 
         _app = builder.Build();

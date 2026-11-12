@@ -3,6 +3,7 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Common.Web.Diagnostics;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
 using ST.DotNetSolutionKit.Samples.Billing.API.Setup;
 using ST.DotNetSolutionKit.Samples.Billing.Infrastructure.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Billing.Infrastructure.EntityFramework.DataSeeding;

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using ST.DotNetSolutionKit.Samples.Common.Web.Authentication;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Authentication;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Web.Gateway;
 

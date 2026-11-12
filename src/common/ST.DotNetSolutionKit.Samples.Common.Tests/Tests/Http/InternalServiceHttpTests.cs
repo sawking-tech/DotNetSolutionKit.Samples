@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
-using ST.DotNetSolutionKit.Samples.Common.Application.Tracing;
+using ST.DotNetSolutionKit.Samples.Framework.Observability;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Http.Internal;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
 

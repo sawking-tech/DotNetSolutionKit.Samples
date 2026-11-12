@@ -1,4 +1,4 @@
-using ST.DotNetSolutionKit.Samples.Common.Application.Tracing;
+using ST.DotNetSolutionKit.Samples.Framework.Observability;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using MassTransit;

@@ -2,6 +2,7 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
 namespace ST.DotNetSolutionKit.Samples.Orders.API.Setup;
 
 internal static class ApplicationConfiguration

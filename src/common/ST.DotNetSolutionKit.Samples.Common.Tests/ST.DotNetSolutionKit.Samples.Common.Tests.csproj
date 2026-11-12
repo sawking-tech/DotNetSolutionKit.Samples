@@ -28,6 +28,9 @@
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Common.Testing\ST.DotNetSolutionKit.Samples.Common.Testing.csproj" />
       <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Testing\ST.DotNetSolutionKit.Samples.Framework.Testing.csproj" />
       <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.DomainEvents\ST.DotNetSolutionKit.Samples.Framework.DomainEvents.csproj" />
+      <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.OpenApi\ST.DotNetSolutionKit.Samples.Framework.OpenApi.csproj" />
+      <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Validation\ST.DotNetSolutionKit.Samples.Framework.Validation.csproj" />
+      <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Observability\ST.DotNetSolutionKit.Samples.Framework.Observability.csproj" />
     </ItemGroup>
 
 </Project>

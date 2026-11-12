@@ -1,5 +1,6 @@
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
 using ST.DotNetSolutionKit.Samples.Notifications.Application;
 using ST.DotNetSolutionKit.Samples.Notifications.Infrastructure;
 

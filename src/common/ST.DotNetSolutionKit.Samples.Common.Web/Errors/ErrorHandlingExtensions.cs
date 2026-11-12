@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using ST.DotNetSolutionKit.Samples.Common.Application.Tracing;
+using ST.DotNetSolutionKit.Samples.Framework.Observability;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.Responses;
-using ST.DotNetSolutionKit.Samples.Common.Web.Tracing;
+using ST.DotNetSolutionKit.Samples.Framework.Observability.Tracing;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Web.Errors;
 

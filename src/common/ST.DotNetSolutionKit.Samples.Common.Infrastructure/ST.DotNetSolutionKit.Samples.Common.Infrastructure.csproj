@@ -27,6 +27,7 @@
         <ProjectReference Include="..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Abstractions.csproj" />
         <ProjectReference Include="..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.csproj" />
         <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.DomainEvents\ST.DotNetSolutionKit.Samples.Framework.DomainEvents.csproj" />
+        <ProjectReference Include="..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Observability\ST.DotNetSolutionKit.Samples.Framework.Observability.csproj" />
     </ItemGroup>
 
     <ItemGroup>
