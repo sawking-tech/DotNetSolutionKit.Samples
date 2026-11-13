@@ -6,8 +6,9 @@ using Microsoft.Extensions.Options;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Configuration;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
+using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.RabbitMQ;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
+using ST.DotNetSolutionKit.Samples.Capabilities.Background.Hangfire;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Events;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications;
@@ -93,7 +94,10 @@ public static partial class DependencyInjection
         if (switches.Jobs)
         {
             services.AddValidatedOptions<IHangfireSettings, HangfireSettings>(HangfireSettings.SectionName);
-            services.AddBackgroundJobs(connectionString);
+            services.AddHangfireJobs(
+                connectionString,
+                typeof(DomainMarker).Namespace!,
+                $"{NotificationsDbContext.DefaultSchemaName}_hangfire");
         }
 
         // Data Seeding

@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Persistence;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
+using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.RabbitMQ;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 
 namespace ST.DotNetSolutionKit.Samples.Notifications.Infrastructure.EntityFramework;

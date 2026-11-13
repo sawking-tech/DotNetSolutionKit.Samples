@@ -17,6 +17,8 @@
       <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Abstractions\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.Abstractions.csproj" />
       <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.S3.csproj" />
       <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Analytics\ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse\ST.DotNetSolutionKit.Samples.Capabilities.Analytics.ClickHouse.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Messaging\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.RabbitMQ\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.RabbitMQ.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Background\ST.DotNetSolutionKit.Samples.Capabilities.Background.Hangfire\ST.DotNetSolutionKit.Samples.Capabilities.Background.Hangfire.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Orders.Application\ST.DotNetSolutionKit.Samples.Orders.Application.csproj" />
     </ItemGroup>
 
@@ -27,9 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Hangfire.AspNetCore" />
-        <PackageReference Include="Hangfire.Console" />
-        <PackageReference Include="Hangfire.PostgreSql" />
+
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
             <PrivateAssets>all</PrivateAssets>

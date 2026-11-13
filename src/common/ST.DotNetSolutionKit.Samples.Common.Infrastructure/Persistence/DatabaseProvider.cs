@@ -1,9 +1,7 @@
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ST.DotNetSolutionKit.Samples.Capabilities.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Specifications;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Diagnostics;
 using Npgsql;
 using ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres;
 
@@ -98,12 +96,6 @@ public static class DatabaseProvider
         return PostgresErrors.IsUniqueViolation(exception);
     }
 
-    /// <summary>The lock statements the MassTransit outbox runs against the solution's database.</summary>
-    public static IEntityFrameworkOutboxConfigurator UseDatabaseLocks(this IEntityFrameworkOutboxConfigurator outbox)
-    {
-        outbox.UsePostgres();
-        return outbox;
-    }
 
     /// <summary>How the outbox statistics are read from the solution's database.</summary>
     internal static IOutboxStatsDialect CreateOutboxStatsDialect()

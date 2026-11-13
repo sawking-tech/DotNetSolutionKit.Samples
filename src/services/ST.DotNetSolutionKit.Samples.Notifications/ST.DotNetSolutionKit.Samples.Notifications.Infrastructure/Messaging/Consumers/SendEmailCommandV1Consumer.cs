@@ -3,7 +3,7 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Messaging.Consumers;
 using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications;
 using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.Notifications.Abstractions;
 using ST.DotNetSolutionKit.Samples.Common.Contracts.Messaging.Notifications;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging.Consumers;
+using ST.DotNetSolutionKit.Samples.Capabilities.Messaging.RabbitMQ.Consumers;
 
 namespace ST.DotNetSolutionKit.Samples.Notifications.Infrastructure.Messaging.Consumers;
 

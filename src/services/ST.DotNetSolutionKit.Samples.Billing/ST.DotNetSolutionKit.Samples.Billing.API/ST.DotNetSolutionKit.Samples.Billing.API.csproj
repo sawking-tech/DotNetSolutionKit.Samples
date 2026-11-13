@@ -32,6 +32,8 @@
       <ProjectReference Include="..\..\..\framework\ST.DotNetSolutionKit.Samples.Framework.Auth\ST.DotNetSolutionKit.Samples.Framework.Auth.csproj" />
       <ProjectReference Include="..\..\..\framework\ST.DotNetSolutionKit.Samples.Framework.OpenApi\ST.DotNetSolutionKit.Samples.Framework.OpenApi.csproj" />
       <ProjectReference Include="..\..\..\framework\ST.DotNetSolutionKit.Samples.Framework.FeatureFlags\ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Messaging\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.RabbitMQ\ST.DotNetSolutionKit.Samples.Capabilities.Messaging.RabbitMQ.csproj" />
+      <ProjectReference Include="..\..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Background\ST.DotNetSolutionKit.Samples.Capabilities.Background.Hangfire\ST.DotNetSolutionKit.Samples.Capabilities.Background.Hangfire.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.Application\ST.DotNetSolutionKit.Samples.Billing.Application.csproj" />
       <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Billing.Infrastructure\ST.DotNetSolutionKit.Samples.Billing.Infrastructure.csproj" />
     </ItemGroup>
