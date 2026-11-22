@@ -8,6 +8,12 @@
         "commands": [
           "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true"
         ]
+      },
+      {
+        "since": "3.0.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders --solution --github-cicd true --allow-scripts yes"
+        ]
       }
     ]
   },
@@ -21,6 +27,14 @@
           "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true",
           "-N ST -P DotNetSolutionKit.Samples -S Billing",
           "-N ST -P DotNetSolutionKit.Samples -S Gateway --ApiGateway true"
+        ]
+      },
+      {
+        "since": "3.0.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders --solution --github-cicd true --allow-scripts yes",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --allow-scripts yes",
+          "-N ST -P DotNetSolutionKit.Samples -S Gateway --api-gateway true --allow-scripts yes"
         ]
       }
     ]
@@ -44,6 +58,15 @@
           "dotskit init",
           "dotskit new -S Notifications --Notify email --Messaging outbox --DiffApi true"
         ]
+      },
+      {
+        "since": "3.0.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders --solution --github-cicd true --messaging rabbitmq:outbox -I true --diff-api true --feature-flags true --hierarchy-rules true --storage true --clickhouse true --mongodb true --allow-scripts yes",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --messaging rabbitmq:outbox -I true --diff-api true --feature-flags true --storage true --clickhouse true --allow-scripts yes",
+          "dotskit init",
+          "dotskit new -S Notifications --notify email --messaging rabbitmq:outbox --diff-api true"
+        ]
       }
     ],
     "default": true
@@ -57,6 +80,13 @@
         "commands": [
           "-N ST -P DotNetSolutionKit.Samples -S Orders -M false --GitHubCiCd true --Database mssql --TestFramework xunit --Vault true --Deploy k8s --Messaging outbox --Audit true",
           "-N ST -P DotNetSolutionKit.Samples -S Billing --Database mssql --TestFramework xunit --Vault true --Deploy k8s --Messaging outbox --Audit true"
+        ]
+      },
+      {
+        "since": "3.0.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders --solution --github-cicd true --database mssql --test-framework xunit --vault true --deploy k8s --messaging rabbitmq:outbox --audit true --allow-scripts yes",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --database mssql --test-framework xunit --vault true --deploy k8s --messaging rabbitmq:outbox --audit true --allow-scripts yes"
         ]
       }
     ]
@@ -73,6 +103,15 @@
           "-N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --allow-scripts yes",
           "dotskit init",
           "dotskit new -S Notifications --Notify email --Messaging outbox --DiffApi true"
+        ]
+      },
+      {
+        "since": "3.0.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders --solution --github-cicd true --messaging rabbitmq:outbox -I true --diff-api true --feature-flags true --hierarchy-rules true --storage true --clickhouse true --mongodb true --allow-scripts yes",
+          "-N ST -P DotNetSolutionKit.Samples -S Billing --messaging rabbitmq:outbox -I true --diff-api true --feature-flags true --storage true --clickhouse true --allow-scripts yes",
+          "dotskit init",
+          "dotskit new -S Notifications --notify email --messaging rabbitmq:outbox --diff-api true"
         ]
       }
     ]

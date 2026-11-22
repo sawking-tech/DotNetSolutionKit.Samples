@@ -5,6 +5,11 @@ name: Report
 # scan writes its day too, so a broken tool or scenario turns the branch's day red, not only a broken CI.
 # The commit says [skip ci], so it starts no CI of its own and no report of a report.
 # It is pushed with SAMPLES_DEPLOY_KEY, as the regeneration is.
+#
+# The branch a run reports into is the branch the run was about, which is not always the branch it ran on:
+# Regenerate and lifecycle run on the default branch and rebuild others, so those workflows upload an
+# artifact named sample-branch-<branch> for each branch they rebuild, and the report follows it. Without
+# that artifact the run was the branch's own and reports into the branch it ran on.
 
 on:
   workflow_run:
@@ -33,16 +38,42 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           DEPLOY_KEY: ${{ secrets.SAMPLES_DEPLOY_KEY }}
-          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RAN_ON: ${{ github.event.workflow_run.head_branch }}
           RUN: ${{ github.event.workflow_run.id }}
         run: |
+          # report.sh, from the automation copy into each branch's clone, must see this run's API and the
+          # branch it writes into; the steps above reset the working directory of the whole job.
+          set -euo pipefail
+          report="$GITHUB_WORKSPACE/automation/.samples/report.sh"
+          write() {
+            branch="$1"; shift
+            echo "reporting run $RUN into $branch"
+            git clone -q --branch "$branch" "git@github.com:${GITHUB_REPOSITORY}.git" "$RUNNER_TEMP/branch"
+            (
+              cd "$RUNNER_TEMP/branch"
+              bash "$report" "$RUN" "$@" || true
+              git add reports
+              git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+                commit -qm "Report of CI run $RUN [skip ci]" || exit 0
+              git push -q origin "$branch"
+            )
+            rm -rf "$RUNNER_TEMP/branch"
+          }
           key="$RUNNER_TEMP/deploy_key"
           printf '%s\n' "$DEPLOY_KEY" > "$key" && chmod 600 "$key"
           export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
-          git clone -q --branch "$BRANCH" "git@github.com:${GITHUB_REPOSITORY}.git" branch
-          cd branch
-          bash ../automation/.samples/report.sh "$RUN"
-          git add reports
-          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-            commit -qm "Report of CI run $RUN [skip ci]" || exit 0
-          git push -q origin "$BRANCH"
+          # The branches this run rebuilt, each with its own job's result, from the marker a matrix job of
+          # Regenerate or lifecycle leaves; a run of a branch's own leaves none and speaks of that branch.
+          markers=$(mktemp -d)
+          while read -r name; do
+            gh run download "$RUN" -R "$GITHUB_REPOSITORY" -n "sample-branch-$name" -D "$markers/$name" 2>/dev/null || true
+          done < <(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/artifacts" --paginate \
+                     -q '.artifacts[].name' | sed -n 's/^sample-branch-//p' | sort -u)
+          found=0
+          for dir in "$markers"/*; do
+            [ -f "$dir/sample-branch.txt" ] || continue
+            found=1
+            read -r BRANCH RESULT < "$dir/sample-branch.txt"
+            write "$BRANCH" "$RESULT"
+          done
+          [ "$found" = 1 ] || write "$RAN_ON"

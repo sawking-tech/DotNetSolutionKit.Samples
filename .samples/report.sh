@@ -2,10 +2,12 @@
 #
 # Writes the report of one checking run into the sample branch checked out in the current folder:
 #
-#   ./report.sh <run id>
+#   ./report.sh <run id> [<result of the job>]
 #
 # A CI run reports its tests and coverage; a failed Regenerate or Secret scan reports its conclusion,
 # so its day is red too. A successful non-CI run writes nothing: the CI its push starts reports the day.
+# <result> is the conclusion of the job that rebuilt this branch (report.yml reads it from the marker the
+# matrix job leaves); without it the conclusion of the whole run is used, right for a branch's own run.
 #
 # The reports live in reports/<branch>/, so two branches merged together keep each other's reports.
 # reports/<branch>/<version>.json keeps every run of the branch generated from that version (a release tag,
@@ -17,6 +19,7 @@
 set -euo pipefail
 
 run="$1"
+result="${2:-}"
 repo="${GITHUB_REPOSITORY:-sawking-tech/DotNetSolutionKit.Samples}"
 template_repo="${TEMPLATE_REPO:-sawking-tech/DotNetSolutionKit}"
 work="$(mktemp -d)"
@@ -47,11 +50,15 @@ fi
 
 gh api "repos/$repo/actions/runs/$run" > "$work/run.json"
 workflow=$(jq -r '.name' "$work/run.json")
+# A matrix job's own result where report.yml read one: three branches rebuilt by one run must not all turn
+# red because one of them did. A run of a branch's own has no marker and speaks of the whole run.
+conclusion="${result:-$(jq -r .conclusion "$work/run.json")}"
+conclusion="${conclusion,,}"
 
 # A successful Regenerate or Secret scan writes nothing: the CI its push starts reports the day. Only
 # its failure speaks, of its conclusion (see the header). Coverage speaks like CI: it exists to write
 # the coverage a push run could not.
-if [ "$workflow" != CI ] && [ "$workflow" != Coverage ] && [ "$(jq -r .conclusion "$work/run.json")" = success ]; then
+if [ "$workflow" != CI ] && [ "$workflow" != Coverage ] && [ "$conclusion" = success ]; then
     echo "a successful $workflow writes no report"
     exit 0
 fi
@@ -82,8 +89,8 @@ if [ "$workflow" = CI ] || [ "$workflow" = Coverage ]; then
     fi
 fi
 
-entry=$(jq -c --argjson tests "$tests" --argjson coverage "$coverage" --arg template_commit "$template_commit" '{
-    run: .id, url: .html_url, commit: .head_sha, conclusion: .conclusion, event: .event, workflow: .name,
+entry=$(jq -c --argjson tests "$tests" --argjson coverage "$coverage" --arg template_commit "$template_commit" --arg conclusion "$conclusion" '{
+    run: .id, url: .html_url, commit: .head_sha, conclusion: $conclusion, event: .event, workflow: .name,
     started: .run_started_at, finished: .updated_at,
     seconds: ((.updated_at | fromdateiso8601) - (.run_started_at | fromdateiso8601)),
     tests: $tests, coverage: $coverage, templateCommit: $template_commit }' "$work/run.json")
