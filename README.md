@@ -13,13 +13,13 @@ ice blue or dark red from day 30 on. A day keeps its colour; a new run makes its
 again. A pale square is a day before the first run; the fading squares on the right are the weeks to
 come.
 
-Generated from DotNetSolutionKit dev at [944c55e](https://github.com/sawking-tech/DotNetSolutionKit/commit/944c55e6ee577570c50cd27cacb995719b791faa), not a release, with:
+Generated from DotNetSolutionKit dev at [de6d016](https://github.com/sawking-tech/DotNetSolutionKit/commit/de6d0166a7d1143bba3fca6ee192d0be583eeb70), not a release, with:
 
 ```bash
-dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders --Solution --GitHubCiCd true --Messaging outbox -I true --DiffApi true --FeatureFlags true --HierarchyRules true --Storage true --ClickHouse true --MongoDB true --allow-scripts yes
-dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing --Messaging outbox -I true --DiffApi true --FeatureFlags true --Storage true --ClickHouse true --allow-scripts yes
+dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders --solution --github-cicd true --messaging rabbitmq:outbox -I true --diff-api true --feature-flags true --hierarchy-rules true --storage true --clickhouse true --mongodb true --allow-scripts yes
+dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Billing --messaging rabbitmq:outbox -I true --diff-api true --feature-flags true --storage true --clickhouse true --allow-scripts yes
 dotskit init
-dotskit new -S Notifications --Notify email --Messaging outbox --DiffApi true
+dotskit new -S Notifications --notify email --messaging rabbitmq:outbox --diff-api true
 ```
 
 dotskit is the template's tool, SawKing.DotsKit.Tool of the same version; it ran here with --yes and

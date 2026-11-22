@@ -5,7 +5,7 @@ using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore;
 
-namespace ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Tests.Secrets;
+namespace ST.DotNetSolutionKit.Samples.Capabilities.Security.CredentialStore.Tests.Configuration;
 
 /// <summary>
 /// The feature flags of a service whose secret store answers, changes and goes down, end to end: the
@@ -24,7 +24,7 @@ public class FeatureFlagsStoreOutageTests
     private const string Secret = $"Features__{Key}__enabled";
     private string _folder = null!;
 
-    private sealed class Store : ISecretStore
+    private sealed class Store : IConfigurationStore
     {
         public Dictionary<string, string> Values { get; } = new() { [Secret] = "true" };
         public bool Down { get; set; }
@@ -43,7 +43,7 @@ public class FeatureFlagsStoreOutageTests
         public IFileProvider ContentRootFileProvider { get; set; } = null!;
     }
 
-    private sealed record Service(ConfigurationFeatureCatalog Catalog, SecretsConfigurationProvider Provider);
+    private sealed record Service(ConfigurationFeatureCatalog Catalog, ConfigurationStoreProvider Provider);
 
     [SetUp]
     public void CreateFolder() => _folder = Directory.CreateTempSubdirectory("outage-").FullName;
@@ -66,12 +66,12 @@ public class FeatureFlagsStoreOutageTests
             ["Infisical:ClientId"] = "id", ["Infisical:ClientSecret"] = "secret",
             ["Infisical:ReloadSeconds"] = "0",
         });
-        builder.AddPlatformSecrets("/orders", storeFactory: _ => store);
+        builder.AddPlatformConfiguration("/orders", storeFactory: _ => store);
         var configuration = builder.Build();
 
         return new Service(
             new ConfigurationFeatureCatalog(configuration, new Production(), TimeProvider.System),
-            configuration.Providers.OfType<SecretsConfigurationProvider>().Last());
+            configuration.Providers.OfType<ConfigurationStoreProvider>().Last());
     }
 
     [Test(Description = "A flag set in the store decides over the shared file, and is reported as the store's")]
