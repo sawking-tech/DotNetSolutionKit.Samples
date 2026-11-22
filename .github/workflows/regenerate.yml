@@ -122,6 +122,22 @@ jobs:
             commit -qm "Generated from DotNetSolutionKit ${{ matrix.from }}"
           git push -q origin "${{ matrix.branch }}"
 
+      # The report of this run belongs to the branch rebuilt here, not to the default branch the run is on
+      # (report.yml). Last step of the job, so job.status is this branch's own result: a branch that failed
+      # to rebuild turns red in its own row, and a run that rebuilt three branches with one of them red
+      # does not paint all three.
+      - name: Name the branch and the result for the report
+        if: always()
+        run: echo "${{ matrix.branch }} ${{ job.status }}" > "$RUNNER_TEMP/sample-branch.txt"
+
+      - name: Keep it for the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-branch-${{ matrix.branch }}
+          path: ${{ runner.temp }}/sample-branch.txt
+          retention-days: 1
+
   # GitHub turns a schedule off in a public repository after 60 days without a commit. Releases of the
   # template can be further apart, so an empty commit on the default branch keeps the schedule alive.
   keep-alive:
