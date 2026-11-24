@@ -61,4 +61,4 @@ a step; [its workflow](.github/workflows/lifecycle.yml) builds it again when dev
 After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's
 reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release, and
 ci.svg, the picture of its days above.
-The automation is in [.samples](.samples).
+The automation - the chain that regenerates the branches, what starts a rebuild and what the runs mean - is in [.samples/AUTOMATION.md](.samples/AUTOMATION.md).
