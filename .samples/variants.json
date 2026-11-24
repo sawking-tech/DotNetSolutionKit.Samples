@@ -117,6 +117,25 @@
     ]
   },
   {
+    "branch": "canary",
+    "tag": false,
+    "about": "Not a sample: the detector of the runner's environment. One recipe generated from the template's dev on the SDK the runner brings, built and tested by canary.yml. Creates no branch and is never shown on the samples page.",
+    "generate": [
+      {
+        "since": "2.7.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders -M false"
+        ]
+      },
+      {
+        "since": "3.0.0",
+        "commands": [
+          "-N ST -P DotNetSolutionKit.Samples -S Orders --solution"
+        ]
+      }
+    ]
+  },
+  {
     "branch": "lifecycle",
     "tag": false,
     "about": "The life of a solution on the template: made with the release two minors before the next one, changed by the team, then described, upgraded and grown by dotskit, each step a commit. Owned by lifecycle.yml, not generated from a release tag.",
