@@ -2,10 +2,10 @@
   {
     "version": "v2.9.2",
     "file": "v2.9.2.json",
-    "runs": 3,
+    "runs": 4,
     "last": {
       "conclusion": "success",
-      "started": "2026-11-24T17:23:19Z",
+      "started": "2026-11-24T17:49:03Z",
       "tests": {
         "failed": 0,
         "passed": 433,
@@ -16,19 +16,27 @@
         "line": 69.3,
         "branch": 67.9
       },
-      "seconds": 132
+      "seconds": 146
     }
   },
   {
     "version": "v2.9.1",
     "file": "v2.9.1.json",
-    "runs": 34,
+    "runs": 5,
     "last": {
-      "conclusion": "failure",
-      "started": "2026-11-22T10:40:46Z",
-      "tests": null,
-      "coverage": null,
-      "seconds": 114
+      "conclusion": "success",
+      "started": "2026-11-22T10:39:12Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 69.3,
+        "branch": 67.9
+      },
+      "seconds": 139
     }
   },
   {
