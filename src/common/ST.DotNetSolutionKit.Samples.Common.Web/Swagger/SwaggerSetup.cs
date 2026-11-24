@@ -10,6 +10,7 @@ using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
 using ST.DotNetSolutionKit.Samples.Common.Web.Gateway;
 using ST.DotNetSolutionKit.Samples.Common.Web.Pagination;
+using ST.DotNetSolutionKit.Samples.Common.Web.FeatureManagement;
 using ST.DotNetSolutionKit.Samples.Common.Web.Swagger.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -113,6 +114,9 @@ public static class SwaggerSetup
             options.SchemaFilter<SchemaValuesFromFilter>();
             options.DocumentFilter<VersionedDocumentFilter>();
             options.DocumentFilter<ScrubDescriptionsFilter>();
+            // An action behind a closed [FeatureGate] answers 404, so the document leaves it out too.
+            options.OperationFilter<FeatureGateFilters>();
+            options.DocumentFilter<FeatureGateFilters>();
 
             var xmlFile = $"{serviceAssembly.GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
