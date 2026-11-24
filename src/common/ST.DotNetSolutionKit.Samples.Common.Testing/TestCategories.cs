@@ -10,9 +10,9 @@ public static class TestCategories
     public const string Integration = "Integration";
 
     /// <summary>
-    /// The trait an xUnit test carries the category under: <c>[Trait(TestCategories.TraitName,
-    /// TestCategories.Integration)]</c>. Named so that the filter CI uses for NUnit's categories,
-    /// <c>TestCategory=Integration</c>, selects xUnit tests too.
+    /// The trait an xUnit test carries the category under; a service's tests set it with
+    /// <c>[Integration]</c> from their <c>TestFramework.cs</c>. Named so that the filter CI uses for NUnit's
+    /// categories, <c>TestCategory=Integration</c>, selects xUnit tests too.
     /// </summary>
     public const string TraitName = "TestCategory";
 }

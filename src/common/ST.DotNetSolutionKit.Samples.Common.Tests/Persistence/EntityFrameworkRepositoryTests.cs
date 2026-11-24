@@ -1,4 +1,4 @@
-﻿using ST.DotNetSolutionKit.Samples.Common.Exceptions;
+using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Specifications;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Querying;
