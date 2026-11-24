@@ -10,7 +10,7 @@ internal static class ApplicationSetup
     {
         var configuration = builder.Configuration;
         var services = builder.Services;
-        
+
         // services.AddJwtConfiguration(configuration);
         services.AddInternalApiConfiguration(configuration);
         services.AddAuthValidationConfiguration(configuration);
@@ -18,7 +18,7 @@ internal static class ApplicationSetup
         // Register Application Layer services. They register the domain services too:
         // the API reaches the domain only through the application layer.
         services.AddApplicationServices();
-        
+
         // Register Infrastructure Layer services
         services.AddInfrastructureServices(builder.Configuration);
 

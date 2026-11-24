@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Diagnostics;
+using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Messaging;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Diagnostics;
@@ -36,8 +37,7 @@ internal class OutboxStatsQueryTests
         using var db = new OrdersOutbox();
 
         // Each provider quotes as it does: SQL Server always, PostgreSQL only what needs it.
-        var expected = "";
-        expected = "orders.outbox_message";
+        var expected = DatabaseProvider.IsSqlServer ? "[orders].[outbox_message]" : "orders.outbox_message";
         OutboxStatsQuery.ResolveOutboxTable(db).ShouldBe(expected);
     }
 
@@ -46,8 +46,9 @@ internal class OutboxStatsQueryTests
     {
         using var db = new OddSchemaOutbox();
 
-        var expected = "";
-        expected = "\"odd\"\"schema\".outbox_message";
+        var expected = DatabaseProvider.IsSqlServer
+            ? "[odd\"schema].[outbox_message]"
+            : "\"odd\"\"schema\".outbox_message";
         OutboxStatsQuery.ResolveOutboxTable(db).ShouldBe(expected);
     }
 

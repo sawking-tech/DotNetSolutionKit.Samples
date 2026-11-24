@@ -57,6 +57,10 @@ class Node {
   }
 }
 
+/** The limits of the plan's form: past them the plan stops being a list of actions. */
+const LIMITS = { planLines: 100, fieldChars: 160, comments: 3, farChecks: 2 };
+
+const COMMENT = /^\s*\/\//;
 const HEAD = /^(\s*)(stage|step)\s+(\S+)\s+"([^"]*)"(.*)$/;
 const FIELD = /^\s*(why|how|done_when|note|check)\s+"/;
 
@@ -152,7 +156,7 @@ function parse(text) {
  * They are syntactically valid: a file that breaks them parses and looks whole. That is why the eye misses
  * them, and only a check shows them.
  */
-function invariants(nodes) {
+function invariants(nodes, lines) {
   const bad = [];
   const say = (node, text) => bad.push({ line: node?.line ?? 0, id: node?.id ?? '-', text });
 
@@ -189,6 +193,8 @@ function invariants(nodes) {
     }
   }
 
+  form(nodes, lines, say);
+
   /*
     The order of the document is the priority, so an open item above the marker reads as done - and is
     forgotten. It is a property of the sequence, not of a node: every item on its own is fine, their order
@@ -211,6 +217,41 @@ function invariants(nodes) {
   return bad;
 }
 
+/**
+ * The form of the plan.
+ *
+ * @remarks
+ * The plan is a list of actions, rebuilt at any time from the tracker's issues. What swells it into a
+ * warehouse shows in its form, so it is checked here instead of staying a request in the skill's text: a
+ * request gets broken, a check does not.
+ */
+function form(nodes, lines, say) {
+  // A file that ends with a newline splits into one empty line more than it has.
+  const count = lines.at(-1) === '' ? lines.length - 1 : lines.length;
+  if (count > LIMITS.planLines) {
+    say(null, `the plan is ${count} lines, the limit is ${LIMITS.planLines}: closed and far items go to the tracker, actions stay in the plan`);
+  }
+  const comments = lines.filter((l) => COMMENT.test(l)).length;
+  if (comments > LIMITS.comments) {
+    say(null, `${comments} comments, the limit is ${LIMITS.comments}: decisions and agreements go to the issue, an ADR, the docs or memory`);
+  }
+  for (const node of nodes) {
+    for (const [name, value] of Object.entries(node.fields)) {
+      if (value && value.length > LIMITS.fieldChars) {
+        say(node, `${name} is ${value.length} characters, the limit is ${LIMITS.fieldChars}: one line on what we do; the analysis goes to the tracker`);
+      }
+    }
+    for (const check of node.checks) {
+      if (check.text.length > LIMITS.fieldChars) {
+        say(node, `check is ${check.text.length} characters: a check is what is run and gives a got, not an agreement`);
+      }
+    }
+    if (!node.now && node.pending && node.checks.length > LIMITS.farChecks) {
+      say(node, `${node.checks.length} checks on a far item: the far work is written out - expand it when reached`);
+    }
+  }
+}
+
 const minutesSince = (stamp) => {
   const then = Date.parse(stamp.replace(' ', 'T'));
   if (Number.isNaN(then)) return null;
@@ -221,7 +262,7 @@ const forHuman = (minutes) =>
   minutes === null ? '' : minutes < 90 ? `${minutes} min` : `${Math.round(minutes / 60)} h`;
 
 /** Where I am: the current item in full, the next ones as numbers, the violations next to them. */
-function where(nodes, tail = 6) {
+function where({ nodes, lines }, tail = 6) {
   const out = [];
   const queue = nodes.filter((n) => n.pending);
   const at = queue.findIndex((n) => n.now);
@@ -267,15 +308,15 @@ function where(nodes, tail = 6) {
     });
   }
 
-  const bad = invariants(nodes);
+  const bad = invariants(nodes, lines);
   if (bad.length) {
     out.push('', `${bad.length} VIOLATIONS - in detail: node plan.mjs check`);
   }
   return out.join('\n');
 }
 
-function check(nodes) {
-  const bad = invariants(nodes);
+function check({ nodes, lines }) {
+  const bad = invariants(nodes, lines);
   if (!bad.length) return { text: 'The plan invariants hold.', code: 0 };
   const text = bad
     .map((b) => `  line ${String(b.line).padStart(4)}  [${b.id}]  ${b.text}`)
@@ -397,10 +438,10 @@ const parsed = parse(source);
 let result;
 switch (command) {
   case 'where':
-    result = { text: where(parsed.nodes, Number(rest[0] ?? 6)), code: 0 };
+    result = { text: where(parsed, Number(rest[0] ?? 6)), code: 0 };
     break;
   case 'check':
-    result = check(parsed.nodes);
+    result = check(parsed);
     break;
   case 'take':
     result = take(parsed, rest[0]);
@@ -420,7 +461,7 @@ switch (command) {
         'node plan.mjs [command]',
         '',
         '  where [N]                       where I am: the current item in full and N next ones (default 6)',
-        '  check                           node and order invariants; exit code 1 when broken',
+        '  check                           node and order invariants and the form of the plan; exit code 1 when broken',
         '  take <slug>                     take into work: remove the old marker, set since',
         '  done <slug>                     close: at, refused without done_when or with open checks',
         '  add <slug> "<title>" --before|--after <slug>   add an item between two others',

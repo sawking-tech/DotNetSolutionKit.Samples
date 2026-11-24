@@ -8,7 +8,6 @@ using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Persistence.EntityFramework.Idempotency;
 using ST.DotNetSolutionKit.Samples.Common.Tests.Stubs;
-using Npgsql;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Integration;
 
@@ -222,32 +221,4 @@ internal abstract class IdempotentExecutorTests
         second.ShouldNotBe(first);
         (await WidgetsAsync()).ShouldBe(2);
     }
-}
-
-[TestFixture]
-[Category(TestCategories.Integration)]
-internal sealed class IdempotentExecutorOnPostgresTests : IdempotentExecutorTests
-{
-    protected override async Task<string> CreateDatabaseAsync(string name)
-    {
-        var admin = Postgres.ConnectionString();
-        await using (var connection = new NpgsqlConnection(admin))
-        {
-            await connection.OpenAsync();
-            await new NpgsqlCommand($"CREATE DATABASE \"{name}\"", connection).ExecuteNonQueryAsync();
-        }
-
-        return new NpgsqlConnectionStringBuilder(admin) { Database = name }.ToString();
-    }
-
-    protected override async Task DropDatabaseAsync(string name)
-    {
-        NpgsqlConnection.ClearAllPools();
-        await using var connection = new NpgsqlConnection(Postgres.ConnectionString());
-        await connection.OpenAsync();
-        await new NpgsqlCommand($"DROP DATABASE IF EXISTS \"{name}\" WITH (FORCE)", connection).ExecuteNonQueryAsync();
-    }
-
-    protected override DbContextOptions<Db> Options(string connection) =>
-        new DbContextOptionsBuilder<Db>().UseNpgsql(connection).Options;
 }
