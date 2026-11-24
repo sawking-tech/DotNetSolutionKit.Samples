@@ -3,9 +3,9 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
+using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 
 namespace ST.DotNetSolutionKit.Samples.Billing.Infrastructure.Security.Handlers;
 

@@ -1,9 +1,10 @@
 using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;
-using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
 using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
 using ST.DotNetSolutionKit.Samples.Orders.Application;
 using ST.DotNetSolutionKit.Samples.Orders.Infrastructure;
+using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Configuration;
 
 namespace ST.DotNetSolutionKit.Samples.Orders.API.Setup;
 

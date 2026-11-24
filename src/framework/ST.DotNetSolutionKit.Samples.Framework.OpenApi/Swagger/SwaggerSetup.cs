@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
 using ST.DotNetSolutionKit.Samples.Framework.OpenApi;
 using ST.DotNetSolutionKit.Samples.Framework.FeatureFlags;

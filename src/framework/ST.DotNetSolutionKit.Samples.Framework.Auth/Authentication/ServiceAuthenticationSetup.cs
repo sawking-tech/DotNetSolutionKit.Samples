@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
-using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Security;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Configuration;
 
 namespace ST.DotNetSolutionKit.Samples.Framework.Auth.Authentication;
 

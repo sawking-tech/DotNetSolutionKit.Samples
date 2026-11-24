@@ -1,10 +1,10 @@
 using System.Security.Cryptography;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
+namespace ST.DotNetSolutionKit.Samples.Framework.Auth.Security;
 
 /// <summary>
 /// Provides RSA keys for JWT token signing and validation.

@@ -25,6 +25,9 @@
         <ProjectReference Include="..\..\common\ST.DotNetSolutionKit.Samples.Common\ST.DotNetSolutionKit.Samples.Common.csproj" />
         <ProjectReference Include="..\..\common\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
         <ProjectReference Include="..\..\common\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
+        <!-- TODO: capability implementations in a framework module, recorded in the README: the
+             real-database harness is tied to the provider on purpose (its test contexts live here).
+             Rides on the #228 inversion like the kernel's own provider switch. -->
         <ProjectReference Include="..\..\capabilities\ST.DotNetSolutionKit.Samples.Capabilities.Persistence\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres\ST.DotNetSolutionKit.Samples.Capabilities.Persistence.Postgres.csproj" />
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Framework.DomainEvents\ST.DotNetSolutionKit.Samples.Framework.DomainEvents.csproj" />
     </ItemGroup>

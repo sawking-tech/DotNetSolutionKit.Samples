@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
-using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
+using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Infrastructure.Http.Internal;
 

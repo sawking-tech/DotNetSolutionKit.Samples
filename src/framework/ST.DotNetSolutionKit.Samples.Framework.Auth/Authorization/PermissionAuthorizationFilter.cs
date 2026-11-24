@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using ST.DotNetSolutionKit.Samples.Common.Application.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 
 namespace ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;

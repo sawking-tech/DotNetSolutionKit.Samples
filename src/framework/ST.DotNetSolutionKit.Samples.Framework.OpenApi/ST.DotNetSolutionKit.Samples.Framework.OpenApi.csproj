@@ -26,10 +26,16 @@
         <ProjectReference Include="..\..\common\ST.DotNetSolutionKit.Samples.Common.Contracts\ST.DotNetSolutionKit.Samples.Common.Contracts.csproj" />
         <ProjectReference Include="..\..\common\ST.DotNetSolutionKit.Samples.Common.Application\ST.DotNetSolutionKit.Samples.Common.Application.csproj" />
         <ProjectReference Include="..\..\common\ST.DotNetSolutionKit.Samples.Common.Infrastructure\ST.DotNetSolutionKit.Samples.Common.Infrastructure.csproj" />
+        <!-- TODO: another module's implementation, a violation ADR-009 allows only with its reason
+             written: the permission filter reads RequiredPermissionsAttribute and the Swagger setup reads
+             JwtPublicConfiguration, both live in Framework.Auth; the stack without them cannot name
+             what it documents. No issue yet: the split of the Swagger stack from auth is future work. -->
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Framework.Auth\ST.DotNetSolutionKit.Samples.Framework.Auth.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+        <!-- TODO: another module's implementation under the flag: the FeatureGate filters of the
+             Swagger document live in Framework.FeatureFlags. Same reason shape as the Auth reference above. -->
         <ProjectReference Include="..\ST.DotNetSolutionKit.Samples.Framework.FeatureFlags\ST.DotNetSolutionKit.Samples.Framework.FeatureFlags.csproj" />
     </ItemGroup>
 

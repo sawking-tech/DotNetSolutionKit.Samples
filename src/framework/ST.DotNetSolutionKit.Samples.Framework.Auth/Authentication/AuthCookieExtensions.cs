@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Configuration;
 
 namespace ST.DotNetSolutionKit.Samples.Framework.Auth.Authentication;
 

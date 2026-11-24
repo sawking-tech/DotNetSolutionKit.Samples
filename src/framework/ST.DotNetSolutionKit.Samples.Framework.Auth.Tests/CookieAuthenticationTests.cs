@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Moq;
-using ST.DotNetSolutionKit.Samples.Common.Application.Configuration;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
 using ST.DotNetSolutionKit.Samples.Framework.Auth.Authentication;
 using ST.DotNetSolutionKit.Samples.Common.Web.Setup;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Configuration;
 
 namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Web;
 

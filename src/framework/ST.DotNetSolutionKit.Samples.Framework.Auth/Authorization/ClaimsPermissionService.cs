@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using ST.DotNetSolutionKit.Samples.Common.Application.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Security;
 

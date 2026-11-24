@@ -1,12 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using ST.DotNetSolutionKit.Samples.Common.Application.Authorization;
+using ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Framework.Testing.Stubs;
-using ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;
 
-namespace ST.DotNetSolutionKit.Samples.Common.Tests.Tests.Web;
+namespace ST.DotNetSolutionKit.Samples.Framework.Auth.Tests;
 
 /// <summary>
 /// Permissions:Source picks the implementation, and a remote source without an address does not start.

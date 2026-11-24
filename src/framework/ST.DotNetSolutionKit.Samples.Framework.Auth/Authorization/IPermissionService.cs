@@ -1,4 +1,4 @@
-namespace ST.DotNetSolutionKit.Samples.Common.Application.Authorization;
+namespace ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;
 
 /// <summary>
 /// Answers whether the current user holds the permissions an action requires.

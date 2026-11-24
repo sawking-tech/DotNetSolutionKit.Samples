@@ -2,7 +2,6 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using ST.DotNetSolutionKit.Samples.Common.Application.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Domain.Context;
 using ST.DotNetSolutionKit.Samples.Common.Exceptions;
 

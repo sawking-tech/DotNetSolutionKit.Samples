@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using ST.DotNetSolutionKit.Samples.Common.Application.Authorization;
 using ST.DotNetSolutionKit.Samples.Common.Infrastructure.Http.Internal;
 
 namespace ST.DotNetSolutionKit.Samples.Framework.Auth.Authorization;
