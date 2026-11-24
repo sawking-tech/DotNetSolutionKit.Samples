@@ -79,8 +79,24 @@ else
 fi
 dotnet new DotNetSolutionKit "${names[@]}" -S Orders "${whole[@]}" --GitHubCiCd true --Messaging outbox --Storage true "${scripts[@]}" "${hive[@]}"
 dotnet new DotNetSolutionKit "${names[@]}" -S Billing --Messaging outbox --Storage true "${scripts[@]}" "${hive[@]}"
-# Before 2.8 a service joined All.sln by this script; since, it adds itself, and there is no script.
-[ ! -f src/services/manual-add-projects.sh ] || bash src/services/manual-add-projects.sh < /dev/null
+# Before 2.8 a service joined All.sln by manual-add-projects.sh; since, it adds itself, and there is no
+# script. The script of a release before 2.8 calls dotnet sln add bare, and an SDK 8.0.428+ add pulls the
+# project's references in without the service's folder, so the next add of that service fails on the name
+# in it (the break the release branches saw on 14.11). The same adds, made here with the references off,
+# a bare add as the fallback for an older SDK; the result is the sln the script writes.
+if [ ! -f src/services/manual-add-projects.sh ]; then
+    :
+else
+    sln=$(ls src/services/*.All.sln)
+    listed=$(dotnet sln "$sln" list | tr '\\' '/')
+    for proj in $(find src/services -mindepth 3 -maxdepth 3 -name "*.csproj"); do
+        path=${proj#src/services/}
+        echo "$listed" | grep -qxF "$path" && continue
+        folder=$(basename "$(dirname "$(dirname "$proj")")")
+        dotnet sln "$sln" add "$proj" --solution-folder "${folder##*.}" --include-references false 2>/dev/null \
+            || dotnet sln "$sln" add "$proj" --solution-folder "${folder##*.}"
+    done
+fi
 commit "Made with DotNetSolutionKit $start alone, as before dotskit"
 
 program=$(ls src/services/*.Orders/*.Orders.API/Program.cs)
