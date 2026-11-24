@@ -2,10 +2,10 @@
   {
     "version": "3.0.0-rc",
     "file": "3.0.0-rc.json",
-    "runs": 11,
+    "runs": 12,
     "last": {
       "conclusion": "success",
-      "started": "2026-11-22T10:42:36Z",
+      "started": "2026-11-24T11:52:12Z",
       "tests": {
         "failed": 0,
         "passed": 433,
@@ -16,7 +16,7 @@
         "line": 80.7,
         "branch": 67.6
       },
-      "seconds": 142
+      "seconds": 151
     }
   },
   {
