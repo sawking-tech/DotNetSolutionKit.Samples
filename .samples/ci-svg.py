@@ -136,7 +136,10 @@ def svg(branch, runs, today):
     width = LEFT + weeks * (CELL + GAP) + 12
     height = TOP + 7 * (CELL + GAP) + 10
 
-    last = runs[-1] if runs else None
+    # the facts line speaks for the CI that built the version, not for the file's last record: a failed
+    # Regenerate behind a passed CI is the branch's rebuild trouble, and the numbers below are the CI's
+    ci = [r for r in runs if r.get("workflow") == "CI"]
+    last = ci[-1] if ci else (runs[-1] if runs else None)
     if last:
         tests = last.get("tests") or {}
         cov = last.get("coverage") or {}
