@@ -42,7 +42,7 @@
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
     <!-- Held on 7.7.3, here and for System.IdentityModel.Tokens.Jwt: the version JwtBearer 8.0.x depends on.
          Email raises both to 8.15.0 in package-versions/notify-email.props. -->
-    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="7.7.3" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageVersion Include="Moq" Version="4.21.0" />
     <PackageVersion Include="NUnit" Version="5.0.0" />
@@ -61,7 +61,7 @@
     <!-- Held on 9: version 10 moves to Microsoft.OpenApi 2, whose types (OpenApiDocument, OpenApiOperation,
          the Models and Writers namespaces) the Swagger filters in Common.Web are written against. -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.7.3" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.4" />
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
