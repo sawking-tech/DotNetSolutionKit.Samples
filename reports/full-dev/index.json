@@ -1,0 +1,395 @@
+[
+  {
+    "version": "3.0.0-rc",
+    "file": "3.0.0-rc.json",
+    "runs": 12,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-11-24T11:52:12Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 80.7,
+        "branch": 67.6
+      },
+      "seconds": 151
+    }
+  },
+  {
+    "version": "v2.9.1",
+    "file": "v2.9.1.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-11-09T16:52:12Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 69.3,
+        "branch": 67.9
+      },
+      "seconds": 121
+    }
+  },
+  {
+    "version": "2.10.0-rc",
+    "file": "2.10.0-rc.json",
+    "runs": 2,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-11-08T10:03:57Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 69.3,
+        "branch": 67.9
+      },
+      "seconds": 120
+    }
+  },
+  {
+    "version": "v2.9.0",
+    "file": "v2.9.0.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-11-08T05:40:31Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 69.3,
+        "branch": 67.9
+      },
+      "seconds": 105
+    }
+  },
+  {
+    "version": "bd21a11666db159942e028512be7a94b273e0272",
+    "file": "bd21a11666db159942e028512be7a94b273e0272.json",
+    "runs": 4,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-11-07T09:53:42Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": null,
+      "seconds": 112
+    }
+  },
+  {
+    "version": "0d7b01f7e29a6a8c1fef3078df3c97361875bade",
+    "file": "0d7b01f7e29a6a8c1fef3078df3c97361875bade.json",
+    "runs": 2,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-11-06T17:49:48Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": null,
+      "seconds": 101
+    }
+  },
+  {
+    "version": "7c17f86a07b866008c8f1fcc9e9b94b7b742fcdb",
+    "file": "7c17f86a07b866008c8f1fcc9e9b94b7b742fcdb.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-28T18:20:12Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": null,
+      "seconds": 108
+    }
+  },
+  {
+    "version": "161a5b7046174c9eab900ddd43142b5fbc3dbed0",
+    "file": "161a5b7046174c9eab900ddd43142b5fbc3dbed0.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-07T10:14:50Z",
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": null,
+      "seconds": 104
+    }
+  },
+  {
+    "version": "e834340de5a31fdf4773bb3843741d587f02727f",
+    "file": "e834340de5a31fdf4773bb3843741d587f02727f.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-06T09:51:22Z",
+      "tests": {
+        "failed": 0,
+        "passed": 434,
+        "skipped": 0,
+        "total": 434
+      },
+      "coverage": null,
+      "seconds": 99
+    }
+  },
+  {
+    "version": "4217f9c813a967ad96133ea15d248f46225ad8f9",
+    "file": "4217f9c813a967ad96133ea15d248f46225ad8f9.json",
+    "runs": 2,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-06T08:54:58Z",
+      "tests": {
+        "failed": 0,
+        "passed": 439,
+        "skipped": 0,
+        "total": 439
+      },
+      "coverage": null,
+      "seconds": 130
+    }
+  },
+  {
+    "version": "dbf9313c29fd9cc08523e627ab66151b90dee700",
+    "file": "dbf9313c29fd9cc08523e627ab66151b90dee700.json",
+    "runs": 2,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-05T08:09:29Z",
+      "tests": {
+        "failed": 0,
+        "passed": 428,
+        "skipped": 0,
+        "total": 428
+      },
+      "coverage": null,
+      "seconds": 102
+    }
+  },
+  {
+    "version": "eba52819877d45abde2164988e375043bad12cc0",
+    "file": "eba52819877d45abde2164988e375043bad12cc0.json",
+    "runs": 2,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-05T06:46:33Z",
+      "tests": {
+        "failed": 0,
+        "passed": 406,
+        "skipped": 0,
+        "total": 406
+      },
+      "coverage": null,
+      "seconds": 76
+    }
+  },
+  {
+    "version": "978b089237f9ef4c16615d18a8f26f8d8372c178",
+    "file": "978b089237f9ef4c16615d18a8f26f8d8372c178.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-05T04:28:05Z",
+      "tests": {
+        "failed": 0,
+        "passed": 399,
+        "skipped": 0,
+        "total": 399
+      },
+      "coverage": null,
+      "seconds": 88
+    }
+  },
+  {
+    "version": "cfed0deec35a44c4e907562f27e8fe7992d75c9f",
+    "file": "cfed0deec35a44c4e907562f27e8fe7992d75c9f.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T23:40:48Z",
+      "tests": {
+        "failed": 0,
+        "passed": 399,
+        "skipped": 0,
+        "total": 399
+      },
+      "coverage": {
+        "line": 65.9,
+        "branch": 64.4
+      },
+      "seconds": 93
+    }
+  },
+  {
+    "version": "bfc13cdbcc408c032d34a335b68721a3efcc0e1c",
+    "file": "bfc13cdbcc408c032d34a335b68721a3efcc0e1c.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T15:00:36Z",
+      "tests": {
+        "failed": 0,
+        "passed": 387,
+        "skipped": 0,
+        "total": 387
+      },
+      "coverage": {
+        "line": 65.1,
+        "branch": 63.4
+      },
+      "seconds": 84
+    }
+  },
+  {
+    "version": "0f36e03d5091eae3ed8eef9e7f5acf2046a171dd",
+    "file": "0f36e03d5091eae3ed8eef9e7f5acf2046a171dd.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T14:17:31Z",
+      "tests": {
+        "failed": 0,
+        "passed": 377,
+        "skipped": 0,
+        "total": 377
+      },
+      "coverage": {
+        "line": 64.8,
+        "branch": 62.8
+      },
+      "seconds": 76
+    }
+  },
+  {
+    "version": "19094e90851f8bc2973de7f51dceac20c654a8a8",
+    "file": "19094e90851f8bc2973de7f51dceac20c654a8a8.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T13:56:03Z",
+      "tests": {
+        "failed": 0,
+        "passed": 377,
+        "skipped": 0,
+        "total": 377
+      },
+      "coverage": {
+        "line": 64.8,
+        "branch": 62.8
+      },
+      "seconds": 123
+    }
+  },
+  {
+    "version": "7017c78caf68d4b09312dadc88bcbf79e0ae8208",
+    "file": "7017c78caf68d4b09312dadc88bcbf79e0ae8208.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T09:44:28Z",
+      "tests": {
+        "failed": 0,
+        "passed": 377,
+        "skipped": 0,
+        "total": 377
+      },
+      "coverage": {
+        "line": 64.8,
+        "branch": 62.8
+      },
+      "seconds": 86
+    }
+  },
+  {
+    "version": "10aeed48216ee512effa47f57d53afa22f537983",
+    "file": "10aeed48216ee512effa47f57d53afa22f537983.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T05:28:36Z",
+      "tests": {
+        "failed": 0,
+        "passed": 358,
+        "skipped": 0,
+        "total": 358
+      },
+      "coverage": {
+        "line": 63.6,
+        "branch": 62.9
+      },
+      "seconds": 75
+    }
+  },
+  {
+    "version": "3eb781cdeb324d703055d30aceab59b2365ddb65",
+    "file": "3eb781cdeb324d703055d30aceab59b2365ddb65.json",
+    "runs": 1,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T05:12:26Z",
+      "tests": {
+        "failed": 0,
+        "passed": 358,
+        "skipped": 0,
+        "total": 358
+      },
+      "coverage": {
+        "line": 63.6,
+        "branch": 62.9
+      },
+      "seconds": 84
+    }
+  },
+  {
+    "version": "d97424da5859900c58d5806df6747b5734565204",
+    "file": "d97424da5859900c58d5806df6747b5734565204.json",
+    "runs": 2,
+    "last": {
+      "conclusion": "success",
+      "started": "2026-10-04T05:05:13Z",
+      "tests": {
+        "failed": 0,
+        "passed": 358,
+        "skipped": 0,
+        "total": 358
+      },
+      "coverage": {
+        "line": 63.6,
+        "branch": 62.9
+      },
+      "seconds": 86
+    }
+  }
+]
