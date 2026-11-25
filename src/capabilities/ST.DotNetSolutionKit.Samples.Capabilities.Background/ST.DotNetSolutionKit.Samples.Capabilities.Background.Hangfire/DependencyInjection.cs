@@ -30,10 +30,10 @@ public static class DependencyInjection
                 .UseRecommendedSerializerSettings();
             config.UsePostgreSqlStorage(c =>
                 c.UseNpgsqlConnection(connectionString), new PostgreSqlStorageOptions
-            {
-                SchemaName = schemaName,
-                PrepareSchemaIfNecessary = true
-            });
+                {
+                    SchemaName = schemaName,
+                    PrepareSchemaIfNecessary = true
+                });
         });
 
         services.AddHangfireServer((sp, options) =>

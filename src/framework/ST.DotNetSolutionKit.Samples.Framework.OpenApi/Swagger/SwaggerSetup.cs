@@ -144,7 +144,8 @@ public static class SwaggerSetup
     /// </summary>
     public static WebApplication UseSwaggerPage(this WebApplication app, Assembly serviceAssembly)
     {
-        if (app.Environment.IsProduction()) return app;
+        if (app.Environment.IsProduction())
+            return app;
 
         app.UseSwagger();
         app.UseSwaggerUI(c =>
