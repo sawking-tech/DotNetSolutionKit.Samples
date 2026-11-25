@@ -40,6 +40,22 @@ jobs:
     outputs:
       build: ${{ steps.moved.outputs.build }}
     steps:
+      # The gate: the canary proves the runner's SDK still generates, builds and tests the template.
+      # When it is red the environment is the suspect, not the template, and a regeneration would push
+      # a branch broken by the environment and paint the samples board with it.
+      - name: The environment holds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          json=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/canary.yml/runs?per_page=1")
+          conclusion=$(jq -r '.workflow_runs[0].conclusion // "none"' <<< "$json")
+          url=$(jq -r '.workflow_runs[0].html_url // ""' <<< "$json")
+          case "$conclusion" in
+            success) echo "the canary is green: $url" ;;
+            none) echo "the canary has not run yet; the first run decides from now on" ;;
+            *) echo "::error title=The canary is red::The environment broke the template; this run is held until canary.yml is green. $url"
+               exit 1 ;;
+          esac
       - id: moved
         env:
           GH_TOKEN: ${{ github.token }}

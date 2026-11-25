@@ -1,0 +1,73 @@
+# Part of DotNetSolutionKit (https://dotskit.sawking.tech/). MIT License, Copyright (c) 2025 Vladimir Savkin.
+
+name: Canary
+
+# The runner image changes without a commit: GitHub updates ubuntu-24.04 silently, and the .NET SDK it
+# brings is the environment every generation and every build runs in. On 14.11 a patch SDK turned
+# `dotnet sln add` into a command that pulls in the projects it references, and every Regenerate lost
+# projects from All.sln for a week while the samples board stayed red under a name that looked like a
+# flaky branch (issue: the hotfix of 2.9.2).
+#
+# This is the detector. It generates one recipe from the template's sources on the SDK the runner brings,
+# unpinned, and builds and tests it: a change in the environment shows up here within hours, with nothing
+# of the samples board involved. It creates no branch, writes no variant, and never touches the page.
+#
+# This file lives on the default branch only, copies to every branch and does nothing there.
+
+on:
+  schedule:
+    # Four times a day: often enough to catch a change the same day, rare enough to cost nothing.
+    - cron: '17 3,9,15,21 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TEMPLATE_REPO: sawking-tech/DotNetSolutionKit
+
+jobs:
+  canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: automation
+
+      # No version here: the point is the SDK the runner brings, whatever it is.
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: The environment under test
+        run: |
+          echo "runner image: $ImageOS $ImageVersion"
+          dotnet --version
+          dotnet --list-sdks
+
+      - name: Generate one recipe from the sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash automation/.samples/generate.sh dev canary "$RUNNER_TEMP/canary"
+
+      - name: Build and test
+        run: |
+          sln=$(ls "$RUNNER_TEMP"/canary/src/services/*.All.sln)
+          dotnet build "$sln" -warnaserror
+          dotnet test "$sln" --no-build --filter "TestCategory!=Integration"
+
+      # The verdict Regenerate and Lifecycle read before they start (the gate in each of them).
+      - name: Record the verdict
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONCLUSION: ${{ job.status }}
+        run: |
+          gh api -X POST "repos/$GITHUB_REPOSITORY/dispatches" \
+            -f event_type=canary \
+            -f "client_payload[conclusion]=$CONCLUSION" \
+            -f "client_payload[run]=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" || true
+          if [ "$CONCLUSION" != "success" ]; then
+            echo "::error title=The environment broke the template::The SDK the runner brings cannot generate, build and test one recipe. Regenerate and Lifecycle are held until this is green."
+          fi
