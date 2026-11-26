@@ -12,8 +12,8 @@ name: Lifecycle
 on:
   schedule:
     - cron: '47 3 * * *'
-  # The released.yml dispatcher fires when nuget.org shows a version these samples are not generated
-  # from yet, so a release does not wait for the nightly schedule (issue #134).
+  # samples-dispatch.yml of the template fires this on a release (issue #134); the nightly cron rebuilds the
+  # branch when dev has moved, which no release announces.
   repository_dispatch:
     types: [released]
   workflow_dispatch:

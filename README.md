@@ -52,7 +52,7 @@ ice blue or dark red from day 30 on. A day keeps its colour; a new run makes its
 again. A pale square is a day before the first run; the fading squares on the right are the weeks to
 come.
 
-Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches
+On a release [regenerate](.github/workflows/regenerate.yml) rebuilds every branch: the newest tag is the release, and the template's samples-dispatch wakes this repository the minute the packages are out. What reaches
 master is a release, and every release branch is generated again from a new one, pushed, and its CI runs.
 full-dev follows dev instead, where the next release is built: it is generated again when dev has moved.
 [lifecycle](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/lifecycle) is the life of a solution rather than a generation: made with the release
