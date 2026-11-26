@@ -13,7 +13,7 @@ ice blue or dark red from day 30 on. A day keeps its colour; a new run makes its
 again. A pale square is a day before the first run; the fading squares on the right are the weeks to
 come.
 
-Generated from DotNetSolutionKit dev at [d37e947](https://github.com/sawking-tech/DotNetSolutionKit/commit/d37e947fc072e0abf20dc7b1d9408b12c619c19a), not a release, with:
+Generated from DotNetSolutionKit dev at [fd4f900](https://github.com/sawking-tech/DotNetSolutionKit/commit/fd4f900d91a24bcee683176052fe303fe96b0af5), not a release, with:
 
 ```bash
 dotnet new DotNetSolutionKit -N ST -P DotNetSolutionKit.Samples -S Orders --solution --github-cicd true --messaging rabbitmq:outbox -I true --diff-api true --feature-flags true --hierarchy-rules true --storage true --clickhouse true --mongodb true --allow-scripts yes

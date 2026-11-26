@@ -40,7 +40,9 @@
     "--FeatureFlags",
     "true",
     "--HierarchyRules",
-    "true"
+    "true",
+    "--CodeStyle",
+    "false"
   ],
   "_comment_services": "Each service by its own arguments; dotskit new adds one or joins flags to one",
   "services": [
@@ -66,7 +68,7 @@
       "--Vault",
       "false",
       "--HttpPort",
-      "5323",
+      "5401",
       "--DiffApi",
       "true",
       "--FeatureFlags",
@@ -78,7 +80,7 @@
       "--ServiceNameOrCustom",
       "Billing",
       "--HttpPort",
-      "5967",
+      "5554",
       "--Messaging",
       "rabbitmq:outbox",
       "--Storage",
