@@ -46,10 +46,25 @@ jobs:
           dotnet --version
           dotnet --list-sdks
 
-      - name: Generate one recipe from the sources
+      # From the newest release, as Regenerate does: the detector asks whether the environment still generates,
+      # builds and tests what the template's release carries, not what dev has become. A release whose generation
+      # breaks on the runner is what the board would otherwise show as a broken branch of the template.
+      - name: The newest release
+        id: release
+        run: |
+          tag=$(git ls-remote --tags "https://github.com/$TEMPLATE_REPO" 'v*'             | awk '{ n = $2; sub(/^refs\/tags\//, "", n); sub(/\^\{\}$/, "", n); if (n != "") print n }'             | sort -Vu | tail -1)
+          echo "the newest release is ${tag:-(none yet)}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Generate one recipe from that release
+        if: steps.release.outputs.tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
-        run: bash automation/.samples/generate.sh dev canary "$RUNNER_TEMP/canary"
+        run: bash automation/.samples/generate.sh "${{ steps.release.outputs.tag }}" canary "$RUNNER_TEMP/canary"
+
+      - name: No release to detect yet
+        if: steps.release.outputs.tag == ''
+        run: echo "::warning::no release tag in the template yet; the canary has nothing to generate from"
 
       - name: Build and test
         run: |

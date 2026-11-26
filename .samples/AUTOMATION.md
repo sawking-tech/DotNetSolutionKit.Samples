@@ -12,10 +12,10 @@ on the default branch (`full`, itself a sample), and the scripts they run are in
 ```
 release.yml (DotNetSolutionKit)  ── tags v<version>, publishes to nuget.org
         │
-released.yml  ── every 30 min, polls nuget.org for a version newer than template-version
-        │  repository_dispatch "released"
+samples-dispatch.yml (DotNetSolutionKit)  ── on the Release run that carries a tag
+        │  repository_dispatch "released", with the tag as the payload
         ▼
-regenerate.yml  ── every hour; also listens for the dispatch
+regenerate.yml  ── on that dispatch, and on a hand run only: no clock
         │  replaces every release branch (single, gateway, full, full-alt)
         │  full-dev follows the template's dev instead
 lifecycle.yml  ── daily 03:47 UTC; also listens for the dispatch
@@ -39,15 +39,16 @@ Two facts of the plumbing that the chain rests on:
 
 ## What starts a regeneration
 
-- **A release.** `released.yml` polls nuget.org twice an hour and dispatches `released` when the
-  index shows a version `template-version` does not name. The polling is a stand-in: release.yml may
-  call this repository's dispatch itself (it needs a GitHub App with `actions: write` here, a stored
-  secret in the template's repository), and this file goes away when that is in. The wait for
-  nuget.org itself does not go away with it: the index lists a published package up to half an hour
-  late, and `generate.sh` waits for it (`WAIT_MINUTES`, 40 by default) before it installs.
-- **The template's master or dev moving.** Regenerate checks every hour; `full-dev` follows `dev`
-  and is rebuilt the day after it moves. `lifecycle.yml` checks master's SHA against the branch's
-  `template-version` and rebuilds on a difference.
+- **A release.** `samples-dispatch.yml` in the template's repository wakes this one the minute the
+  publication is done: it reads the tag of the Release run and dispatches `released` with it. Before
+  that, `released.yml` here polled nuget.org twice an hour; it is gone, and so is the hourly cron of
+  `regenerate.yml` - a clock rebuilds nothing a release has not already asked for. The wait for
+  nuget.org itself does not go away: the index lists a published package up to half an hour late, and
+  `generate.sh` waits for it (`WAIT_MINUTES`, 40 by default) before it installs.
+- **The template's dev moving.** `full-dev` follows `dev` and is rebuilt by the next release-triggered
+  run if dev has moved since; no clock rebuilds it, which is the cost of the reactive chain: the row
+  shows dev as of the last release, not as of this morning. `lifecycle.yml` keeps its own daily cron -
+  it rebuilds the lifecycle branch when the template's master moved, which no release announces.
 - **A hand run.** `gh workflow run regenerate.yml -f force=true` (or the lifecycle workflow): the
   check normally skips a branch already built from the current ref, and `force` is how the automation
   itself is exercised after a change to it.
