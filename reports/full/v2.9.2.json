@@ -109,6 +109,28 @@
         "branch": 67.9
       },
       "templateCommit": "e023e1e97b1a3305ba0234a2a24dad9378ba84f9"
+    },
+    {
+      "run": 45916353815,
+      "url": "https://github.com/sawking-tech/DotNetSolutionKit.Samples/actions/runs/45916353815",
+      "commit": "ede8d2b31ee60ef90250f4c1417f8880aca2edd4",
+      "conclusion": "success",
+      "event": "push",
+      "workflow": "CI",
+      "started": "2026-11-27T00:22:40Z",
+      "finished": "2026-11-27T00:24:43Z",
+      "seconds": 123,
+      "tests": {
+        "failed": 0,
+        "passed": 433,
+        "skipped": 0,
+        "total": 433
+      },
+      "coverage": {
+        "line": 69.3,
+        "branch": 67.9
+      },
+      "templateCommit": "e023e1e97b1a3305ba0234a2a24dad9378ba84f9"
     }
   ],
   "branch": "full",
@@ -138,7 +160,6 @@
     ".github/workflows/coverage.yml",
     ".github/workflows/lifecycle.yml",
     ".github/workflows/regenerate.yml",
-    ".github/workflows/released.yml",
     ".github/workflows/report.yml",
     ".github/workflows/secret-scan.yml",
     ".gitignore",
