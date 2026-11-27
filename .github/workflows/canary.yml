@@ -8,9 +8,12 @@ name: Canary
 # projects from All.sln for a week while the samples board stayed red under a name that looked like a
 # flaky branch (issue: the hotfix of 2.9.2).
 #
-# This is the detector. It generates one recipe from the template's sources on the SDK the runner brings,
-# unpinned, and builds and tests it: a change in the environment shows up here within hours, with nothing
-# of the samples board involved. It creates no branch, writes no variant, and never touches the page.
+# This is the detector. It generates one recipe from the newest release of the template on the SDK the runner
+# brings, unpinned, and builds and tests it: a change in the environment shows up here within hours, with
+# nothing of the samples board involved. From the release and not from dev, because the question is whether
+# what the samples carry still builds; a break in dev is Regenerate's to find, and it does. It creates no
+# branch, writes no variant, and never touches the page - and with no release to generate from, it skips the
+# build rather than turn red, since a red canary holds Regenerate and Lifecycle.
 #
 # This file lives on the default branch only, copies to every branch and does nothing there.
 
@@ -66,7 +69,10 @@ jobs:
         if: steps.release.outputs.tag == ''
         run: echo "::warning::no release tag in the template yet; the canary has nothing to generate from"
 
+      # Nothing was generated when the template has no release: skipping is the verdict of a canary that had
+      # nothing to test, where the step failing would hold Regenerate and Lifecycle for good.
       - name: Build and test
+        if: steps.release.outputs.tag != ''
         run: |
           sln=$(ls "$RUNNER_TEMP"/canary/src/services/*.All.sln)
           dotnet build "$sln" -warnaserror

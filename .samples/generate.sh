@@ -174,7 +174,7 @@ fi
 
 if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false' "$here/variants.json")" = "true" ]; then
     mkdir -p .samples .github/workflows
-    cp "$here/generate.sh" "$here/lifecycle.sh" "$here/report.sh" "$here/backfill.sh" "$here/ci-svg.py" "$here/variants.json" .samples/
+    cp "$here/generate.sh" "$here/lifecycle.sh" "$here/report.sh" "$here/backfill.sh" "$here/ci-svg.py" "$here/variants.json" "$here/AUTOMATION.md" .samples/
     python3 "$here/ci-svg.py" --legend .samples/legend.svg
     cp "$here"/../.github/workflows/{regenerate,lifecycle,report,backfill,canary}.yml .github/workflows/
     {
@@ -191,15 +191,17 @@ if [ "$(jq -r --arg b "$branch" '.[] | select(.branch == $b) | .default // false
         jq -r --arg raw "$raw" '.[] | "[![CI of \(.branch) by day](\($raw)/\(.branch)/reports/\(.branch)/ci.svg)](https://dotskit.sawking.tech/samples.html#\(.branch))\n"' "$here/variants.json"
         legend
         echo
-        echo "Once a day [regenerate](.github/workflows/regenerate.yml) checks the template's master: what reaches"
-        echo "master is a release, and every release branch is generated again from a new one, pushed, and its CI runs."
-        echo "full-dev follows dev instead, where the next release is built: it is generated again when dev has moved."
+        echo "On a release [regenerate](.github/workflows/regenerate.yml) rebuilds every branch: the newest tag is the"
+        echo "release, and the template's samples-dispatch wakes this repository the minute the packages are out."
+        echo "full-dev follows dev instead, where the next release is built: it is rebuilt on that next release, or by"
+        echo "hand: gh workflow run regenerate.yml -f force=true."
         echo "[lifecycle]($repo/tree/lifecycle) is the life of a solution rather than a generation: made with the release"
         echo "two minors before the next one, changed by the team, then described, upgraded and grown by dotskit, a commit"
-        echo "a step; [its workflow](.github/workflows/lifecycle.yml) builds it again when dev has moved."
+        echo "a step; [its workflow](.github/workflows/lifecycle.yml) keeps its own daily cron."
         echo "After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's"
         echo "reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release, and"
         echo "ci.svg, the picture of its days above."
-        echo "The automation is in [.samples](.samples)."
+        echo "The automation - what starts a rebuild and what the runs mean - is in"
+        echo "[.samples/AUTOMATION.md](.samples/AUTOMATION.md)."
     } >> README.md
 fi

@@ -52,12 +52,13 @@ ice blue or dark red from day 30 on. A day keeps its colour; a new run makes its
 again. A pale square is a day before the first run; the fading squares on the right are the weeks to
 come.
 
-On a release [regenerate](.github/workflows/regenerate.yml) rebuilds every branch: the newest tag is the release, and the template's samples-dispatch wakes this repository the minute the packages are out. What reaches
-master is a release, and every release branch is generated again from a new one, pushed, and its CI runs.
-full-dev follows dev instead, where the next release is built: it is generated again when dev has moved.
+On a release [regenerate](.github/workflows/regenerate.yml) rebuilds every branch: the newest tag is the
+release, and the template's samples-dispatch wakes this repository the minute the packages are out.
+full-dev follows dev instead, where the next release is built: it is rebuilt on that next release, or by
+hand, `gh workflow run regenerate.yml -f force=true`.
 [lifecycle](https://github.com/sawking-tech/DotNetSolutionKit.Samples/tree/lifecycle) is the life of a solution rather than a generation: made with the release
 two minors before the next one, changed by the team, then described, upgraded and grown by dotskit, a commit
-a step; [its workflow](.github/workflows/lifecycle.yml) builds it again when dev has moved.
+a step; [its workflow](.github/workflows/lifecycle.yml) keeps its own daily cron.
 After each CI run of a branch, [report](.github/workflows/report.yml) writes the run into the branch's
 reports/<branch>/ folder: tests, coverage, time and the branch's files, one file per release, and
 ci.svg, the picture of its days above.
