@@ -119,7 +119,7 @@
   {
     "branch": "canary",
     "tag": false,
-    "about": "Not a sample: the detector of the runner's environment. One recipe generated from the template's dev on the SDK the runner brings, built and tested by canary.yml. Creates no branch and is never shown on the samples page.",
+    "about": "Not a sample: the detector of the runner's environment. One recipe generated from the newest release of the template on the SDK the runner brings, built and tested by canary.yml. Creates no branch and is never shown on the samples page.",
     "generate": [
       {
         "since": "2.7.0",

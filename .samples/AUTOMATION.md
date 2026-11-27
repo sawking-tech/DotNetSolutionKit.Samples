@@ -47,8 +47,10 @@ Two facts of the plumbing that the chain rests on:
   `generate.sh` waits for it (`WAIT_MINUTES`, 40 by default) before it installs.
 - **The template's dev moving.** `full-dev` follows `dev` and is rebuilt by the next release-triggered
   run if dev has moved since; no clock rebuilds it, which is the cost of the reactive chain: the row
-  shows dev as of the last release, not as of this morning. `lifecycle.yml` keeps its own daily cron -
-  it rebuilds the lifecycle branch when the template's master moved, which no release announces.
+  shows dev as of the last release, not as of this morning. It is rebuilt by hand before a release:
+  `gh workflow run regenerate.yml -f force=true`, and `promote.yml` refuses a dev whose `full-dev` CI
+  has not run on it. `lifecycle.yml` keeps its own daily cron, which keeps the branch in step with the
+  template's master between releases.
 - **A hand run.** `gh workflow run regenerate.yml -f force=true` (or the lifecycle workflow): the
   check normally skips a branch already built from the current ref, and `force` is how the automation
   itself is exercised after a change to it.

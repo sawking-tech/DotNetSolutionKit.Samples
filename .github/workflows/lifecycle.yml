@@ -12,8 +12,8 @@ name: Lifecycle
 on:
   schedule:
     - cron: '47 3 * * *'
-  # samples-dispatch.yml of the template fires this on a release (issue #134); the nightly cron rebuilds the
-  # branch when dev has moved, which no release announces.
+  # samples-dispatch.yml of the template fires this on a release (issue #134); the nightly cron keeps the branch
+  # in step with master between them.
   repository_dispatch:
     types: [released]
   workflow_dispatch:
